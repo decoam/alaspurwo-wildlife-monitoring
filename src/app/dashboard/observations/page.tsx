@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PlusCircle, Search } from "lucide-react";
+import { ArrowLeft, PlusCircle, Search } from "lucide-react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getObservations, deleteObservation } from "@/actions/observation.actions";
@@ -62,6 +62,12 @@ export default async function ObservationsPage({
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,64,38,0.5),_transparent_35%),linear-gradient(135deg,_#07110c_0%,_#0c1914_45%,_#13261d_100%)] px-4 py-6 text-slate-100 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl rounded-[28px] border border-emerald-900/60 bg-[#07110c]/80 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+        <div className="mb-4">
+          <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-2xl px-3 py-2 text-sm text-emerald-200 transition hover:bg-emerald-900/60 hover:text-white">
+            <ArrowLeft className="h-4 w-4" />
+            Kembali ke Dashboard
+          </Link>
+        </div>
         <div className="flex flex-col gap-4 border-b border-emerald-900/60 pb-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-emerald-400">Data Pengamatan</p>

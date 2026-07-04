@@ -1,5 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { LayoutDashboard, Camera, PlusCircle, UserCircle2, LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
+
 
 type DashboardSidebarProps = {
   user: {
@@ -18,6 +23,14 @@ const menuItems = [
 ];
 
 export function DashboardSidebar({ user }: DashboardSidebarProps) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+    router.refresh();
+  };
+
   return (
     <aside className="flex h-full w-full flex-col justify-between rounded-[28px] border border-emerald-900/60 bg-[#07110c]/90 p-5 shadow-2xl">
       <div>
@@ -52,7 +65,11 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
         </nav>
       </div>
 
-      <button className="flex items-center gap-3 rounded-2xl border border-amber-900/40 bg-amber-950/30 px-3 py-3 text-sm font-medium text-amber-100 transition hover:bg-amber-900/40">
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="flex items-center gap-3 rounded-2xl border border-amber-900/40 bg-amber-950/30 px-3 py-3 text-sm font-medium text-amber-100 transition hover:bg-amber-900/40"
+      >
         <LogOut className="h-4 w-4" />
         Logout
       </button>
