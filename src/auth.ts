@@ -14,6 +14,8 @@ declare module "next-auth" {
       username: string;
       fullName: string;
       role: string;
+      email?: string;
+      posPengamatan?: string;
     } & DefaultSession["user"];
   }
 
@@ -22,6 +24,8 @@ declare module "next-auth" {
     username: string;
     fullName: string;
     role: string;
+    email?: string;
+    posPengamatan?: string;
   }
 }
 
@@ -67,6 +71,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           fullName: user.fullName,
           role: user.role,
           name: user.fullName,
+          email: user.username,
+          posPengamatan: user.fullName,
         };
       },
     }),
@@ -78,6 +84,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.username = user.username;
         token.fullName = user.fullName;
         token.role = user.role;
+        token.email = user.email;
+        token.posPengamatan = user.posPengamatan;
       }
       return token;
     },
@@ -87,6 +95,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.username = token.username as string;
         session.user.fullName = token.fullName as string;
         session.user.role = token.role as string;
+        // token.email bisa undefined, pastikan field session.user.email selalu string
+        session.user.email = (token.email as string | undefined) ?? "";
+        session.user.posPengamatan = token.posPengamatan as string | undefined;
       }
       return session;
     },

@@ -2,7 +2,7 @@ import { type LucideIcon } from "lucide-react";
 
 type SummaryCardProps = {
   title: string;
-  value: string;
+  value: string | number;
   detail: string;
   icon: LucideIcon;
   accent: string;
