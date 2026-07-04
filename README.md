@@ -1,36 +1,157 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🐾 Alas Purwo Wildlife Monitoring System
 
-## Getting Started
+Sistem Monitoring Satwa Liar berbasis web yang digunakan untuk membantu petugas dalam mencatat hasil pengamatan satwa di kawasan **Taman Nasional Alas Purwo** secara digital.
 
-First, run the development server:
+---
+
+## 📌 Tentang Project
+
+Selama proses pengamatan satwa, pencatatan masih banyak dilakukan secara manual. Project ini dibuat untuk membantu petugas agar data observasi dapat tersimpan dengan lebih rapi, mudah diakses, dan lebih aman.
+
+Aplikasi ini dibangun menggunakan **Next.js**, **MongoDB Atlas**, dan **NextAuth** sebagai sistem autentikasi.
+
+---
+
+## ✨ Fitur
+
+- 🔐 Login & Register Petugas
+- 👤 Manajemen Akun Petugas
+- 🦌 CRUD Data Observasi Satwa
+- 📷 Upload Foto Satwa
+- 📊 Dashboard Monitoring
+- 🔒 Autentikasi menggunakan NextAuth
+
+---
+
+## 👤 Data Petugas
+
+Data yang digunakan pada akun petugas:
+
+- Username
+- Password
+- Nama Petugas
+- Pos Pengamatan
+
+Contoh Pos Pengamatan:
+
+- Pancur
+- Sadengan
+- Trianggulasi
+- Rowobendo
+- Ngagelan
+
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+- Next.js 15
+- TypeScript
+- Tailwind CSS
+- NextAuth
+- MongoDB Atlas
+- Mongoose
+- Cloudinary (Upload Gambar)
+
+---
+
+## 📂 Struktur Folder
+
+```text
+src
+│
+├── app
+│   ├── dashboard
+│   ├── login
+│   ├── register
+│   └── api
+│
+├── components
+├── lib
+├── models
+└── middleware.ts
+```
+
+---
+
+## 🚀 Cara Menjalankan Project
+
+1. Clone repository
+
+```bash
+git clone https://github.com/username/alaspurwo-wildlife-monitoring.git
+```
+
+2. Masuk ke folder project
+
+```bash
+cd alaspurwo-wildlife-monitoring
+```
+
+3. Install dependency
+
+```bash
+npm install
+```
+
+4. Buat file `.env.local`
+
+```env
+MONGODB_URI=
+AUTH_SECRET=
+NEXTAUTH_URL=http://localhost:3000
+
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+```
+
+5. Jalankan aplikasi
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Aplikasi dapat diakses melalui:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📸 Tampilan Aplikasi
 
-To learn more about Next.js, take a look at the following resources:
+- Landing Page
+- Login
+- Register
+- Dashboard
+- Data Observasi
+- Tambah Observasi
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+*(Screenshot akan ditambahkan setelah aplikasi selesai.)*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🎯 Tujuan Project
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Project ini dibuat sebagai tugas individu untuk mengembangkan aplikasi berbasis web menggunakan **Next.js** dengan menerapkan:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- CRUD
+- Autentikasi
+- Upload Gambar
+- Database NoSQL
+- UI Modern menggunakan Tailwind CSS
+
+---
+
+## 👨‍💻 Developer
+
+**Deco Akbar M**
+
+Mahasiswa Teknik Informatika
+
+---
+
+## 📄 Lisensi
+
+Project ini dibuat untuk keperluan pembelajaran dan tugas untuk kesiapan magang.
