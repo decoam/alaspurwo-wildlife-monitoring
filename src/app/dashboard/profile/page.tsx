@@ -24,12 +24,12 @@ function ProfileAvatar({ fullName, avatarUrl }: ProfileAvatarProps) {
     .toUpperCase();
 
   return avatarUrl ? (
-    <div className="relative h-14 w-14 overflow-hidden rounded-full border border-emerald-900/60 bg-[#08140e]">
+    <div className="prof-avatar-container">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={avatarUrl} alt={fullName} className="h-full w-full object-cover" />
+      <img src={avatarUrl} alt={fullName} className="prof-avatar-img" />
     </div>
   ) : (
-    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-emerald-900/60 bg-gradient-to-br from-emerald-500 to-lime-600 text-base font-semibold text-white shadow-lg">
+    <div className="prof-avatar-fallback">
       {initials}
     </div>
   );
@@ -43,14 +43,14 @@ type StatCardProps = {
 
 function StatCard({ title, value, icon: Icon }: StatCardProps) {
   return (
-    <div className="rounded-2xl border border-emerald-900/60 bg-[#0c1914]/90 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.18)] backdrop-blur">
-      <div className="flex items-start justify-between gap-3">
+    <div className="prof-stat-card">
+      <div className="prof-stat-flex">
         <div>
-          <p className="text-sm font-medium text-emerald-200/80">{title}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">{value}</p>
+          <p className="prof-stat-title">{title}</p>
+          <p className="prof-stat-value">{value}</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-emerald-500 to-lime-600 p-2 text-white shadow-lg">
-          <Icon className="h-5 w-5" />
+        <div className="prof-stat-icon-wrapper">
+          <Icon className="prof-stat-icon" />
         </div>
       </div>
     </div>
@@ -138,75 +138,74 @@ export default async function ProfilePage() {
   });
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,64,38,0.5),_transparent_35%),linear-gradient(135deg,_#07110c_0%,_#0c1914_45%,_#13261d_100%)] px-4 py-6 text-slate-100 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl rounded-[28px] border border-emerald-900/60 bg-[#07110c]/80 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
-        <div className="sr-only">{username}</div>
-        <div className="flex flex-col gap-4 border-b border-emerald-900/60 pb-6 md:flex-row md:items-center md:justify-between">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 self-start rounded-2xl px-3 py-2 text-sm text-emerald-200 transition hover:bg-emerald-900/60 hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
+    <main className="prof-main-layout">
+      <div className="prof-container">
+        <div className="prof-sr-only">{username}</div>
+        
+        {/* Header Section */}
+        <div className="prof-header-flex">
+          <Link href="/dashboard" className="prof-btn-secondary">
+            <ArrowLeft className="prof-icon" />
             Kembali ke Dashboard
           </Link>
 
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-emerald-400">Profil</p>
-            <h1 className="mt-2 text-2xl font-semibold text-white">Data Pengguna</h1>
-            <p className="mt-2 text-sm text-slate-400">Kelola informasi akun dan pantau aktivitas pengamatan Anda.</p>
+            <p className="prof-meta-title">Profil</p>
+            <h1 className="prof-main-title">Data Pengguna</h1>
+            <p className="prof-desc">Kelola informasi akun dan pantau aktivitas pengamatan Anda.</p>
           </div>
         </div>
 
-        <div className="mt-6 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-          <section className="rounded-[24px] border border-emerald-900/60 bg-[#08140e] p-5">
-            <div className="flex items-center gap-4">
+        {/* Content Layout */}
+        <div className="prof-grid-layout">
+          
+          {/* User Bio Card */}
+          <section className="prof-section-card">
+            <div className="prof-info-flex">
               <ProfileAvatar fullName={fullName || "Alas Purwo"} />
               <div className="flex-1">
-                <h2 className="text-lg font-semibold text-white">{fullName || "Alas Purwo"}</h2>
-                <p className="mt-1 text-sm text-slate-300">@{username || "unknown"}</p>
-                <p className="mt-2 inline-flex items-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#0d1d14] px-3 py-2 text-xs font-semibold text-emerald-200">
+                <h2 className="prof-section-title">{fullName || "Alas Purwo"}</h2>
+                <p className="prof-username">@{username || "unknown"}</p>
+                <p className="prof-badge-pos">
                   {posPengamatan ? `Pos: ${posPengamatan}` : "Pos Pengamatan: —"}
                 </p>
               </div>
             </div>
 
-            <div className="mt-5 grid gap-3 rounded-[24px] border border-emerald-900/60 bg-[#0c1914]/70 p-4 text-sm text-slate-200">
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-slate-400">Email</span>
-                <span className="font-medium text-white">{email || "—"}</span>
+            {/* Account Details Box */}
+            <div className="prof-details-box">
+              <div className="prof-detail-row">
+                <span className="prof-detail-label">Email</span>
+                <span className="prof-detail-value">{email || "—"}</span>
               </div>
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-slate-400">Role</span>
-                <span className="font-medium text-white">{role || "Petugas"}</span>
+              <div className="prof-detail-row">
+                <span className="prof-detail-label">Role</span>
+                <span className="prof-detail-value">{role || "Petugas"}</span>
               </div>
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-slate-400">Tanggal Bergabung</span>
-                <span className="font-medium text-white">
+              <div className="prof-detail-row">
+                <span className="prof-detail-label">Tanggal Bergabung</span>
+                <span className="prof-detail-value">
                   {createdAt ? createdAt.toLocaleDateString("id-ID", { year: "numeric", month: "long", day: "numeric" }) : "—"}
                 </span>
               </div>
             </div>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <Link
-                href="/dashboard/observations/create"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-500"
-              >
-                <PlusCircle className="h-4 w-4" />
+            {/* Quick Action Buttons */}
+            <div className="prof-actions-grid">
+              <Link href="/dashboard/observations/create" className="prof-btn-primary">
+                <PlusCircle className="prof-icon" />
                 Tambah Pengamatan
               </Link>
-              <Link
-                href="/dashboard/observations"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#10241a] px-4 py-3 text-sm font-semibold text-emerald-200 transition hover:bg-emerald-900/40"
-              >
-                <Camera className="h-4 w-4" />
+              <Link href="/dashboard/observations" className="prof-btn-outline">
+                <Camera className="prof-icon" />
                 Lihat Semua Pengamatan
               </Link>
             </div>
           </section>
 
-          <aside className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-1">
+          {/* Stats Section */}
+          <aside className="prof-aside">
+            <div className="prof-stats-grid">
               <StatCard title="Total Pengamatan Saya" value={totalPengamatanSaya} icon={CalendarDays} />
               <StatCard title="Pengamatan Hari Ini" value={pengamatanHariIni} icon={CalendarDays} />
               <StatCard title="Upload Foto Saya" value={uploadFotoSaya} icon={Camera} />
@@ -214,60 +213,62 @@ export default async function ProfilePage() {
           </aside>
         </div>
 
-        <section className="mt-6 rounded-[24px] border border-emerald-900/60 bg-[#08140e] p-5">
-          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        {/* Recent Observation Table */}
+        <section className="prof-table-section">
+          <div className="prof-table-header">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-emerald-400">Pengamatan Terbaru Saya</p>
-              <h2 className="mt-2 text-lg font-semibold text-white">Maksimal 5 data terbaru</h2>
+              <p className="prof-meta-title">Pengamatan Terbaru Saya</p>
+              <h2 className="prof-main-title">Maksimal 5 data terbaru</h2>
             </div>
           </div>
 
-          <div className="mt-4 overflow-x-auto">
+          <div className="prof-table-wrapper">
             {recentRows.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-emerald-800/70 bg-[#0c1712] px-5 py-12 text-center">
-                <p className="text-sm font-semibold text-white">Belum ada pengamatan Anda</p>
-                <p className="mt-2 text-sm text-slate-400">Mulai dengan menambahkan pengamatan pertama Anda.</p>
-                <Link
-                  href="/dashboard/observations/create"
-                  className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-500"
-                >
-                  <PlusCircle className="h-4 w-4" />
-                  Tambah Pengamatan
-                </Link>
+              /* Table Empty State */
+              <div className="prof-empty-state">
+                <p className="prof-section-title">Belum ada pengamatan Anda</p>
+                <p className="prof-desc">Mulai dengan menambahkan pengamatan pertama Anda.</p>
+                <div className="prof-empty-btn">
+                  <Link href="/dashboard/observations/create" className="prof-btn-primary">
+                    <PlusCircle className="prof-icon" />
+                    Tambah Pengamatan
+                  </Link>
+                </div>
               </div>
             ) : (
-              <table className="min-w-full divide-y divide-emerald-900/60 text-sm">
-                <thead className="bg-emerald-950/50 text-left text-slate-300">
+              /* Data Table */
+              <table className="prof-table">
+                <thead className="prof-thead">
                   <tr>
-                    <th className="px-4 py-3 font-medium">Foto</th>
-                    <th className="px-4 py-3 font-medium">Nama Satwa</th>
-                    <th className="px-4 py-3 font-medium">Lokasi</th>
-                    <th className="px-4 py-3 font-medium">Tanggal</th>
-                    <th className="px-4 py-3 font-medium">Shift</th>
+                    <th className="prof-th">Foto</th>
+                    <th className="prof-th">Nama Satwa</th>
+                    <th className="prof-th">Lokasi</th>
+                    <th className="prof-th">Tanggal</th>
+                    <th className="prof-th">Shift</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-emerald-900/50 bg-[#0f2218] text-slate-200">
+                <tbody className="prof-tbody">
                   {recentRows.map((row) => (
-                    <tr key={row._id} className="transition hover:bg-emerald-950/40">
-                      <td className="px-4 py-4">
+                    <tr key={row._id} className="prof-tr">
+                      <td className="prof-td">
                         {row.foto ? (
-                          <div className="relative h-12 w-12 overflow-hidden rounded-full border border-emerald-900/60 bg-[#08140e]">
+                          <div className="prof-row-img-container">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={row.foto} alt={row.namaSatwa} className="h-full w-full object-cover" />
+                            <img src={row.foto} alt={row.namaSatwa} className="prof-avatar-img" />
                           </div>
                         ) : (
-                          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-emerald-900/60 bg-[#08140e]">
+                          <div className="prof-row-img-placeholder">
                             <span className="text-lg">🐾</span>
                           </div>
                         )}
                       </td>
-                      <td className="px-4 py-4 font-medium text-white">{row.namaSatwa}</td>
-                      <td className="px-4 py-4">{row.lokasi}</td>
-                      <td className="px-4 py-4">
+                      <td className="prof-td-highlight">{row.namaSatwa}</td>
+                      <td className="prof-td">{row.lokasi}</td>
+                      <td className="prof-td">
                         {row.tanggalPengamatan.toLocaleString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
                       </td>
-                      <td className="px-4 py-4">
-                        <span className="rounded-full border border-emerald-700/60 bg-emerald-900/60 px-3 py-1 text-xs font-semibold text-emerald-200">
+                      <td className="prof-td">
+                        <span className="prof-badge-shift">
                           {row.shift}
                         </span>
                       </td>
@@ -282,4 +283,3 @@ export default async function ProfilePage() {
     </main>
   );
 }
-
