@@ -621,3 +621,97 @@ body {
   width: 1.25rem;  /* h-5 */
   height: 1.25rem; /* w-5 */
 }
+
+/* ==========================================================================
+   Custom Utility Classes untuk Halaman Login / Autentikasi (LoginPage)
+   ========================================================================== */
+
+@utility auth-form-space {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* space-y-5 */
+}
+
+@utility auth-label {
+  display: block;
+  margin-bottom: 0.5rem; /* mb-2 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: #e2e8f0; /* text-slate-200 */
+}
+
+@utility auth-input-element {
+  width: 100%;
+  border-radius: 1rem; /* rounded-2xl */
+  border: 1px solid #334155; /* border-slate-700 */
+  background-color: #020617; /* bg-slate-950 */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem; /* px-4 py-3 */
+  font-size: 0.875rem; /* text-sm */
+  color: #ffffff; /* text-white */
+  outline: none; /* outline-none */
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: #34d399; /* focus:border-emerald-400 */
+  }
+}
+
+@utility auth-error-text {
+  margin-top: 0.25rem; /* mt-1 */
+  font-size: 0.875rem; /* text-sm */
+  color: #fb7185; /* text-rose-400 */
+}
+
+@utility auth-alert-error {
+  border-radius: 1rem; /* rounded-2xl */
+  border: 1px solid rgba(244, 63, 94, 0.5); /* border-rose-500/50 */
+  background-color: rgba(244, 63, 94, 0.1); /* bg-rose-500/10 */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem; /* px-4 py-3 */
+  font-size: 0.875rem; /* text-sm */
+  color: #fda4af; /* text-rose-300 */
+}
+
+@utility auth-btn-submit {
+  width: 100%;
+  border-radius: 1rem; /* rounded-2xl */
+  background-color: #10b981; /* bg-emerald-500 */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem; /* px-4 py-3 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 600; /* font-semibold */
+  color: #020617; /* text-slate-950 */
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: #34d399; /* hover:bg-emerald-400 */
+  }
+
+  &:disabled {
+    cursor: not-allowed; /* disabled:cursor-not-allowed */
+    opacity: 0.7; /* disabled:opacity-70 */
+  }
+}
+
+@utility auth-back-wrapper {
+  margin-top: 1.25rem; /* mt-5 */
+  font-size: 0.875rem; /* text-sm */
+  color: #94a3b8; /* text-slate-400 */
+}
+
+@utility auth-link-back {
+  font-weight: 500; /* font-medium */
+  color: #cbd5e1; /* text-slate-300 */
+  transition: all 0.2s;
+
+  &:hover {
+    color: #ffffff; /* hover:text-white */
+  }
+}
