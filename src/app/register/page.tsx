@@ -60,57 +60,57 @@ export default function RegisterPage() {
       footerHref="/login"
       footerLabel="Masuk"
     >
-      <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+      <form className="auth-form-space" onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label htmlFor="username" className="mb-2 block text-sm font-medium text-slate-200">
+          <label htmlFor="username" className="auth-label">
             Username
           </label>
           <input
             id="username"
             type="text"
             autoComplete="username"
-            className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-emerald-400"
+            className="auth-input-element"
             {...register("username")}
           />
           {errors.username ? (
-            <p className="mt-1 text-sm text-rose-400">{errors.username.message}</p>
+            <p className="auth-error-text">{errors.username.message}</p>
           ) : null}
         </div>
 
         <div>
-          <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-200">
+          <label htmlFor="password" className="auth-label">
             Password
           </label>
           <input
             id="password"
             type="password"
             autoComplete="new-password"
-            className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-emerald-400"
+            className="auth-input-element"
             {...register("password")}
           />
           {errors.password ? (
-            <p className="mt-1 text-sm text-rose-400">{errors.password.message}</p>
+            <p className="auth-error-text">{errors.password.message}</p>
           ) : null}
         </div>
 
         <div>
-          <label htmlFor="fullName" className="mb-2 block text-sm font-medium text-slate-200">
+          <label htmlFor="fullName" className="auth-label">
             Nama Petugas
           </label>
           <input
             id="fullName"
             type="text"
             autoComplete="name"
-            className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-emerald-400"
+            className="auth-input-element"
             {...register("fullName")}
           />
           {errors.fullName ? (
-            <p className="mt-1 text-sm text-rose-400">{errors.fullName.message}</p>
+            <p className="auth-error-text">{errors.fullName.message}</p>
           ) : null}
         </div>
 
         {submitError ? (
-          <div className="rounded-2xl border border-rose-500/50 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+          <div className="auth-alert-error">
             {submitError}
           </div>
         ) : null}
@@ -118,7 +118,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
+          className="auth-btn-submit"
         >
           {isSubmitting ? "Memproses..." : "Daftar"}
         </button>

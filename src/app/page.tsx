@@ -10,185 +10,125 @@ import {
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-green-950 via-emerald-950 to-stone-950 text-white">
-
-      {/* Background */}
+    <main className="landing-main">
+      {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-20"
+        className="landing-bg-image"
         style={{
           backgroundImage: "url('/forest-bg.jpg')",
         }}
       />
 
-      <div className="absolute inset-0 bg-black/50" />
+      {/* Dark Overlay */}
+      <div className="landing-overlay" />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-6">
-
-        <div className="grid w-full items-center gap-16 lg:grid-cols-2">
-
-          {/* LEFT */}
-
+      <div className="landing-hero-container">
+        <div className="landing-grid-layout">
+          
+          {/* LEFT SECTION */}
           <div>
-
-            <div className="inline-flex items-center gap-2 rounded-full border border-green-400/30 bg-green-700/20 px-4 py-2 text-sm backdrop-blur">
-              <Leaf className="h-4 w-4 text-lime-300" />
+            <div className="landing-tag">
+              <Leaf size={16} className="text-lime-300" />
               Taman Nasional Alas Purwo
             </div>
 
-            <h1 className="mt-8 text-5xl font-extrabold leading-tight lg:text-6xl">
+            <h1 className="landing-title">
               Wildlife
-              <span className="block text-lime-300">
+              <span className="landing-title-highlight">
                 Monitoring System
               </span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-8 text-green-100">
+            <p className="landing-description">
               Platform digital untuk membantu petugas konservasi
               mencatat aktivitas pengamatan satwa liar secara cepat,
               akurat, dan terintegrasi langsung dari lapangan.
             </p>
 
-            <div className="mt-10 flex flex-wrap gap-4">
-
-              <Link
-                href="/login"
-                className="flex items-center gap-2 rounded-xl bg-lime-400 px-6 py-3 font-semibold text-black transition hover:bg-lime-300"
-              >
+            <div className="landing-actions">
+              <Link href="/login" className="landing-btn-primary">
                 Masuk
                 <ArrowRight size={18} />
               </Link>
 
-              <Link
-                href="/register"
-                className="rounded-xl border border-green-400/40 bg-white/5 px-6 py-3 font-semibold backdrop-blur transition hover:bg-white/10"
-              >
+              <Link href="/register" className="landing-btn-secondary">
                 Daftar Petugas
               </Link>
-
             </div>
 
-            <div className="mt-12 flex flex-wrap gap-8">
-
+            <div className="landing-stats-row">
               <div>
-                <h2 className="text-3xl font-bold text-lime-300">
-                  42
-                </h2>
-                <p className="text-green-100">
-                  Pos Pengamatan
-                </p>
+                <h2 className="landing-stat-number">42</h2>
+                <p className="landing-stat-label">Pos Pengamatan</p>
               </div>
 
               <div>
-                <h2 className="text-3xl font-bold text-lime-300">
-                  1.256
-                </h2>
-                <p className="text-green-100">
-                  Observasi
-                </p>
+                <h2 className="landing-stat-number">1.256</h2>
+                <p className="landing-stat-label">Observasi</p>
               </div>
 
               <div>
-                <h2 className="text-3xl font-bold text-lime-300">
-                  87
-                </h2>
-                <p className="text-green-100">
-                  Spesies
-                </p>
+                <h2 className="landing-stat-number">87</h2>
+                <p className="landing-stat-label">Spesies</p>
               </div>
-
             </div>
-
           </div>
 
-          {/* RIGHT */}
-
-          <div className="grid gap-6">
-
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl transition hover:scale-[1.02]">
-
-              <div className="flex items-center gap-4">
-
-                <div className="rounded-2xl bg-lime-400/20 p-4">
+          {/* RIGHT SECTION */}
+          <div className="landing-features-column">
+            <div className="landing-feature-card">
+              <div className="landing-feature-flex">
+                <div className="landing-feature-icon-wrapper">
                   <Binoculars className="text-lime-300" />
                 </div>
-
                 <div>
-                  <h3 className="text-xl font-bold">
-                    Monitoring Satwa
-                  </h3>
-
-                  <p className="text-green-100">
+                  <h3 className="landing-feature-title">Monitoring Satwa</h3>
+                  <p className="landing-stat-label">
                     Catat hasil observasi pagi dan sore secara realtime.
                   </p>
                 </div>
-
               </div>
-
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl transition hover:scale-[1.02]">
-
-              <div className="flex items-center gap-4">
-
-                <div className="rounded-2xl bg-lime-400/20 p-4">
+            <div className="landing-feature-card">
+              <div className="landing-feature-flex">
+                <div className="landing-feature-icon-wrapper">
                   <Trees className="text-lime-300" />
                 </div>
-
                 <div>
-                  <h3 className="text-xl font-bold">
-                    Konservasi Alam
-                  </h3>
-
-                  <p className="text-green-100">
+                  <h3 className="landing-feature-title">Konservasi Alam</h3>
+                  <p className="landing-stat-label">
                     Data terpusat untuk mendukung pengelolaan kawasan konservasi.
                   </p>
                 </div>
-
               </div>
-
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl transition hover:scale-[1.02]">
-
-              <div className="flex items-center gap-4">
-
-                <div className="rounded-2xl bg-lime-400/20 p-4">
+            <div className="landing-feature-card">
+              <div className="landing-feature-flex">
+                <div className="landing-feature-icon-wrapper">
                   <ShieldCheck className="text-lime-300" />
                 </div>
-
                 <div>
-                  <h3 className="text-xl font-bold">
-                    Akses Aman
-                  </h3>
-
-                  <p className="text-green-100">
+                  <h3 className="landing-feature-title">Akses Aman</h3>
+                  <p className="landing-stat-label">
                     Sistem autentikasi petugas dengan keamanan berbasis session.
                   </p>
                 </div>
-
               </div>
-
             </div>
 
-            <div className="rounded-3xl border border-lime-400/30 bg-lime-500/10 p-6 backdrop-blur">
-
-              <div className="flex items-center gap-3">
-
+            <div className="landing-quote-card">
+              <div className="landing-quote-flex">
                 <PawPrint className="text-lime-300" />
-
-                <p className="italic text-green-50">
-                  "Menjaga satwa liar hari ini adalah menjaga
-                  keseimbangan alam untuk generasi mendatang."
+                <p className="landing-quote-text">
+                  "Menjaga satwa liar hari ini adalah menjaga keseimbangan alam untuk generasi mendatang."
                 </p>
-
               </div>
-
             </div>
-
           </div>
 
         </div>
-
       </div>
     </main>
   );
