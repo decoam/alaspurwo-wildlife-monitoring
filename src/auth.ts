@@ -1,11 +1,10 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-
-export const runtime = "nodejs";
 import bcrypt from "bcryptjs";
 import type { DefaultSession } from "next-auth";
-import { connectDB } from "@/app/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
 import { User } from "@/models/User";
+
 
 declare module "next-auth" {
   interface Session {
@@ -46,7 +45,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        await connectDB();
+        try {
+          await connectDB();
+        } catch (err) {
+          // Prevent noisy NextAuth CallbackRouteError; treat DB failure as auth failure.
+          console.error("[Auth] DB connection error during authorize", {
+            message: err instanceof Error ? err.message : String(err),
+          });
+          return null;
+        }
 
         const user = await User.findOne({
           username: String(credentials.username).trim().toLowerCase(),
@@ -64,6 +71,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!passwordMatches) {
           return null;
         }
+        
 
         return {
           id: user._id.toString(),

@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 
+// MongoDB connection helper (shared across the app).
+// Keep this in `src/lib/` so it can be imported from anywhere.
+// NOTE: Do not change connection behavior; only move the file.
+
 const MONGODB_URI = process.env.MONGODB_URI!;
 
 if (!MONGODB_URI) {
@@ -59,3 +63,4 @@ export async function connectDB() {
     throw err;
   }
 }
+

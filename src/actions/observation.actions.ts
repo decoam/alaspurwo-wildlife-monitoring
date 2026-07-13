@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { connectDB } from "@/app/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
 import { deleteFromCloudinary } from "@/lib/cloudinary";
 import { Observation } from "@/models/Observation";
 import { revalidatePath } from "next/cache";
