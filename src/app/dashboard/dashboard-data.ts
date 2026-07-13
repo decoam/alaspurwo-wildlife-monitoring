@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { connectDB } from "@/app/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
 import { Observation } from "@/models/Observation";
 import { revalidatePath } from "next/cache";
 
