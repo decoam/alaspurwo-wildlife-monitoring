@@ -1,12 +1,12 @@
-import { Camera, Eye, Leaf, TrendingUp } from "lucide-react";
+import { ClipboardList, Camera, Eye, PlusCircle, Sunrise, Sunset } from "lucide-react";
 import { DashboardHeader } from "@/features/dashboard/components/DashboardHeader";
-
-export const runtime = "nodejs";
 import { DashboardSidebar } from "@/features/dashboard/components/DashboardSidebar";
 import { RecentObservationTable } from "@/features/dashboard/components/RecentObservationTable";
 import { SummaryCard } from "@/features/dashboard/components/SummaryCard";
-import { DashboardCharts } from "@/features/dashboard/components/DashboardCharts";
 import { getDashboardData } from "@/app/dashboard/dashboard-data";
+import Link from "next/link";
+
+export const runtime = "nodejs";
 
 export default async function DashboardPage({
   searchParams,
@@ -15,6 +15,7 @@ export default async function DashboardPage({
 }) {
   const resolvedSearchParams = await searchParams;
   const search = typeof resolvedSearchParams.search === "string" ? resolvedSearchParams.search : "";
+
   const { stats, recentObservations, user } = await getDashboardData(search);
 
   const summaryCards = [
@@ -33,22 +34,23 @@ export default async function DashboardPage({
       accent: "from-amber-500 to-orange-500",
     },
     {
-      title: "Jumlah Spesies",
-      value: stats.uniqueSpecies,
-      detail: "Spesies tercatat saat ini",
-      icon: Leaf,
-      accent: "from-emerald-600 to-teal-500",
+      title: "Sesi Pagi",
+      value: stats.morningShift,
+      detail: "Pengamatan sesi pagi",
+      icon: Sunrise,
+      accent: "from-sky-500 to-blue-500",
     },
     {
-      title: "Upload Hari Ini",
-      value: stats.uploadsToday,
-      detail: "Foto dan video terbaru",
-      icon: TrendingUp,
-      accent: "from-lime-500 to-emerald-600",
+      title: "Sesi Sore",
+      value: stats.eveningShift,
+      detail: "Pengamatan sesi sore",
+      icon: Sunset,
+      accent: "from-orange-500 to-rose-500",
     },
   ];
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,64,38,0.5),_transparent_35%),linear-gradient(135deg,_#07110c_0%,_#0c1914_45%,_#13261d_100%)] px-4 py-4 text-slate-100 sm:px-6 lg:px-8 lg:py-6">
+    <main className="min-h-screen bg-[#07110c] px-4 py-4 text-slate-100 sm:px-6 lg:px-8 lg:py-6">
+
       <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row">
         <div className="w-full lg:w-72">
           <DashboardSidebar user={user} />
@@ -63,11 +65,28 @@ export default async function DashboardPage({
             ))}
           </div>
 
-          <DashboardCharts activity={stats.weeklyActivity} categoryBreakdown={stats.categoryBreakdown} />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Link
+              href="/dashboard/observations/create"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-600/90 px-4 py-3 text-sm font-semibold text-white shadow-[0_20px_60px_rgba(2,8,23,0.2)] transition hover:bg-emerald-700/70"
+            >
+              <PlusCircle className="h-4 w-4" />
+              Tambah Pengamatan
+            </Link>
 
-          <div className="rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+            <Link
+              href="/dashboard/observations"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#07110c]/70 px-4 py-3 text-sm font-semibold text-emerald-200/80 transition hover:bg-emerald-900/40"
+            >
+              <ClipboardList className="h-4 w-4" />
+              Data Pengamatan
+            </Link>
+          </div>
+
+          <div className="mt-2 rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
             <RecentObservationTable observations={recentObservations} />
           </div>
+
         </section>
       </div>
     </main>
