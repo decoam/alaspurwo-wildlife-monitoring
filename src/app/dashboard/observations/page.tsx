@@ -3,7 +3,7 @@ import { ArrowLeft, PlusCircle, Search } from "lucide-react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getObservations, deleteObservation } from "@/actions/observation.actions";
-import { ObservationTable } from "@/components/observations/ObservationTable";
+import { ObservationTable } from "@/features/observation/components/ObservationTable";
 
 export const runtime = "nodejs";
 

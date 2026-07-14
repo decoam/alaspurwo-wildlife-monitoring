@@ -1,11 +1,11 @@
 import { Camera, Eye, Leaf, TrendingUp } from "lucide-react";
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { DashboardHeader } from "@/features/dashboard/components/DashboardHeader";
 
 export const runtime = "nodejs";
-import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import { RecentObservationTable } from "@/components/dashboard/RecentObservationTable";
-import { SummaryCard } from "@/components/dashboard/SummaryCard";
-import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
+import { DashboardSidebar } from "@/features/dashboard/components/DashboardSidebar";
+import { RecentObservationTable } from "@/features/dashboard/components/RecentObservationTable";
+import { SummaryCard } from "@/features/dashboard/components/SummaryCard";
+import { DashboardCharts } from "@/features/dashboard/components/DashboardCharts";
 import { getDashboardData } from "@/app/dashboard/dashboard-data";
 
 export default async function DashboardPage({
