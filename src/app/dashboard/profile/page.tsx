@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, CalendarDays, Camera, PlusCircle } from "lucide-react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { connectDB } from "@/app/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
 import { Observation } from "@/models/Observation";
 import { User } from "@/models/User";
 

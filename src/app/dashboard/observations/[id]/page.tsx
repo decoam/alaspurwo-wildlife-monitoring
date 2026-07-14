@@ -3,8 +3,9 @@ import Link from "next/link";
 import { ArrowLeft, CalendarDays, MapPin, UserCircle2 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { getObservationById, type SerializedObservation } from "@/actions/observation.actions";
-
+import { getObservationById } from "@/features/observation/repository";
+import { serializeObservation } from "@/features/observation/mapper"; 
+import { SerializedObservation } from "@/features/observation";
 export const runtime = "nodejs";
 
 type DetailObservationPageProps = {

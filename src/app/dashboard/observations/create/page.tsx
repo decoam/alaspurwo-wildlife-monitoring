@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { createObservation } from "@/actions/observation.actions";
-import { ObservationForm } from "@/components/observations/ObservationForm";
+import { createObservation } from "@/features/observation";
+import { ObservationForm } from "@/features/observation/components/ObservationForm";
 
 export const runtime = "nodejs";
 
