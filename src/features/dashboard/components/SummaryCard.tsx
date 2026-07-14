@@ -17,7 +17,7 @@ export function SummaryCard({ title, value, detail, icon: Icon, accent }: Summar
           <p className="mt-3 text-3xl font-semibold text-white">{value}</p>
           <p className="mt-2 text-sm text-slate-400">{detail}</p>
         </div>
-        <div className={`rounded-2xl bg-gradient-to-br ${accent} p-3 text-white shadow-lg`}>
+        <div className={`rounded-2xl bg-linear-to-br ${accent} p-3 text-white shadow-lg`}>
           <Icon className="h-5 w-5" />
         </div>
       </div>

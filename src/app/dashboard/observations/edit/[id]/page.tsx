@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { getObservationById, updateObservation } from "@/actions/observation.actions";
+import { getObservationById } from "@/features/observation/repository";
+import { updateObservation } from "@/features/observation/service";
 import { ObservationForm } from "@/features/observation/components/ObservationForm";
 
 export const runtime = "nodejs";

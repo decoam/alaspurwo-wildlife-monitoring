@@ -20,7 +20,7 @@ export function AuthCard({
   footerLabel,
 }: AuthCardProps) {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-green-950 via-emerald-950 to-stone-950">
+    <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-green-950 via-emerald-950 to-stone-950">
 
       {/* Background Forest */}
       <div className="absolute inset-0 bg-[url('/forest-bg.jpg')] bg-cover bg-center opacity-20" />
@@ -29,14 +29,14 @@ export function AuthCard({
       <div className="absolute inset-0 bg-black/45" />
 
       {/* Blur Effect */}
-      <div className="absolute -top-40 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-emerald-500/20 blur-3xl" />
+      <div className="absolute -top-40 left-1/2 h-125 w-125 -translate-x-1/2 rounded-full bg-emerald-500/20 blur-3xl" />
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-6 py-10">
 
         <div className="flex w-full max-w-6xl overflow-hidden rounded-3xl border border-white/10 bg-white/10 shadow-2xl backdrop-blur-xl">
 
           {/* LEFT SIDE */}
-          <div className="hidden flex-1 flex-col justify-between bg-gradient-to-br from-green-900/70 via-green-800/70 to-lime-700/60 p-12 lg:flex">
+          <div className="hidden flex-1 flex-col justify-between bg-linear-to-br from-green-900/70 via-green-800/70 to-lime-700/60 p-12 lg:flex">
 
             <div>
 

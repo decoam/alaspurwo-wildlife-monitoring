@@ -35,7 +35,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
     <aside className="flex h-full w-full flex-col justify-between rounded-[28px] border border-emerald-900/60 bg-[#07110c]/90 p-5 shadow-2xl">
       <div>
         <div className="mb-8 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-white">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-white">
             {user.avatarInitials}
           </div>
           <div>

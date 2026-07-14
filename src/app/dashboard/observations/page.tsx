@@ -2,8 +2,9 @@ import Link from "next/link";
 import { ArrowLeft, PlusCircle, Search } from "lucide-react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { getObservations, deleteObservation } from "@/actions/observation.actions";
-import { ObservationTable } from "@/features/observation/components/ObservationTable";
+import { getObservations } from "@/features/observation/repository";
+import { deleteObservation } from "@/features/observation/service";
+import { ObservationTable } from "@/features/observation";
 
 export const runtime = "nodejs";
 
