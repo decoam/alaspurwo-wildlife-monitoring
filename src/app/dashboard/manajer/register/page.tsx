@@ -49,16 +49,16 @@ export default function RegisterPage() {
       return;
     }
 
-    router.push("/login");
+    router.push("/dashoard/manajer/register");
   };
 
   return (
     <AuthCard
       title="Buat akun petugas"
       description="Daftarkan petugas baru untuk mengelola pengamatan."
-      footerText="Sudah punya akun?"
-      footerHref="/login"
-      footerLabel="Masuk"
+      footerText=""
+      footerHref=""
+      footerLabel=""
     >
       <form className="auth-form-space" onSubmit={handleSubmit(onSubmit)}>
         <div>
