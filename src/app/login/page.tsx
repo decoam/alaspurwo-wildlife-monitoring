@@ -53,9 +53,9 @@ export default function LoginPage() {
     <AuthCard
       title="Masuk ke akun"
       description="Gunakan username dan password petugas Anda untuk mengakses dashboard monitoring."
-      footerText="Belum punya akun?"
-      footerHref="/register"
-      footerLabel="Daftar sekarang"
+      footerText=""
+      footerHref=""
+      footerLabel=""
     >
       <form className="auth-form-space" onSubmit={handleSubmit(onSubmit)}>
         <div>

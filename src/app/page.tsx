@@ -51,9 +51,9 @@ export default function HomePage() {
                 <ArrowRight size={18} />
               </Link>
 
-              <Link href="/register" className="landing-btn-secondary">
+              {/* <Link href="/register" className="landing-btn-secondary">
                 Daftar Petugas
-              </Link>
+              </Link> */}
             </div>
 
             <div className="landing-stats-row">
