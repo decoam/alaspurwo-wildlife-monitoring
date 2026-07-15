@@ -20,7 +20,7 @@ export default async function ManagerDashboardPage() {
   const session = await auth();
   const sessionUser = session?.user as any;
 
-  if (!session || sessionUser?.role?.toLowerCase() !== "petugas") {
+  if (!session || sessionUser?.role?.toLowerCase() !== "manajer") {
     redirect("/login");
   }
 
