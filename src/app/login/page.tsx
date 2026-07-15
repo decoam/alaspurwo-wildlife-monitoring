@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { z } from "zod";
 import { AuthCard } from "@/components/auth/AuthCard";
 
@@ -34,19 +34,41 @@ export default function LoginPage() {
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitError(null);
 
-    const result = await signIn("credentials", {
-      username: values.username,
-      password: values.password,
-      redirect: false,
-    });
+    try {
+      // 1. Jalankan autentikasi
+      const result = await signIn("credentials", {
+        username: values.username,
+        password: values.password,
+        redirect: false,
+      });
 
-    if (result?.error) {
-      setSubmitError("Username atau password salah.");
-      return;
+      if (result?.error) {
+        setSubmitError("Username atau password salah.");
+        return;
+      }
+
+      // 2. Ambil session aktif pasca login untuk membaca role dari token
+      const session = await getSession();
+      const userRole = session?.user?.role?.toLowerCase(); // lowercase untuk keandalan
+
+      if (!userRole) {
+        setSubmitError("Gagal mengidentifikasi hak akses akun Anda.");
+        return;
+      }
+
+      // 3. Arahkan rute secara dinamis sesuai role masing-masing
+      if (userRole === "manajer") {
+        router.push("/dashboard/manajer");
+      } else if (userRole === "petugas") {
+        router.push("/dashboard");
+      }
+
+      router.refresh();
+
+    } catch (error: any) {
+      setSubmitError("Terjadi kesalahan sistem saat mencoba masuk. Silakan coba lagi.");
+      console.error("Login onSubmit error:", error);
     }
-
-    router.push("/dashboard");
-    router.refresh();
   };
 
   return (
