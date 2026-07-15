@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { CheckCircle2, Clock, AlertTriangle, Eye } from "lucide-react";
 
@@ -7,6 +9,7 @@ interface ObservationRecord {
   speciesName: string;
   location: string;
   observedAt: string; // Format waktu/tanggal dari DB
+  foto?: string;       // Menambahkan dukungan foto satwa dari database
   status: "Terkonfirmasi" | "Pending" | "Darurat";
 }
 
@@ -21,21 +24,21 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
     switch (status) {
       case "Terkonfirmasi":
         return (
-          <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-400 border border-emerald-500/20">
+          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
             <CheckCircle2 size={12} />
             Terkonfirmasi
           </span>
         );
       case "Darurat":
         return (
-          <span className="inline-flex items-center gap-1 rounded-md bg-rose-500/10 px-2 py-1 text-xs font-medium text-rose-400 border border-rose-500/20 animate-pulse">
+          <span className="inline-flex items-center gap-1 rounded-full border border-rose-500/20 bg-rose-500/10 px-3 py-1 text-xs font-semibold text-rose-400 animate-pulse">
             <AlertTriangle size={12} />
             Darurat
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-1 text-xs font-medium text-amber-400 border border-amber-500/20">
+          <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-400">
             <Clock size={12} />
             Pending
           </span>
@@ -44,58 +47,79 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
   };
 
   return (
-    <div className="rounded-3xl border border-emerald-900/40 bg-[#07110c]/50 p-6 shadow-md w-full">
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <h3 className="text-base font-semibold text-slate-200">
-            Monitoring Laporan Terbaru
-          </h3>
-          <p className="text-xs text-slate-500">
-            Daftar aktivitas pengamatan satwa liar yang masuk dari lapangan[cite: 1]
-          </p>
-        </div>
+    <div className="overflow-hidden rounded-2xl border border-emerald-900/60 bg-[#0c1914]/90 shadow-[0_20px_60px_rgba(2,8,23,0.2)]">
+      {/* Header Tabel */}
+      <div className="border-b border-emerald-900/60 px-5 py-4">
+        <h2 className="text-lg font-semibold text-white">Monitoring Laporan Terbaru</h2>
+        <p className="mt-1 text-sm text-slate-400">
+          Daftar aktivitas pengamatan satwa liar yang masuk dari lapangan.
+        </p>
       </div>
 
-      {/* Kontainer Tabel Responshif */}
+      {/* Kontainer Tabel */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-slate-300">
-          <thead className="bg-[#040a07] text-xs uppercase tracking-wider text-emerald-400/80 border-b border-emerald-900/30">
-            <tr>
-              <th className="px-4 py-3.5 font-semibold">Petugas</th>
-              <th className="px-4 py-3.5 font-semibold">Satwa</th>
-              <th className="px-4 py-3.5 font-semibold">Lokasi Pos</th>
-              <th className="px-4 py-3.5 font-semibold">Waktu</th>
-              <th className="px-4 py-3.5 font-semibold">Status</th>
-              <th className="px-4 py-3.5 text-center font-semibold">Aksi</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-emerald-900/20">
-            {records.length === 0 ? (
+        {records.length === 0 ? (
+          <div className="px-5 py-10 text-center text-sm text-slate-400">
+            Belum ada laporan masuk dari lapangan saat ini.
+          </div>
+        ) : (
+          <table className="min-w-full divide-y divide-emerald-900/60 text-sm">
+            <thead className="bg-emerald-950/50 text-left text-slate-300">
               <tr>
-                <td colSpan={6} className="text-center py-8 text-slate-500 text-xs">
-                  Tidak ada laporan masuk saat ini.
-                </td>
+                <th className="px-5 py-3 font-medium">Foto</th>
+                <th className="px-5 py-3 font-medium">Petugas</th>
+                <th className="px-5 py-3 font-medium">Nama Satwa</th>
+                <th className="px-5 py-3 font-medium">Lokasi</th>
+                <th className="px-5 py-3 font-medium">Waktu</th>
+                <th className="px-5 py-3 font-medium">Status</th>
+                <th className="px-5 py-3 text-center font-medium">Aksi</th>
               </tr>
-            ) : (
-              records.map((record) => (
-                <tr key={record._id} className="hover:bg-emerald-950/10 transition-colors">
-                  <td className="px-4 py-3.5 font-medium text-slate-200">
+            </thead>
+            <tbody className="divide-y divide-emerald-900/50 bg-[#0f2218] text-slate-200">
+              {records.map((record) => (
+                <tr key={record._id} className="transition hover:bg-emerald-950/40">
+                  {/* Kolom Foto Bulat */}
+                  <td className="px-5 py-4">
+                    {record.foto ? (
+                      <img 
+                        src={record.foto} 
+                        alt={record.speciesName} 
+                        className="h-10 w-10 rounded-full object-cover border border-emerald-500/20" 
+                      />
+                    ) : (
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-900/70 text-lg">
+                        🐾
+                      </div>
+                    )}
+                  </td>
+                  
+                  {/* Nama Petugas */}
+                  <td className="px-5 py-4 font-semibold text-slate-100">
                     {record.observerName}
                   </td>
-                  <td className="px-4 py-3.5 italic text-emerald-300">
+
+                  {/* Nama Satwa */}
+                  <td className="px-5 py-4 font-medium italic text-emerald-300">
                     {record.speciesName}
                   </td>
-                  <td className="px-4 py-3.5 text-slate-400">
+
+                  {/* Lokasi */}
+                  <td className="px-5 py-4">
                     {record.location}
                   </td>
-                  <td className="px-4 py-3.5 text-xs text-slate-400">
+
+                  {/* Waktu */}
+                  <td className="px-5 py-4 text-xs">
                     {record.observedAt}
                   </td>
-                  <td className="px-4 py-3.5">
+
+                  {/* Status Badge */}
+                  <td className="px-5 py-4">
                     {renderStatusBadge(record.status)}
                   </td>
-                  <td className="px-4 py-3.5 text-center">
-                    {/* Tombol Aksi Cepat Manajer */}
+
+                  {/* Tombol Aksi Verifikasi */}
+                  <td className="px-5 py-4 text-center">
                     <button
                       onClick={() => console.log(`Detail laporan ID: ${record._id}`)}
                       className="inline-flex items-center justify-center p-1.5 rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400 hover:bg-emerald-500 hover:text-black transition-all"
@@ -105,10 +129,10 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
                     </button>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

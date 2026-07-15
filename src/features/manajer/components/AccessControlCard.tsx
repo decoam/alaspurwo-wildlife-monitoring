@@ -22,15 +22,6 @@ export const AccessControlCard: React.FC<AccessControlCardProps> = ({
             <ShieldCheck size={20} className="text-emerald-400" />
             Kontrol Akses Petugas
           </h2>
-          
-          {/* Tombol Expand Menuju Halaman Khusus Kelola Petugas */}
-          <Link 
-            href="/dashboard/manajer/petugas" 
-            className="p-1.5 rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400 hover:bg-emerald-500 hover:text-black transition-all"
-            title="Buka Halaman Penuh Kelola Akun"
-          >
-            <ArrowUpRight size={16} />
-          </Link>
         </div>
 
         <p className="text-xs text-slate-400 mb-4">

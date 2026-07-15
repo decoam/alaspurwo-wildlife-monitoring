@@ -22,14 +22,6 @@ export const MinistryReportCard: React.FC<MinistryReportCardProps> = ({
             <Building2 size={20} className="text-emerald-400" />
             Laporan Kementerian
           </h2>
-          
-          <Link 
-            href="/dashboard/manajer/kementerian" 
-            className="p-1.5 rounded-lg bg-emerald-950/60 border border-emerald-800/40 text-emerald-400 hover:bg-emerald-500 hover:text-black transition-all"
-            title="Buka Halaman Regulasi Kementerian"
-          >
-            <ArrowUpRight size={16} />
-          </Link>
         </div>
 
         <p className="text-xs text-slate-400 mb-4">

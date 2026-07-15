@@ -1,66 +1,63 @@
+"use client";
+
 import React from "react";
-import { Search, Bell, UserCheck } from "lucide-react";
+import { BellRing, Search } from "lucide-react";
 
-interface ManagerHeaderProps {
+type ManagerHeaderProps = {
+  searchValue?: string;
   user: {
-    name: string;
-    email: string;
+    fullName: string;
+    role: string;
+    avatarInitials: string;
   };
-}
+};
 
-export const ManagerHeader: React.FC<ManagerHeaderProps> = ({ user }) => {
-  // Membuat inisial nama secara dinamis dari database
-  const avatarInitials = user.name
-    ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
-    : "MG";
-
+export function ManagerHeader({ searchValue = "", user }: ManagerHeaderProps) {
   return (
-    <header className="flex flex-col gap-4 rounded-3xl border border-emerald-900/40 bg-[#07110c]/50 p-4 shadow-md sm:flex-row sm:items-center sm:justify-between lg:p-5">
-      
-      {/* Kiri: Kolom Pencarian Global */}
-      <div className="relative flex-1 max-w-md w-full">
-        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-          <Search size={18} />
-        </div>
-        <form action="/dashboard/manajer/histori" method="GET" className="w-full">
-          <input
-            type="text"
-            name="search"
-            placeholder="Cari data historis (spesies, pos, petugas)..."
-            className="w-full rounded-xl border border-emerald-900/60 bg-[#07110c]/80 py-2.5 pl-11 pr-4 text-sm text-slate-100 placeholder-slate-400 outline-none ring-emerald-500/30 transition-all focus:border-emerald-500 focus:ring-4"
-          />
-        </form>
+    <header className="flex flex-col gap-4 rounded-[28px] border border-emerald-900/60 bg-[#0c1914]/85 px-5 py-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:flex-row md:items-center md:justify-between">
+      {/* Kiri: Judul Halaman Utama */}
+      <div>
+        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-emerald-400">
+          Monitoring Center
+        </p>
+        <h1 className="mt-1 text-2xl font-semibold text-white">Dashboard Konservasi</h1>
       </div>
 
-      {/* Kanan: Informasi Akun Manajer dari MongoDB */}
-      <div className="flex items-center justify-end gap-4">
-        
-        <button 
-          className="relative rounded-xl border border-emerald-900/60 bg-[#07110c]/60 p-2.5 text-slate-300 hover:bg-emerald-950/40 hover:text-emerald-400 transition-all"
-          title="Notifikasi Laporan Masuk"
+      {/* Kanan: Pencarian, Notifikasi, dan Profil */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        {/* Form Pencarian Arahkan ke Fitur Histori Manajer */}
+        <form 
+          method="GET" 
+          action="/dashboard/manajer/histori" 
+          className="flex items-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2 text-sm text-slate-400"
         >
-          <Bell size={18} />
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-        </button>
-
-        <div className="hidden h-8 w-1px bg-emerald-900/40 sm:block" />
+          <Search className="h-4 w-4" />
+          <input
+            name="search"
+            defaultValue={searchValue}
+            className="w-full bg-transparent outline-none placeholder:text-slate-500 sm:w-56"
+            placeholder="Cari satwa, lokasi, petugas..."
+          />
+        </form>
 
         <div className="flex items-center gap-3">
-          <div className="hidden text-right sm:block">
-            <p className="text-sm font-semibold text-slate-200">{user.name || "Manager"}</p>
-            <p className="flex items-center justify-end gap-1 text-xs text-emerald-400 font-medium">
-              <UserCheck size={12} />
-              Manajer Balai TNAP
-            </p>
-          </div>
+          {/* Tombol Notifikasi */}
+          <button className="rounded-2xl border border-emerald-900/60 bg-[#10241a] p-2.5 text-emerald-200 transition hover:bg-emerald-900/60">
+            <BellRing className="h-4 w-4" />
+          </button>
 
-          {/* Avatar Inisial Dinamis */}
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-600 font-bold text-black shadow-md">
-            {avatarInitials}
+          {/* Widget Info Login User */}
+          <div className="flex items-center gap-3 rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-lime-600 font-semibold text-white">
+              {user.avatarInitials}
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-white">{user.fullName}</p>
+              <p className="text-xs text-slate-400">{user.role}</p>
+            </div>
           </div>
         </div>
-
       </div>
     </header>
   );
-};
+}

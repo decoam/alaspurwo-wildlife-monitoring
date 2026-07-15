@@ -4,19 +4,15 @@ import React from "react";
 import {
   BarChart,
   Bar,
+  CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
 } from "recharts";
-
-// Warna grafik diselaraskan dengan tema Alas Purwo
-const COLORS = ["#10b981", "#06b6d4", "#f59e0b", "#ef4444"];
 
 interface ChartDataPoint {
   day: string;
@@ -33,90 +29,74 @@ interface PerformanceChartsProps {
   categoryBreakdown: CategoryDataPoint[];
 }
 
+// Skema palet warna bawaan yang kamu sukai di DashboardCharts
+const COLORS = ["#34d399", "#f59e0b", "#38bdf8", "#a78bfa", "#fb7185"];
+
 export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
   weeklyTrends,
   categoryBreakdown,
 }) => {
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-      
-      {/* 1. Grafik Batang: Tren Observasi Mingguan (Mengambil 2 Kolom Grid) */}
-      <div className="rounded-3xl border border-emerald-900/40 bg-[#07110c]/50 p-6 shadow-md lg:col-span-2">
+    <div className="grid gap-4 xl:grid-cols-[1.4fr_0.9fr]">
+      {/* 1. Grafik Batang: Aktivitas Mingguan */}
+      <div className="rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
         <div className="mb-4">
-          <h3 className="text-base font-semibold text-slate-200">
-            Tren Intensitas Observasi
-          </h3>
-          <p className="text-xs text-slate-500">
-            Jumlah aktivitas laporan satwa liar masuk per hari
+          <h2 className="text-lg font-semibold text-white">Aktivitas Mingguan</h2>
+          <p className="mt-1 text-sm text-slate-400">
+            Jumlah pengamatan yang tercatat dalam 7 hari terakhir.
           </p>
         </div>
-        
-        <div className="h-72 w-full">
+        <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={weeklyTrends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#064e3b/20" vertical={false} />
-              <XAxis dataKey="day" stroke="#64748b" fontSize={12} tickLine={false} />
-              <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-              <Tooltip
+            <BarChart data={weeklyTrends}>
+              <CartesianGrid stroke="#1f3b2d" strokeDasharray="3 3" />
+              <XAxis dataKey="day" tick={{ fill: "#cbd5e1", fontSize: 12 }} />
+              <YAxis tick={{ fill: "#cbd5e1", fontSize: 12 }} />
+              <Tooltip 
                 contentStyle={{ backgroundColor: "#040a07", borderColor: "#064e3b" }}
-                labelStyle={{ color: "#10b981" }}
+                labelStyle={{ color: "#34d399" }}
                 itemStyle={{ color: "#f8fafc" }}
               />
-              <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={40} />
+              <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="#34d399" />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* 2. Grafik Lingkaran: Breakdown Kategori Satwa (Mengambil 1 Kolom Grid) */}
-      <div className="rounded-3xl border border-emerald-900/40 bg-[#07110c]/50 p-6 shadow-md">
+      {/* 2. Grafik Lingkaran: Kategori Satwa */}
+      <div className="rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
         <div className="mb-4">
-          <h3 className="text-base font-semibold text-slate-200">
-            Komposisi Kelas Satwa
-          </h3>
-          <p className="text-xs text-slate-500">
-            Persentase temuan berdasarkan ordo taksonomi
+          <h2 className="text-lg font-semibold text-white">Kategori Satwa</h2>
+          <p className="mt-1 text-sm text-slate-400">
+            Distribusi pengamatan berdasarkan kategori.
           </p>
         </div>
-
-        <div className="relative flex h-72 flex-col items-center justify-center">
-          <ResponsiveContainer width="100%" height="80%">
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={categoryBreakdown}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={5}
                 dataKey="value"
+                nameKey="name"
+                innerRadius={60}
+                outerRadius={90}
+                paddingAngle={3}
               >
                 {categoryBreakdown.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell 
+                    key={`${entry.name}-${index}`} 
+                    fill={COLORS[index % COLORS.length]} 
+                  />
                 ))}
               </Pie>
-              <Tooltip
+              <Tooltip 
                 contentStyle={{ backgroundColor: "#040a07", borderColor: "#064e3b" }}
                 itemStyle={{ color: "#f8fafc" }}
               />
             </PieChart>
           </ResponsiveContainer>
-
-          {/* Legenda Custom di Bawah Pie Chart */}
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs">
-            {categoryBreakdown.map((entry, index) => (
-              <div key={entry.name} className="flex items-center gap-1.5">
-                <span 
-                  className="h-2.5 w-2.5 rounded-full" 
-                  style={{ backgroundColor: COLORS[index % COLORS.length] }} 
-                />
-                <span className="text-slate-400">{entry.name} ({entry.value}%)</span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
-
     </div>
   );
 };
