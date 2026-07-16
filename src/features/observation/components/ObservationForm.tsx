@@ -195,14 +195,14 @@ export function ObservationForm({
         {/* Remaining fields (disabled until Nama Satwa selected) */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Jumlah</label>
-          <input
-            type="number"
-            min={1}
-            inputMode="numeric"
-            disabled={!isNamaSatwaSelected}
-            {...register("jumlah")}
-            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
-          />
+         <input
+  type="number"
+  min={1}
+  inputMode="numeric"
+  disabled={!isNamaSatwaSelected}
+  {...register("jumlah")}
+  className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+/>
           {errors.jumlah ? <p className="mt-1 text-sm text-rose-300">{errors.jumlah.message}</p> : null}
         </div>
 
