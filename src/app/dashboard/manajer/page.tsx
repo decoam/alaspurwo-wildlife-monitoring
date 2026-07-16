@@ -39,9 +39,14 @@ export default async function ManagerDashboardPage() {
   // 3. Tarik Data Utama untuk Ringkasan Card
   const totalPetugas = await User.countDocuments({ role: { $regex: /petugas/i } });
   
+  // 🟢 SEKARANG DINAMIS: Menghitung total Pos wilayah unik berdasarkan data lokasi di koleksi Observasi
+  const uniqueLocations = await Observation.distinct("lokasi");
+  const totalPos = uniqueLocations.length;
+  
   // Mengambil entri observasi terbaru berdasarkan tanggal pengamatan lapangan
   const latestObs = await Observation.findOne().sort({ tanggalPengamatan: -1 }).lean() as any;
-  const lastActivePetugas = latestObs ? latestObs.namaPetugas || "Petugas Lapangan" : "Belum ada aktivitas";
+  // Jika tidak ada data, kosongkan string ("") agar memicu teks fallback bawaan di AccessControlCard
+  const lastActivePetugas = latestObs ? latestObs.namaPetugas || "Petugas Lapangan" : "";
 
   const totalObservations = await Observation.countDocuments();
   
@@ -113,7 +118,7 @@ export default async function ManagerDashboardPage() {
     status: "Pending" as const, 
   }));
 
-  // 🟢 DATA DINAMIS DARI DATABASE & SESI LOGIN
+  // DATA DINAMIS DARI DATABASE & SESI LOGIN
   const realFullName = sessionUser?.fullName || sessionUser?.name || "Manajer Konservasi";
   const realEmail = sessionUser?.email || sessionUser?.username || "manager@alaspurwo.go.id";
   const initials = getInitials(realFullName);
@@ -145,7 +150,12 @@ export default async function ManagerDashboardPage() {
           />
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <AccessControlCard totalPetugas={totalPetugas} totalPos={5} lastActivePetugas={lastActivePetugas} />
+            {/* 🟢 SEKARANG SEPENUHNYA DINAMIS: Passing properti totalPos dari database */}
+            <AccessControlCard 
+              totalPetugas={totalPetugas} 
+              totalPos={totalPos} 
+              lastActivePetugas={lastActivePetugas} 
+            />
             <ExportReportCard totalReportReady={totalObservations} lastGeneratedDate={lastGeneratedDate} />
             <MinistryReportCard isSynced={pendingValidation === 0} pendingSyncCount={pendingValidation} lastSyncDate={lastGeneratedDate} />
           </div>
