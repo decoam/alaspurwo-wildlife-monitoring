@@ -166,7 +166,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         <h2 className="text-xl font-semibold text-white">Daftar Akun Petugas Lapangan</h2>
         <button
           onClick={openAddModal}
-          className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-lime-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:from-emerald-500 hover:to-lime-500 shadow-md"
+          className="flex items-center gap-2 rounded-2xl bg-linear-to-r from-emerald-600 to-lime-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:from-emerald-500 hover:to-lime-500 shadow-md"
         >
           <UserPlus className="h-4 w-4" />
           Tambah Petugas
@@ -302,7 +302,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
 
                 <div className="flex justify-end gap-3 pt-2">
                   <button type="button" onClick={closeModal} className="px-4 py-2 rounded-xl border border-emerald-900/60 bg-[#10241a] text-sm text-slate-300 hover:bg-emerald-900/40 transition">Batal</button>
-                  <button type="submit" disabled={isLoading} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-lime-600 text-sm font-semibold text-white hover:from-emerald-500 hover:to-lime-500 transition disabled:opacity-50">
+                  <button type="submit" disabled={isLoading} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-emerald-600 to-lime-600 text-sm font-semibold text-white hover:from-emerald-500 hover:to-lime-500 transition disabled:opacity-50">
                     {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                     {modalType === "add" ? "Simpan Akun" : "Simpan Perubahan"}
                   </button>
