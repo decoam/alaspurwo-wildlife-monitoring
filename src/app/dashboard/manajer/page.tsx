@@ -15,8 +15,17 @@ import { MinistryReportCard } from "@/features/manajer/components/MinistryReport
 
 export const runtime = "nodejs";
 
+const getInitials = (name: string) => {
+  if (!name) return "M";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length > 1) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return parts[0].substring(0, 2).toUpperCase();
+};
+
 export default async function ManagerDashboardPage() {
-  // 1. Proteksi Sesi dan Hak Akses Manajer (Sudah di-fix ke "manajer")
+  // 1. Proteksi Sesi dan Hak Akses Manajer
   const session = await auth();
   const sessionUser = session?.user as any;
 
@@ -104,20 +113,30 @@ export default async function ManagerDashboardPage() {
     status: "Pending" as const, 
   }));
 
+  // 🟢 DATA DINAMIS DARI DATABASE & SESI LOGIN
+  const realFullName = sessionUser?.fullName || sessionUser?.name || "Manajer Konservasi";
+  const realEmail = sessionUser?.email || sessionUser?.username || "manager@alaspurwo.go.id";
+  const initials = getInitials(realFullName);
+  
+  // Format role agar kapital di awal (contoh: "manajer" -> "Manajer Konservasi")
+  const rawRole = sessionUser?.role || "manajer";
+  const formattedRole = rawRole.charAt(0).toUpperCase() + rawRole.slice(1).toLowerCase() + " Konservasi";
+
   const managerProfile = {
-    fullName: sessionUser?.name || sessionUser?.fullName || "Bintang Rafli",
-    role: "Manajer Konservasi",
-    avatarInitials: "BR",
-    email: sessionUser?.email || "manager@alaspurwo.go.id",
+    fullName: realFullName,
+    role: formattedRole,
+    avatarInitials: initials,
+    email: realEmail,
   };
 
   return (
-    // FIX WARNA: Menggunakan bg-[#030d08] untuk memberikan efek hijau-gelap hutan yang estetik dan mirip gambar
     <div className="min-h-screen bg-[#030d08] text-slate-100 antialiased">
+      {/* Sidebar otomatis menggunakan profile asli */}
       <ManagerSidebar currentPath="/dashboard/manajer" user={managerProfile} />
 
       <div className="pl-72 pr-6 py-6">
         <main className="mx-auto max-w-7xl space-y-6">
+          {/* Header otomatis menggunakan profile asli */}
           <ManagerHeader user={managerProfile} />
 
           <PerformanceCharts 
