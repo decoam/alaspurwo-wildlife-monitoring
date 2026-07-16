@@ -65,23 +65,7 @@ export default async function DashboardPage({
             ))}
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Link
-              href="/dashboard/observations/create"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-600/90 px-4 py-3 text-sm font-semibold text-white shadow-[0_20px_60px_rgba(2,8,23,0.2)] transition hover:bg-emerald-700/70"
-            >
-              <PlusCircle className="h-4 w-4" />
-              Tambah Pengamatan
-            </Link>
-
-            <Link
-              href="/dashboard/observations"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#07110c]/70 px-4 py-3 text-sm font-semibold text-emerald-200/80 transition hover:bg-emerald-900/40"
-            >
-              <ClipboardList className="h-4 w-4" />
-              Data Pengamatan
-            </Link>
-          </div>
+        
 
           <div className="mt-2 rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
             <RecentObservationTable observations={recentObservations} />

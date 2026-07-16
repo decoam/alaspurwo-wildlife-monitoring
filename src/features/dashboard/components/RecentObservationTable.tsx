@@ -32,9 +32,9 @@ export function RecentObservationTable({ observations }: RecentObservationTableP
               <th className="px-5 py-3 font-medium">Foto</th>
               <th className="px-5 py-3 font-medium">Nama Satwa</th>
               <th className="px-5 py-3 font-medium">Lokasi</th>
-              <th className="px-5 py-3 font-medium">Waktu</th>
-              <th className="px-5 py-3 font-medium">Status</th>
+              <th className="px-5 py-3 font-medium">Shift</th>
             </tr>
+            
           </thead>
           <tbody className="divide-y divide-emerald-900/50 bg-[#0f2218] text-slate-200">
             {observations.map((item) => (
@@ -50,13 +50,17 @@ export function RecentObservationTable({ observations }: RecentObservationTableP
                 </td>
                 <td className="px-5 py-4 font-medium text-white">{item.namaSatwa}</td>
                 <td className="px-5 py-4">{item.lokasi}</td>
-                <td className="px-5 py-4">{item.tanggalPengamatan ? new Date(item.tanggalPengamatan).toLocaleString("id-ID", { hour: "2-digit", minute: "2-digit" }) : "-"}</td>
                 <td className="px-5 py-4">
-                  <span className="rounded-full border border-emerald-700/60 bg-emerald-900/60 px-3 py-1 text-xs font-semibold text-emerald-200">
-                    {item.status}
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                      item.shift === "Pagi"
+                        ? "bg-amber-900/50 text-amber-200 border border-amber-700/50"
+                        : "bg-indigo-900/50 text-indigo-200 border border-indigo-700/50"
+                    }`}
+                  >
+                    {item.shift || "-"}
                   </span>
-                </td>
-              </tr>
+                </td>              </tr>
             ))}
           </tbody>
         </table>

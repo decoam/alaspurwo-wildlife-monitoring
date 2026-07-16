@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, getSession } from "next-auth/react";
 import { z } from "zod";
 import { AuthCard } from "@/components/auth/AuthCard";
+import { Eye, EyeOff } from "lucide-react";
 
 const loginSchema = z.object({
   username: z.string().trim().min(1, "Username wajib diisi."),
@@ -19,6 +20,8 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -33,6 +36,8 @@ export default function LoginPage() {
 
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitError(null);
+
+
 
     try {
       // 1. Jalankan autentikasi
@@ -97,20 +102,30 @@ export default function LoginPage() {
         </div>
 
         <div>
-          <label htmlFor="password" className="auth-label">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            className="auth-input-element"
-            {...register("password")}
-          />
-          {errors.password ? (
-            <p className="auth-error-text">{errors.password.message}</p>
-          ) : null}
-        </div>
+  <label htmlFor="password" className="auth-label">
+    Password
+  </label>
+  <div className="relative">
+    <input
+      id="password"
+      type={showPassword ? "text" : "password"}
+      autoComplete="current-password"
+      className="auth-input-element pr-11"
+      {...register("password")}
+    />
+    <button
+      type="button"
+      tabIndex={-1}
+      onClick={() => setShowPassword((v) => !v)}
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+    >
+      {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+    </button>
+  </div>
+  {errors.password ? (
+    <p className="auth-error-text">{errors.password.message}</p>
+  ) : null}
+</div>
 
         {submitError ? (
           <div className="auth-alert-error">

@@ -1,5 +1,3 @@
-import { BellRing, Search } from "lucide-react";
-
 type DashboardHeaderProps = {
   searchValue: string;
   user: {
@@ -21,21 +19,10 @@ export function DashboardHeader({ searchValue, user }: DashboardHeaderProps) {
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <form method="GET" action="/dashboard" className="flex items-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2 text-sm text-slate-400">
-          <Search className="h-4 w-4" />
-          <input
-            name="search"
-            defaultValue={searchValue}
-            className="w-full bg-transparent outline-none placeholder:text-slate-500 sm:w-44"
-            placeholder="Cari satwa, lokasi, petugas"
-          />
-        </form>
+       
 
         <div className="flex items-center gap-3">
-          <button className="rounded-2xl border border-emerald-900/60 bg-[#10241a] p-2.5 text-emerald-200 transition hover:bg-emerald-900/60">
-            <BellRing className="h-4 w-4" />
-          </button>
-
+         
           <div className="flex items-center gap-3 rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-emerald-500 to-lime-600 font-semibold text-white">
               {user.avatarInitials}
