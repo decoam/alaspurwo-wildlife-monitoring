@@ -1,14 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { AlertCircle, Camera, CheckCircle2, Image as ImageIcon, Loader2, Trash2, UploadCloud } from "lucide-react";
 import { CldUploadWidget } from "next-cloudinary";
 
 const satwaOptions = ["Rusa Timor", "Banteng Jawa", "Merak Jawa", "Elang", "Babi Hutan", "Macan Tutul"];
-const categoryOptions = ["Mamalia", "Burung", "Reptil", "Amfibi", "Primata"];
 const locationOptions = ["Pos Pengamatan Pantai", "Rawa Mangrove", "Sadengan", "Puncak Pengamatan", "Padang Savana"];
+
+// Frontend-only mapping for PETUGAS UX.
+// Prevents inconsistent kategori by deriving it from selected namaSatwa.
+const animalCategoryMap: Record<string, string> = {
+  "Banteng Jawa": "Mamalia",
+  "Rusa Timor": "Mamalia",
+  "Merak Jawa": "Burung",
+  "Elang": "Burung",
+  "Babi Hutan": "Mamalia",
+  "Macan Tutul": "Mamalia",
+};
 
 type ObservationFormValues = {
   namaSatwa: string;
@@ -38,7 +48,16 @@ type CloudinaryUploadResult = {
   };
 };
 
-export function ObservationForm({ initialValues, submitLabel, onSubmit, successRedirectUrl = "/dashboard/observations?success=create" }: ObservationFormProps) {
+function getKategoriFromNamaSatwa(namaSatwa: string): string {
+  return animalCategoryMap[namaSatwa] ?? "";
+}
+
+export function ObservationForm({
+  initialValues,
+  submitLabel,
+  onSubmit,
+  successRedirectUrl = "/dashboard/observations?success=create",
+}: ObservationFormProps) {
   const router = useRouter();
   const [photoUrl, setPhotoUrl] = useState<string | null>(initialValues?.foto ?? null);
   const [uploadState, setUploadState] = useState<"idle" | "uploading" | "success" | "error">("idle");
@@ -51,6 +70,8 @@ export function ObservationForm({ initialValues, submitLabel, onSubmit, successR
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<ObservationFormValues>({
     defaultValues: {
@@ -65,6 +86,17 @@ export function ObservationForm({ initialValues, submitLabel, onSubmit, successR
       catatan: initialValues?.catatan ?? "",
     },
   });
+
+  const selectedNamaSatwa = watch("namaSatwa");
+
+  const isNamaSatwaSelected = Boolean(selectedNamaSatwa);
+
+  const derivedKategori = useMemo(() => getKategoriFromNamaSatwa(selectedNamaSatwa), [selectedNamaSatwa]);
+
+  useEffect(() => {
+    const kategoriToSet = derivedKategori;
+    setValue("kategori", kategoriToSet, { shouldValidate: true, shouldDirty: true });
+  }, [derivedKategori, setValue]);
 
   useEffect(() => {
     if (initialValues?.foto) {
@@ -126,70 +158,132 @@ export function ObservationForm({ initialValues, submitLabel, onSubmit, successR
       ) : null}
 
       <div className="grid gap-4 md:grid-cols-2">
+        {/* Nama Satwa (FIRST required field) */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Nama Satwa</label>
-          <select {...register("namaSatwa")} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none">
+          <select
+            {...register("namaSatwa")}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none"
+          >
             <option value="">Pilih satwa</option>
             {satwaOptions.map((option) => (
-              <option key={option} value={option}>{option}</option>
+              <option key={option} value={option}>
+                {option}
+              </option>
             ))}
           </select>
+
+          {!isNamaSatwaSelected ? (
+            <p className="mt-2 text-xs text-emerald-300/90">Silakan pilih nama satwa terlebih dahulu untuk mengaktifkan form pengamatan.</p>
+          ) : null}
+
           {errors.namaSatwa ? <p className="mt-1 text-sm text-rose-300">{errors.namaSatwa.message}</p> : null}
         </div>
+
+        {/* Kategori (read-only, derived) */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Kategori</label>
-          <select {...register("kategori")} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none">
-            <option value="">Pilih kategori</option>
-            {categoryOptions.map((option) => (
-              <option key={option} value={option}>{option}</option>
-            ))}
-          </select>
+          <input
+            readOnly
+            value={derivedKategori}
+            placeholder={isNamaSatwaSelected ? "" : "Select animal name first"}
+            className="w-full cursor-not-allowed rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed"
+          />
           {errors.kategori ? <p className="mt-1 text-sm text-rose-300">{errors.kategori.message}</p> : null}
         </div>
+
+        {/* Remaining fields (disabled until Nama Satwa selected) */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Jumlah</label>
-          <input type="number" {...register("jumlah")} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none" />
+          <input
+            type="number"
+            min={1}
+            inputMode="numeric"
+            disabled={!isNamaSatwaSelected}
+            {...register("jumlah")}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          />
           {errors.jumlah ? <p className="mt-1 text-sm text-rose-300">{errors.jumlah.message}</p> : null}
         </div>
+
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Lokasi</label>
-          <select {...register("lokasi")} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none">
+          <select
+            {...register("lokasi")}
+            disabled={!isNamaSatwaSelected}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          >
             <option value="">Pilih lokasi</option>
             {locationOptions.map((option) => (
-              <option key={option} value={option}>{option}</option>
+              <option key={option} value={option}>
+                {option}
+              </option>
             ))}
           </select>
           {errors.lokasi ? <p className="mt-1 text-sm text-rose-300">{errors.lokasi.message}</p> : null}
         </div>
+
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Tanggal Pengamatan</label>
-          <input type="date" {...register("tanggalPengamatan")} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none" />
-          {errors.tanggalPengamatan ? <p className="mt-1 text-sm text-rose-300">{errors.tanggalPengamatan.message}</p> : null}
+          <input
+            type="date"
+            {...register("tanggalPengamatan")}
+            disabled={!isNamaSatwaSelected}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          />
+          {errors.tanggalPengamatan ? (
+            <p className="mt-1 text-sm text-rose-300">{errors.tanggalPengamatan.message}</p>
+          ) : null}
         </div>
+
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Shift</label>
-          <select {...register("shift")} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none">
+          <select
+            {...register("shift")}
+            disabled={!isNamaSatwaSelected}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          >
             <option value="Pagi">Pagi</option>
             <option value="Sore">Sore</option>
           </select>
           {errors.shift ? <p className="mt-1 text-sm text-rose-300">{errors.shift.message}</p> : null}
         </div>
+
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Cuaca</label>
-          <input {...register("kondisiCuaca")} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none" />
+          <input
+            {...register("kondisiCuaca")}
+            disabled={!isNamaSatwaSelected}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          />
           {errors.kondisiCuaca ? <p className="mt-1 text-sm text-rose-300">{errors.kondisiCuaca.message}</p> : null}
         </div>
+
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-medium text-slate-300">Aktivitas Satwa</label>
-          <textarea {...register("aktivitasSatwa")} rows={3} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none" />
-          {errors.aktivitasSatwa ? <p className="mt-1 text-sm text-rose-300">{errors.aktivitasSatwa.message}</p> : null}
+          <textarea
+            {...register("aktivitasSatwa")}
+            disabled={!isNamaSatwaSelected}
+            rows={3}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          />
+          {errors.aktivitasSatwa ? (
+            <p className="mt-1 text-sm text-rose-300">{errors.aktivitasSatwa.message}</p>
+          ) : null}
         </div>
+
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-medium text-slate-300">Catatan</label>
-          <textarea {...register("catatan")} rows={3} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none" />
+          <textarea
+            {...register("catatan")}
+            disabled={!isNamaSatwaSelected}
+            rows={3}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          />
         </div>
       </div>
 
+      {/* Upload Foto (disabled until animal selected) */}
       <div className="rounded-2xl border border-emerald-900/60 bg-[#10241a] p-4">
         <div className="flex items-center justify-between gap-3">
           <label className="flex items-center gap-2 text-sm font-medium text-slate-300">
@@ -212,6 +306,7 @@ export function ObservationForm({ initialValues, submitLabel, onSubmit, successR
                 resourceType: "image",
               }}
               onOpen={() => {
+                if (!isNamaSatwaSelected) return;
                 setUploadState("uploading");
                 setUploadMessage("Membuka pemilih gambar...");
               }}
@@ -230,10 +325,7 @@ export function ObservationForm({ initialValues, submitLabel, onSubmit, successR
                 setUploadMessage("Foto berhasil diunggah ke Cloudinary.");
               }}
               onError={(error) => {
-                const message = typeof error === "string"
-                  ? error
-                  : error?.statusText ?? "Gagal mengunggah foto.";
-
+                const message = typeof error === "string" ? error : error?.statusText ?? "Gagal mengunggah foto.";
                 setUploadState("error");
                 setUploadMessage(message);
               }}
@@ -241,10 +333,14 @@ export function ObservationForm({ initialValues, submitLabel, onSubmit, successR
               {({ open }) => (
                 <button
                   type="button"
+                  disabled={!isNamaSatwaSelected}
                   onClick={() => {
+                    if (!isNamaSatwaSelected) return;
                     if (!cloudName || !uploadPreset) {
                       setUploadState("error");
-                      setUploadMessage("Cloudinary belum dikonfigurasi. Periksa variabel NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME dan NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET.");
+                      setUploadMessage(
+                        "Cloudinary belum dikonfigurasi. Periksa variabel NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME dan NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET.",
+                      );
                       return;
                     }
 
@@ -252,7 +348,7 @@ export function ObservationForm({ initialValues, submitLabel, onSubmit, successR
                     setUploadMessage("Mengunggah foto...");
                     open();
                   }}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-emerald-700/70 bg-emerald-700/90 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-emerald-700/70 bg-emerald-700/90 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {uploadState === "uploading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
                   {uploadState === "uploading" ? "Mengunggah..." : "Pilih atau tarik gambar"}
@@ -287,6 +383,7 @@ export function ObservationForm({ initialValues, submitLabel, onSubmit, successR
                   type="button"
                   onClick={removePhoto}
                   className="absolute right-3 top-3 flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-3 py-2 text-sm text-white backdrop-blur"
+                  disabled={!isNamaSatwaSelected}
                 >
                   <Trash2 className="h-4 w-4" />
                   Hapus
@@ -305,13 +402,22 @@ export function ObservationForm({ initialValues, submitLabel, onSubmit, successR
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-        <button type="button" onClick={() => router.back()} className="rounded-2xl border border-emerald-900/60 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-emerald-950/60">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="rounded-2xl border border-emerald-900/60 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-emerald-950/60"
+        >
           Batal
         </button>
-        <button type="submit" disabled={isSubmitting} className="rounded-2xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-70">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="rounded-2xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-70"
+        >
           {isSubmitting ? "Menyimpan..." : submitLabel}
         </button>
       </div>
     </form>
   );
 }
+
