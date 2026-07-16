@@ -35,6 +35,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
 
   // Menu items disesuaikan dengan 6 tanggung jawab Manajer
   const menuItems = [
+    { label: "Dashboard", href: "/dashboard/manajer", icon: LayoutDashboard},
     { label: "Detail Observasi", href: "/dashboard/manajer/histori", icon: Camera },
     { label: "Kelola Laporan", href: "/dashboard/manajer/laporan", icon: FileSpreadsheet },
     { label: "Kontrol Akses Petugas", href: "/dashboard/manajer/petugas", icon: Users },
@@ -47,7 +48,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
       <div>
         {/* Bagian Profil User */}
         <div className="mb-8 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-white">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-white">
             {user.avatarInitials || "MG"}
           </div>
           <div>
