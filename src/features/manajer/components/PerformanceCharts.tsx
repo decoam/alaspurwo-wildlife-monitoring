@@ -29,13 +29,17 @@ interface PerformanceChartsProps {
   categoryBreakdown: CategoryDataPoint[];
 }
 
-// Skema palet warna bawaan yang kamu sukai di DashboardCharts
 const COLORS = ["#34d399", "#f59e0b", "#38bdf8", "#a78bfa", "#fb7185"];
 
 export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
   weeklyTrends,
   categoryBreakdown,
 }) => {
+  // Mencari nilai tertinggi untuk menentukan tickCount yang dinamis namun tetap bulat
+  const maxCount = Math.max(...weeklyTrends.map((d) => d.count), 0);
+  // Jika maxCount kurang dari 4, set tickCount menjadi maxCount + 1 agar pas (misal max 2, tickCount 3 untuk angka: 0, 1, 2)
+  const calculatedTickCount = maxCount < 4 ? maxCount + 1 : undefined;
+
   return (
     <div className="grid gap-4 xl:grid-cols-[1.4fr_0.9fr]">
       {/* 1. Grafik Batang: Aktivitas Mingguan */}
@@ -51,7 +55,14 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
             <BarChart data={weeklyTrends}>
               <CartesianGrid stroke="#1f3b2d" strokeDasharray="3 3" />
               <XAxis dataKey="day" tick={{ fill: "#cbd5e1", fontSize: 12 }} />
-              <YAxis tick={{ fill: "#cbd5e1", fontSize: 12 }} />
+              
+              {/* Supaya tampil bilangan bulat bukan desimal */}
+              <YAxis 
+                tick={{ fill: "#cbd5e1", fontSize: 12 }} 
+                allowDecimals={false}
+                tickCount={calculatedTickCount}
+              />
+              
               <Tooltip 
                 contentStyle={{ backgroundColor: "#040a07", borderColor: "#064e3b" }}
                 labelStyle={{ color: "#34d399" }}
