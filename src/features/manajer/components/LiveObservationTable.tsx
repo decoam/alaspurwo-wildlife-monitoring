@@ -121,7 +121,7 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
                   <th className="px-6 py-4 font-medium">Petugas</th>
                   <th className="px-6 py-4 font-medium">Nama Satwa</th>
                   <th className="px-6 py-4 font-medium">Lokasi</th>
-                  <th className="px-6 py-4 font-medium">Waktu</th>
+                  <th className="px-6 py-4 font-medium">Tanggal & Shift</th>
                   <th className="px-6 py-4 font-medium">Status</th>
                   <th className="px-6 py-4 text-center font-medium">Aksi</th>
                 </tr>

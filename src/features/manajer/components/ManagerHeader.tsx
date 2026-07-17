@@ -32,11 +32,6 @@ export function ManagerHeader({
 
       {/* Kanan: Notifikasi dan Profil */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-        {/* Tombol Notifikasi */}
-        <button className="rounded-2xl border border-emerald-900/60 bg-[#10241a] p-2 sm:p-2.5 text-emerald-200 transition hover:bg-emerald-900/60 shrink-0">
-          <BellRing className="h-4 w-4" />
-        </button>
-
         {/* Widget Info Login User */}
         {/* Perbaikan: Menggunakan 'p-1 sm:py-1.5 sm:pl-1.5 sm:pr-3' agar simetris di mobile */}
         <div className="flex items-center gap-2 md:gap-3 rounded-2xl border border-emerald-900/60 bg-[#10241a] p-1 sm:py-1.5 sm:pl-1.5 sm:pr-3 md:py-2">
