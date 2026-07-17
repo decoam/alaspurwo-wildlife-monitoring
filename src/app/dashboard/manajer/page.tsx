@@ -3,8 +3,10 @@ import { connectDB } from "@/lib/mongodb";
 import { Observation } from "@/models/Observation";
 import { User } from "@/models/User";
 import { redirect } from "next/navigation";
+import { Eye, Camera } from "lucide-react";
 import React from "react";
 
+import { SummaryCard } from "@/features/dashboard/components/SummaryCard";
 import { ManagerSidebar } from "@/features/manajer/components/ManagerSidebar";
 import { ManagerHeader } from "@/features/manajer/components/ManagerHeader";
 import { PerformanceCharts } from "@/features/manajer/components/PerformanceCharts";
@@ -45,12 +47,18 @@ export default async function ManagerDashboardPage() {
   
   // Mengambil entri observasi terbaru berdasarkan tanggal pengamatan lapangan
   const latestObs = await Observation.findOne().sort({ tanggalPengamatan: -1 }).lean() as any;
-  // Jika tidak ada data, kosongkan string ("") agar memicu teks fallback bawaan di AccessControlCard
   const lastActivePetugas = latestObs ? latestObs.namaPetugas || "Petugas Lapangan" : "";
 
+  // Hitung Total Observasi Keseluruhan
   const totalObservations = await Observation.countDocuments();
   
-  // Karena di skema belum ada field status, kita hitung data yang tersimpan secara global
+  // Hitung Observasi Khusus Hari Ini secara Dinamis
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const observationsToday = await Observation.countDocuments({
+    tanggalPengamatan: { $gte: startOfToday }
+  });
+  
   const pendingValidation = totalObservations; 
   
   const today = new Date();
@@ -79,7 +87,6 @@ export default async function ManagerDashboardPage() {
     mongoDataMap.set(item._id, item.count);
   });
 
-  // Mapping urutan kaku Senin -> Minggu. Jika hari kosong = 0
   const weeklyTrends = targetDays.map((dayName) => {
     const jsDayIndex = jsDayMapping[dayName];
     const mongoDayIndex = jsDayIndex + 1;
@@ -117,12 +124,10 @@ export default async function ManagerDashboardPage() {
     status: "Pending" as const, 
   }));
 
-  // DATA DINAMIS DARI DATABASE & SESI LOGIN
   const realFullName = sessionUser?.fullName || sessionUser?.name || "Manajer Konservasi";
   const realEmail = sessionUser?.email || sessionUser?.username || "manager@alaspurwo.go.id";
   const initials = getInitials(realFullName);
   
-  // Format role agar kapital di awal (contoh: "manajer" -> "Manajer Konservasi")
   const rawRole = sessionUser?.role || "manajer";
   const formattedRole = rawRole.charAt(0).toUpperCase() + rawRole.slice(1).toLowerCase() + " Konservasi";
 
@@ -135,15 +140,31 @@ export default async function ManagerDashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#030d08] text-slate-100 antialiased relative">
-      {/* Sidebar otomatis menggunakan profile asli & mendukung interaksi drawer di mobile */}
       <ManagerSidebar currentPath="/dashboard/manajer" user={managerProfile} />
 
-      {/* Padding responsif      */}
       <div className="px-4 py-4 xl:pl-76 xl:pr-6 xl:py-6 transition-all duration-300">
         <main className="mx-auto max-w-7xl space-y-6">
           
-          {/* Header otomatis responsif */}
+          {/* Header Dashboard */}
           <ManagerHeader user={managerProfile} />
+
+          {/* SUMMARY CARDS */}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <SummaryCard 
+              title="Total Pengamatan" 
+              value={totalObservations} 
+              detail="Semua data observasi tersimpan" 
+              icon={Eye} 
+              accent="from-emerald-500 to-lime-500" 
+            />
+            <SummaryCard 
+              title="Pengamatan Hari Ini" 
+              value={observationsToday} 
+              detail="Aktivitas tercatat hari ini" 
+              icon={Camera} 
+              accent="from-amber-500 to-orange-500" 
+            />
+          </div>
 
           {/* Grafis responsif */}
           <PerformanceCharts 
@@ -151,7 +172,7 @@ export default async function ManagerDashboardPage() {
             categoryBreakdown={categoryBreakdown.length > 0 ? categoryBreakdown : [{ name: "Tidak Ada Data", value: 100 }]} 
           />
 
-          {/* Grid Cards responsif: 1 kolom di mobile, 2 di tablet, 3 di desktop */}
+          {/* Grid Cards responsif */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <AccessControlCard 
               totalPetugas={totalPetugas} 
