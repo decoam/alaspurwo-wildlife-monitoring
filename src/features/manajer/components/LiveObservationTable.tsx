@@ -46,7 +46,7 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
   };
 
   return (
-    <div className="overflow-hidden rounded-[24px] md:rounded-[28px] border border-emerald-900/60 bg-[#0c1914]/90 shadow-[0_20px_60px_rgba(2,8,23,0.2)]">
+    <div className="overflow-hidden rounded-3xl md:rounded-[28px] border border-emerald-900/60 bg-[#0c1914]/90 shadow-[0_20px_60px_rgba(2,8,23,0.2)]">
       {/* Header Tabel */}
       <div className="border-b border-emerald-900/60 px-5 py-5">
         <h2 className="text-base md:text-lg font-semibold text-white">Monitoring Laporan Terbaru</h2>
