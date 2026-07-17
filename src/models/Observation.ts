@@ -14,6 +14,7 @@ export interface IObservation extends Document {
   namaPetugas: string;
   posPengamatan: string;
   createdBy: Types.ObjectId;
+  deletedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,9 +33,18 @@ const observationSchema = new Schema<IObservation>(
     catatan: { type: String, default: "" },
     namaPetugas: { type: String, required: true, trim: true },
     posPengamatan: { type: String, required: true, trim: true },
+    deletedAt: { type: Date, default: null },
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );
 
-export const Observation = mongoose.models.Observation || mongoose.model<IObservation>("Observation", observationSchema);
+// Sembunyikan data soft-deleted dari semua query .find()
+observationSchema.pre(/^find/, function () {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (this as any).where({ deletedAt: null });
+});
+
+export const Observation =
+  mongoose.models.Observation ||
+  mongoose.model<IObservation>("Observation", observationSchema);

@@ -251,13 +251,22 @@ export function ObservationForm({
 
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Cuaca</label>
-          <input
-            {...register("kondisiCuaca")}
-            disabled={!isNamaSatwaSelected}
-            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
-          />
-          {errors.kondisiCuaca ? <p className="mt-1 text-sm text-rose-300">{errors.kondisiCuaca.message}</p> : null}
-        </div>
+                  <select
+          {...register("kondisiCuaca")}
+          disabled={!isNamaSatwaSelected}
+          className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <option value="">Pilih kondisi cuaca</option>
+          <option value="Cerah">Cerah</option>
+          <option value="Cerah Berawan">Cerah Berawan</option>
+          <option value="Berawan">Berawan</option>
+          <option value="Mendung">Mendung</option>
+          <option value="Hujan Ringan">Hujan Ringan</option>
+          <option value="Hujan Lebat">Hujan Lebat</option>
+          <option value="Berkabut">Berkabut</option>
+        </select>
+                  {errors.kondisiCuaca ? <p className="mt-1 text-sm text-rose-300">{errors.kondisiCuaca.message}</p> : null}
+                </div>
 
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-medium text-slate-300">Aktivitas Satwa</label>

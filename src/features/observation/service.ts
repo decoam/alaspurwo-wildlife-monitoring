@@ -126,6 +126,12 @@ export async function updateObservation(formData: FormData): Promise<ActionResul
 
 export async function deleteObservation(id: string): Promise<ActionResult> {
   try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return { success: false, message: "Sesi Anda tidak valid." };
+    }
+
     await connectDB();
 
     const observation = await Observation.findById(id);
@@ -134,17 +140,23 @@ export async function deleteObservation(id: string): Promise<ActionResult> {
       return { success: false, message: "Data pengamatan tidak ditemukan." };
     }
 
-    if (observation.foto) {
-      await deleteFromCloudinary(observation.foto).catch((error) => {
-        console.warn("Cloudinary delete skipped", error);
-      });
+    // Cek kepemilikan — hanya pemilik yang boleh menghapus
+    if (String(observation.createdBy) !== String(session.user.id)) {
+      return { success: false, message: "Anda tidak memiliki izin untuk menghapus data ini." };
     }
 
-    await Observation.findByIdAndDelete(id);
+    // Soft delete — hanya tandai deletedAt, tidak benar-benar dihapus
+    await Observation.findByIdAndUpdate(id, {
+      $set: { deletedAt: new Date() },
+    });
+
     revalidatePath("/dashboard/observations");
     revalidatePath(`/dashboard/observations/${id}`);
     redirect("/dashboard/observations?success=delete");
   } catch (error) {
+    if ((error as { digest?: string })?.digest?.startsWith("NEXT_REDIRECT")) {
+      throw error;
+    }
     console.error("Delete observation error", error);
     return { success: false, message: error instanceof Error ? error.message : "Gagal menghapus data pengamatan." };
   }
