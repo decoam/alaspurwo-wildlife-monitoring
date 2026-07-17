@@ -5,7 +5,7 @@ import { MapPin, Calendar } from "lucide-react";
 
 interface ObservationRecord {
   _id: string;
-  observerName: string; // Tetap dipertahankan di interface jika data backend mengirimkannya, tapi tidak dirender
+  observerName: string;
   speciesName: string;
   location: string;
   observedAt: string;
@@ -46,6 +46,7 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
                       src={record.foto} 
                       alt={record.speciesName} 
                       className="h-11 w-11 rounded-xl object-cover border border-emerald-500/20 shrink-0" 
+                      style={{ height: "auto" }} // Memperbaiki warning aspek rasio Next.js
                     />
                   ) : (
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-900/70 text-base shrink-0">
@@ -93,6 +94,7 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
                           src={record.foto} 
                           alt={record.speciesName} 
                           className="h-10 w-10 rounded-full object-cover border border-emerald-500/20" 
+                          style={{ height: "auto" }} // Memperbaiki warning aspek rasio Next.js
                         />
                       ) : (
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-900/70 text-lg">
