@@ -25,7 +25,7 @@ const getInitials = (name: string) => {
 };
 
 export default async function ManagerDashboardPage() {
-  // 1. Proteksi Sesi dan Hak Akses Manajer
+  // Proteksi Sesi dan Hak Akses Manajer
   const session = await auth();
   const sessionUser = session?.user as any;
 
@@ -33,13 +33,13 @@ export default async function ManagerDashboardPage() {
     redirect("/login");
   }
 
-  // 2. Hubungkan ke Database MongoDB
+  // Koneksi ke Database MongoDB
   await connectDB();
 
-  // 3. Tarik Data Utama untuk Ringkasan Card
+  // Ambil Data Utama untuk Ringkasan Card
   const totalPetugas = await User.countDocuments({ role: { $regex: /petugas/i } });
   
-  // 🟢 SEKARANG DINAMIS: Menghitung total Pos wilayah unik berdasarkan data lokasi di koleksi Observasi
+  // Menghitung total Pos wilayah unik berdasarkan data lokasi di koleksi Observasi
   const uniqueLocations = await Observation.distinct("lokasi");
   const totalPos = uniqueLocations.length;
   
@@ -61,7 +61,6 @@ export default async function ManagerDashboardPage() {
     "Minggu": 0, "Senin": 1, "Selasa": 2, "Rabu": 3, "Kamis": 4, "Jumat": 5, "Sabtu": 6
   };
 
-  // Kueri Agregasi Riil disesuaikan dengan field skema: 'tanggalPengamatan'
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   
@@ -69,7 +68,7 @@ export default async function ManagerDashboardPage() {
     { $match: { tanggalPengamatan: { $gte: sevenDaysAgo } } },
     {
       $group: {
-        _id: { $dayOfWeek: "$tanggalPengamatan" }, // MongoDB: 1 (Minggu) s/d 7 (Sabtu)
+        _id: { $dayOfWeek: "$tanggalPengamatan" },
         count: { $sum: 1 },
       },
     },
@@ -80,7 +79,7 @@ export default async function ManagerDashboardPage() {
     mongoDataMap.set(item._id, item.count);
   });
 
-  // Mapping urutan kaku Senin -> Minggu. Jika hari kosong = 0 (bukan data tiruan)
+  // Mapping urutan kaku Senin -> Minggu. Jika hari kosong = 0
   const weeklyTrends = targetDays.map((dayName) => {
     const jsDayIndex = jsDayMapping[dayName];
     const mongoDayIndex = jsDayIndex + 1;
@@ -135,22 +134,25 @@ export default async function ManagerDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030d08] text-slate-100 antialiased">
-      {/* Sidebar otomatis menggunakan profile asli */}
+    <div className="min-h-screen bg-[#030d08] text-slate-100 antialiased relative">
+      {/* Sidebar otomatis menggunakan profile asli & mendukung interaksi drawer di mobile */}
       <ManagerSidebar currentPath="/dashboard/manajer" user={managerProfile} />
 
-      <div className="pl-72 pr-6 py-6">
+      {/* Padding responsif      */}
+      <div className="px-4 py-4 xl:pl-76 xl:pr-6 xl:py-6 transition-all duration-300">
         <main className="mx-auto max-w-7xl space-y-6">
-          {/* Header otomatis menggunakan profile asli */}
+          
+          {/* Header otomatis responsif */}
           <ManagerHeader user={managerProfile} />
 
+          {/* Grafis responsif */}
           <PerformanceCharts 
             weeklyTrends={weeklyTrends} 
             categoryBreakdown={categoryBreakdown.length > 0 ? categoryBreakdown : [{ name: "Tidak Ada Data", value: 100 }]} 
           />
 
+          {/* Grid Cards responsif: 1 kolom di mobile, 2 di tablet, 3 di desktop */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* 🟢 SEKARANG SEPENUHNYA DINAMIS: Passing properti totalPos dari database */}
             <AccessControlCard 
               totalPetugas={totalPetugas} 
               totalPos={totalPos} 
@@ -160,6 +162,7 @@ export default async function ManagerDashboardPage() {
             <MinistryReportCard isSynced={pendingValidation === 0} pendingSyncCount={pendingValidation} lastSyncDate={lastGeneratedDate} />
           </div>
 
+          {/* Tabel data observasi real-time */}
           <LiveObservationTable records={recentRecords} />
         </main>
       </div>

@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-// 🟢 1. Impor ikon Eye dan EyeOff untuk toggle lihat password
-import { UserPlus, Edit2, Trash2, X, Loader2, Search, Eye, EyeOff } from "lucide-react";
+import { UserPlus, Edit2, Trash2, X, Loader2, Search, Eye, EyeOff, User } from "lucide-react";
 
 type UserType = {
   _id: string;
@@ -34,14 +33,13 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   
-  // 🟢 2. State untuk menentukan status visibility password (true = kelihatan, false = bintang-bintang)
+  // State untuk menentukan status visibility password
   const [showPassword, setShowPassword] = useState(false);
 
   // Filter data berdasarkan search query
   const filteredUsers = initialUsers.filter((user) =>
     user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.role.toLowerCase().includes(searchQuery.toLowerCase())
+    user.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Pemicu Buka Modal
@@ -51,7 +49,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
     setFullName("");
     setUsername("");
     setPassword("");
-    setShowPassword(false); // Reset ke kondisi tersembunyi setiap buka form baru
+    setShowPassword(false);
     setModalType("add");
   };
 
@@ -62,7 +60,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
     setFullName(user.fullName);
     setUsername(user.username);
     setPassword("");
-    setShowPassword(false); // Reset ke kondisi tersembunyi
+    setShowPassword(false);
     setModalType("edit");
   };
 
@@ -78,7 +76,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
     setSelectedUser(null);
   };
 
-  // 1. Aksi Tambah Akun (POST ke /api/register)
+  // Aksi Tambah Akun
   const handleAddPetugas = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName || !username || !password) {
@@ -111,7 +109,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
     }
   };
 
-  // 2. Aksi Edit Akun (PUT ke /api/manajer/petugas)
+  // Aksi Edit Akun
   const handleEditPetugas = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedUser || !fullName || !username) {
@@ -144,7 +142,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
     }
   };
 
-  // 3. Aksi Hapus Akun (DELETE ke /api/manajer/petugas)
+  // Aksi Hapus Akun
   const handleDeletePetugas = async () => {
     if (!selectedUser) return;
 
@@ -174,17 +172,17 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
   };
 
   return (
-    <div className="rounded-[28px] border border-emerald-900/60 bg-[#0c1914]/85 p-6 shadow-xl space-y-6">
+    <div className="rounded-[28px] border border-emerald-900/60 bg-[#0c1914]/85 p-4 sm:p-6 shadow-xl space-y-6">
       
       {/* BAGIAN ATAS CARD: Judul, Teks Keterangan, dan Tombol Tambah Petugas */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
             DATA PERSONEL
           </p>
           <h2 className="text-xl font-semibold text-white mt-0.5">Daftar Akun Petugas Lapangan</h2>
           <p className="text-sm text-slate-400 mt-1">
-            Manajemen kredensial, pendaftaran personel baru, serta kontrol hak akses operasional lapangan TN Alas Purwo.
+            Manajemen kredensial, dan pendaftaran personel baru, petugas observasi lapangan Taman Nasional Alas Purwo.
           </p>
         </div>
 
@@ -192,7 +190,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         <div className="shrink-0">
           <button
             onClick={openAddModal}
-            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-lime-600 px-5 py-3 text-sm font-semibold text-white transition hover:from-emerald-500 hover:to-lime-500 shadow-md"
+            className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-600 to-lime-600 px-5 py-3 text-sm font-semibold text-white transition hover:from-emerald-500 hover:to-lime-500 shadow-md"
           >
             <UserPlus className="h-4 w-4" />
             Tambah Petugas
@@ -203,32 +201,82 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
       <hr className="border-emerald-900/40" />
 
       {/* BARIS KONTROL SEARCH INPUT */}
-      <div className="flex items-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#10241a] px-4 py-2.5 text-sm text-slate-400 max-w-md">
-        <Search className="h-4 w-4" />
+      <div className="flex items-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#10241a] px-4 py-2.5 text-sm text-slate-400 max-w-md w-full">
+        <Search className="h-4 w-4 shrink-0" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-transparent outline-none placeholder:text-slate-500 text-white"
-          placeholder="Cari nama, username, hak akses..."
+          placeholder="Cari nama atau username..."
         />
       </div>
 
-      {/* TABEL DATA UTAMA */}
-      <div className="overflow-hidden rounded-2xl border border-emerald-900/60 bg-[#0c1914]/85">
-        <table className="w-full text-left text-sm text-slate-300">
+      {/* ================= TAMPILAN RESPONSIVE LAYER ================= */}
+
+      {/* BENTUK CARD BERSUSUN (Mobile/HP) */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {filteredUsers.length === 0 ? (
+          <div className="text-center py-8 text-slate-500 text-sm">
+            {initialUsers.length === 0
+              ? "Belum ada data petugas lapangan terdaftar."
+              : "Tidak ada hasil pencarian yang sesuai."}
+          </div>
+        ) : (
+          filteredUsers.map((user) => (
+            <div 
+              key={user._id} 
+              className="rounded-2xl border border-emerald-900/50 bg-[#0f2218]/60 p-4 space-y-4 shadow-sm"
+            >
+              {/* Header Card: Hanya Nama & Username */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-emerald-950/80 border border-emerald-900/50 text-emerald-400">
+                    <User className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm text-white">{user.fullName}</h4>
+                    <p className="text-xs text-slate-400">@{user.username}</p>
+                  </div>
+                </div>
+
+                {/* Tombol Tindakan */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => openEditModal(user)}
+                    className="flex items-center justify-center p-2 rounded-xl border border-emerald-900/60 bg-[#10241a] text-emerald-400 transition hover:bg-emerald-900/60"
+                    title="Edit"
+                  >
+                    <Edit2 className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    onClick={() => openDeleteModal(user)}
+                    className="flex items-center justify-center p-2 rounded-xl border border-red-900/60 bg-red-950/20 text-red-400 transition hover:bg-red-950/40"
+                    title="Hapus"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* BENTUK TABEL KLASIK & SEIMBANG (Tablet & Desktop - md ke atas) */}
+      <div className="hidden md:block overflow-hidden rounded-2xl border border-emerald-900/60 bg-[#0c1914]/85">
+        <table className="w-full text-left text-sm text-slate-300 table-fixed">
           <thead className="bg-[#10241a] text-xs font-semibold uppercase tracking-wider text-emerald-400 border-b border-emerald-900/60">
             <tr>
-              <th className="px-6 py-4">Nama Lengkap</th>
-              <th className="px-6 py-4">Username</th>
-              <th className="px-6 py-4">Hak Akses</th>
-              <th className="px-6 py-4 text-center">Aksi</th>
+              <th className="px-6 py-4 w-7/12">Nama Lengkap</th>
+              <th className="px-6 py-4 w-3/12">Username</th>
+              <th className="px-6 py-4 w-2/12 text-right">Aksi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-emerald-950/40">
             {filteredUsers.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-6 py-10 text-center text-slate-500">
+                <td colSpan={3} className="px-6 py-10 text-center text-slate-500">
                   {initialUsers.length === 0
                     ? "Belum ada data petugas lapangan terdaftar."
                     : "Tidak ada hasil pencarian yang sesuai."}
@@ -237,15 +285,10 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
             ) : (
               filteredUsers.map((user) => (
                 <tr key={user._id} className="transition hover:bg-emerald-950/20">
-                  <td className="px-6 py-4 font-medium text-white">{user.fullName}</td>
-                  <td className="px-6 py-4 text-slate-400">@{user.username}</td>
-                  <td className="px-6 py-4">
-                    <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-400 border border-emerald-500/20">
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex justify-center gap-3">
+                  <td className="px-6 py-4 font-medium text-white truncate">{user.fullName}</td>
+                  <td className="px-6 py-4 text-slate-400 truncate">@{user.username}</td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex justify-end gap-3">
                       <button
                         onClick={() => openEditModal(user)}
                         className="rounded-xl border border-emerald-900/60 bg-[#10241a] p-2 text-emerald-400 transition hover:bg-emerald-900/60"
@@ -331,10 +374,9 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
                     Password {modalType === "edit" && <span className="text-[10px] text-slate-500 lowercase">(kosongkan jika tidak diubah)</span>}
                   </label>
                   
-                  {/* 🟢 3. Pembungkus Input Password dengan kelas 'relative' */}
+                  {/* Pembungkus Input Password */}
                   <div className="relative flex items-center">
                     <input
-                      // 🟢 4. Kondisi dinamis tipe input: "text" jika showPassword bernilai true, atau "password" jika false
                       type={showPassword ? "text" : "password"}
                       required={modalType === "add"}
                       value={password}
@@ -343,7 +385,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
                       placeholder={modalType === "add" ? "••••••••" : "Masukkan password baru"}
                     />
                     
-                    {/* 🟢 5. Tombol Ikon Mata Interaktif posisi absolute di kanan dalam input */}
+                    {/* Tombol Ikon Mata Interaktif */}
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
@@ -360,7 +402,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
 
                 <div className="flex justify-end gap-3 pt-2">
                   <button type="button" onClick={closeModal} className="px-4 py-2 rounded-xl border border-emerald-900/60 bg-[#10241a] text-sm text-slate-300 hover:bg-emerald-900/40 transition">Batal</button>
-                  <button type="submit" disabled={isLoading} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-lime-600 text-sm font-semibold text-white hover:from-emerald-500 hover:to-lime-500 transition disabled:opacity-50">
+                  <button type="submit" disabled={isLoading} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-emerald-600 to-lime-600 text-sm font-semibold text-white hover:from-emerald-500 hover:to-lime-500 transition disabled:opacity-50">
                     {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                     {modalType === "add" ? "Simpan Akun" : "Simpan Perubahan"}
                   </button>

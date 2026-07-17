@@ -20,7 +20,7 @@ const getInitials = (name: string) => {
 };
 
 export default async function KelolaPetugasPage() {
-  // 1. Proteksi Akses Sesi Manajer
+  // Proteksi Akses Sesi Manajer
   const session = await auth();
   const sessionUser = session?.user as any;
 
@@ -28,7 +28,7 @@ export default async function KelolaPetugasPage() {
     redirect("/login");
   }
 
-  // 2. Ambil Data Petugas dari Database MongoDB
+  // Ambil Data Petugas dari Database MongoDB
   await connectDB();
   const rawPetugas = await User.find({ role: { $regex: /petugas/i } }).lean();
   
@@ -39,7 +39,7 @@ export default async function KelolaPetugasPage() {
     role: p.role,
   }));
 
-  // 3. Konfigurasi Data Profil Manajer Berdasarkan Login
+  // Konfigurasi Data Profil Manajer Berdasarkan Login
   const realFullName = sessionUser?.fullName || sessionUser?.name || "Manajer Konservasi";
   const realUsername = sessionUser?.username || "manager_tnap";
   const initials = getInitials(realFullName);
@@ -54,24 +54,22 @@ export default async function KelolaPetugasPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030d08] text-slate-100 antialiased flex">
-      {/* SIDEBAR FIXED */}
-      <aside className="fixed inset-y-0 left-0 w-72 z-20">
-        <ManagerSidebar currentPath="/dashboard/manajer/petugas" user={managerProfile} />
-      </aside>
+    <div className="min-h-screen bg-[#030d08] text-slate-100 antialiased relative">
+      {/* Sidebar Dinamis */}
+      <ManagerSidebar currentPath="/dashboard/manajer/petugas" user={managerProfile} />
 
-      {/* AREA UTAMA (Scrollable) */}
-      <div className="pl-72 pr-6 py-6 w-full min-h-screen overflow-y-auto">
+      {/* Padding disesuaikan device */}
+      <div className="px-4 py-4 xl:pl-76 xl:pr-6 xl:py-6 transition-all duration-300 w-full min-h-screen">
         <main className="mx-auto max-w-7xl space-y-6">
           
-          {/* 🟢 MEMANGGIL COMPONENT HEADER ASLI SECARA DINAMIS */}
+          {/* Header Fleksibel */}
           <ManagerHeader 
             title="Kelola Akun Petugas" 
             subtitle="Management Center" 
             user={managerProfile} 
           />
 
-          {/* COMPONENT TABEL UTAMA (Memegang judul tabel, deskripsi card, dan search internal) */}
+          {/* COMPONENT TABEL UTAMA (Dengan wrapper scroll internal */}
           <PetugasManagementTable initialUsers={daftarPetugas} />
 
         </main>
