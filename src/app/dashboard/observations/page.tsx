@@ -141,21 +141,23 @@ export default async function ObservationsPage({
         {/* Main Content Table & Pagination */}
         {result.success && result.observations.length > 0 ? (
           <div className="mt-6 space-y-4">
-            <ObservationTable 
-              items={result.observations.map((item: any) => ({ 
-                ...item, 
-                _id: String(item._id), 
-                foto: item.foto || "", 
-                tanggalPengamatan: item.tanggalPengamatan ? new Date(item.tanggalPengamatan).toISOString() : "" 
-              }))} 
-              deleteAction={async (formData: FormData) => {
-                "use server";
-                const id = formData.get("id")?.toString();
-                if (id) {
-                  await deleteObservation(id);
-                }
-              }} 
-            />
+            <ObservationTable
+  items={result.observations.map((item: any) => ({
+    ...item,
+    _id: String(item._id),
+    foto: item.foto || "",
+    tanggalPengamatan: item.tanggalPengamatan ? new Date(item.tanggalPengamatan).toISOString() : "",
+    createdBy: String(item.createdBy ?? ""),
+  }))}
+  currentUserId={session.user.id}
+  deleteAction={async (formData: FormData) => {
+    "use server";
+    const id = formData.get("id")?.toString();
+    if (id) {
+      await deleteObservation(id);
+    }
+  }}
+/>
 
             {/* Pagination Panel */}
             <div className="obs-pagination-bar">
