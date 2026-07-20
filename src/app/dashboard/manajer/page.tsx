@@ -26,6 +26,8 @@ const getInitials = (name: string) => {
   return parts[0].substring(0, 2).toUpperCase();
 };
 
+const DAY_NAMES = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+
 export default async function ManagerDashboardPage() {
   // Proteksi Sesi dan Hak Akses Manajer
   const session = await auth();
@@ -52,9 +54,11 @@ export default async function ManagerDashboardPage() {
   // Hitung Total Observasi Keseluruhan
   const totalObservations = await Observation.countDocuments();
   
-  // Hitung Observasi Khusus Hari Ini secara Dinamis
-  const startOfToday = new Date();
+  // Hitung Observasi Khusus Hari Ini secara Dinamis (WIB)
+  const nowWIB = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+  const startOfToday = new Date(nowWIB);
   startOfToday.setHours(0, 0, 0, 0);
+
   const observationsToday = await Observation.countDocuments({
     tanggalPengamatan: { $gte: startOfToday }
   });
@@ -64,14 +68,22 @@ export default async function ManagerDashboardPage() {
   const today = new Date();
   const lastGeneratedDate = today.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 
-  const targetDays = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
-  const jsDayMapping: { [key: string]: number } = {
-    "Minggu": 0, "Senin": 1, "Selasa": 2, "Rabu": 3, "Kamis": 4, "Jumat": 5, "Sabtu": 6
-  };
+  // Grafik Bergulir Secara Real - Time
+  const rollingDays: { name: string; dayIndex: number }[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(nowWIB);
+    d.setDate(nowWIB.getDate() - i);
+    rollingDays.push({
+      name: DAY_NAMES[d.getDay()],
+      dayIndex: d.getDay() + 1
+    });
+  }
 
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  
+  // Ambil data 7 hari terakhir dari database
+  const sevenDaysAgo = new Date(nowWIB);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+  sevenDaysAgo.setHours(0, 0, 0, 0);
+
   const weeklyRaw = await Observation.aggregate([
     { $match: { tanggalPengamatan: { $gte: sevenDaysAgo } } },
     {
@@ -87,13 +99,11 @@ export default async function ManagerDashboardPage() {
     mongoDataMap.set(item._id, item.count);
   });
 
-  const weeklyTrends = targetDays.map((dayName) => {
-    const jsDayIndex = jsDayMapping[dayName];
-    const mongoDayIndex = jsDayIndex + 1;
-    const realCount = mongoDataMap.get(mongoDayIndex) || 0;
-
+  // Petakan data database ke dalam urutan hari bergulir dinamis
+  const weeklyTrends = rollingDays.map((dayObj) => {
+    const realCount = mongoDataMap.get(dayObj.dayIndex) || 0;
     return {
-      day: dayName,
+      day: dayObj.name,
       count: realCount
     };
   });
