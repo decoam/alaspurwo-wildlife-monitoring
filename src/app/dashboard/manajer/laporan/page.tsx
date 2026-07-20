@@ -69,7 +69,7 @@ export default async function ManajerKelolaLaporanPage() {
       
       {/* 1. Sembunyikan Sidebar saat print */}
       <div className="print:hidden">
-        <ManagerSidebar currentPath="/dashboard/manajer/kelola-laporan" user={managerProfile} />
+        <ManagerSidebar currentPath="/dashboard/manajer/laporan" user={managerProfile} />
       </div>
 
       {/* Konten Utama (Hilangkan padding kiri dan padding vertikal saat print agar tabel rata kiri-atas kertas) */}

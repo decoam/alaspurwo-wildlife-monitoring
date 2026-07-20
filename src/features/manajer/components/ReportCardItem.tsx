@@ -58,25 +58,33 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center w-full">
           
           {/* Kolom Info Satwa & Petugas */}
-          <div className="md:col-span-5 flex items-center gap-3.5 min-w-0">
-            <div className="shrink-0">
-              <Image
-                src={imageError || !report.foto ? "/placeholder.svg" : report.foto}
-                alt={report.namaSatwa}
-                width={48}
-                height={48}
-                className="h-12 w-12 rounded-lg object-cover border border-emerald-500/10"
-                unoptimized
-                onError={() => setImageError(true)}
-              />
-            </div>
-            <div className="min-w-0">
-              <h3 className="text-sm font-semibold text-white italic truncate">{report.namaSatwa}</h3>
-              <div className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5 truncate">
-                <User size={11} className="text-emerald-500/80 shrink-0" />
-                <span>Petugas: <strong className="text-slate-200 font-normal">{report.namaPetugas}</strong></span>
+          <div className="md:col-span-5 flex items-center justify-between gap-3.5 min-w-0">
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="shrink-0">
+                <Image
+                  src={imageError || !report.foto ? "/placeholder.svg" : report.foto}
+                  alt={report.namaSatwa}
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 rounded-lg object-cover border border-emerald-500/10"
+                  unoptimized
+                  onError={() => setImageError(true)}
+                />
               </div>
-              <span className="text-[11px] text-emerald-400 font-medium block mt-0.5">{report.jumlah} Ekor</span>
+              <div className="min-w-0">
+                <h3 className="text-sm font-semibold text-white italic truncate">{report.namaSatwa}</h3>
+                <div className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1.5 truncate">
+                  <User size={11} className="text-emerald-500/80 shrink-0" />
+                  <span>Petugas: <strong className="text-slate-200 font-normal">{report.namaPetugas}</strong></span>
+                </div>
+              </div>
+            </div>
+
+            {/* UPGRADE TATA LETAK: Jumlah hewan dipindahkan ke samping kanan info satwa berbentuk badge yang bersih */}
+            <div className="shrink-0 pl-2">
+              <span className="inline-block px-2 py-0.5 rounded-md bg-emerald-950/80 border border-emerald-500/20 text-emerald-400 font-semibold text-[10px]">
+                {report.jumlah} Ekor
+              </span>
             </div>
           </div>
 
@@ -85,8 +93,8 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
             <div className="flex items-start gap-1.5">
               <MapPin size={12} className="text-emerald-500 shrink-0 mt-0.5" />
               <div className="leading-tight">
+                {/* LOKASI BERSIH: Hanya menampilkan nama pos/lokasi tunggal tanpa kurung ganda */}
                 <span className="font-semibold text-slate-100">{report.posPengamatan || report.lokasi}</span>
-                <span className="block text-[10px] text-slate-400 mt-0.5">({report.lokasi})</span>
               </div>
             </div>
             <div className="flex items-center gap-1.5">
