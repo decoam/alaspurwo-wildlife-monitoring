@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import ProtectedSpecies from "../models/ProtectedSpecies"; // sesuaikan path model kamu
+import SatwaDilindungi from "@/models/SatwaDilindungi";
 
-dotenv.config(); // Untuk membaca MONGODB_URI dari .env
+dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://<user>:<password>@cluster.mongodb.net/your-db-name";
+const MONGODB_URI = process.env.MONGODB_URI || "";
 
-const initialSpeciesData = [
+const dataAwalSatwa = [
   {
     namaSpesies: "Banteng Jawa",
     namaLatin: "Bos javanicus",
@@ -51,25 +51,30 @@ const initialSpeciesData = [
   },
 ];
 
-async function seedProtectedSpecies() {
+async function seedSatwa() {
+  if (!MONGODB_URI) {
+    console.error("Error: MONGODB_URI tidak ditemukan di file .env!");
+    process.exit(1);
+  }
+
   try {
-    console.log("Connecting to MongoDB Cluster...");
+    console.log("Menghubungkan ke MongoDB Cluster...");
     await mongoose.connect(MONGODB_URI);
-    console.log("Connected successfully!");
+    console.log("Terhubung!");
 
-    // 1. Bersihkan koleksi jika sudah ada (opsional, agar tidak duplikat)
-    await ProtectedSpecies.deleteMany({});
-    console.log("Cleared existing protected_species collection.");
+    // Bersihkan koleksi 'satwa_dilindungi'
+    await SatwaDilindungi.deleteMany({});
+    console.log("Koleksi 'satwa_dilindungi' berhasil dibersihkan.");
 
-    // 2. Insert data awal secara otomatis
-    const inserted = await ProtectedSpecies.insertMany(initialSpeciesData);
-    console.log(`Successfully seeded ${inserted.length} protected species into cluster!`);
+    // Insert data baru
+    const result = await SatwaDilindungi.insertMany(dataAwalSatwa);
+    console.log(`Berhasil menambahkan ${result.length} data ke koleksi 'satwa_dilindungi'!`);
 
     process.exit(0);
   } catch (error) {
-    console.error("Failed to seed database:", error);
+    console.error("Gagal melakukan seeding:", error);
     process.exit(1);
   }
 }
 
-seedProtectedSpecies();
+seedSatwa();
