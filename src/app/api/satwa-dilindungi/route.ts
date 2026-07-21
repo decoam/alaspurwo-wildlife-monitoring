@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
-import SatwaDilindungi from "@/models/SatwaDilindungi"; // Import model yang sudah dibuat
+import SatwaDilindungi from "@/models/Satwa"; // Import model yang sudah dibuat
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
