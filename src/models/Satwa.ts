@@ -1,32 +1,27 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface ISatwaDilindungi extends Document {
+export interface ISatwa extends Document {
   namaSpesies: string;
   namaLatin: string;
   keywords: string[];
   kategori: string;
+  isProtected: boolean; // true = Dilindungi, false = Tidak Dilindungi
   statusPerlindungan: string;
-  isPrioritas: boolean;
 }
 
-const SatwaDilindungiSchema: Schema = new Schema(
+const SatwaSchema: Schema = new Schema(
   {
-    namaSpesies: { type: String, required: true },
+    namaSpesies: { type: String, required: true, unique: true },
     namaLatin: { type: String, required: true },
     keywords: { type: [String], required: true },
-    kategori: { type: String, required: true },
-    statusPerlindungan: { 
-      type: String, 
-      default: "UU No. 5 Tahun 1990 / Permen LHK" 
-    },
-    isPrioritas: { type: Boolean, default: true },
+    kategori: { type: String, required: true }, // Mamalia, Aves, Reptil, dll.
+    isProtected: { type: Boolean, required: true, default: false }, // <--- FLAG UTAMA
+    statusPerlindungan: { type: String, default: "Tidak Dilindungi" },
   },
   { 
     timestamps: true,
-    // Memaksa nama koleksi di MongoDB menjadi 'satwa_dilindungi'
-    collection: "satwa_dilindungi" 
+    collection: "satwa" // Nama koleksi di MongoDB Cluster
   }
 );
 
-export default mongoose.models.SatwaDilindungi ||
-  mongoose.model<ISatwaDilindungi>("SatwaDilindungi", SatwaDilindungiSchema, "satwa_dilindungi");
+export default mongoose.models.Satwa || mongoose.model<ISatwa>("Satwa", SatwaSchema, "satwa");
