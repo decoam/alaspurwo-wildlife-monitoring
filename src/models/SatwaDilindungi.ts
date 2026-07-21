@@ -15,12 +15,16 @@ const SatwaDilindungiSchema: Schema = new Schema(
     namaLatin: { type: String, required: true },
     keywords: { type: [String], required: true },
     kategori: { type: String, required: true },
-    statusPerlindungan: { type: String, default: "UU No. 5 Tahun 1990 / Permen LHK" },
+    statusPerlindungan: { 
+      type: String, 
+      default: "UU No. 5 Tahun 1990 / Permen LHK" 
+    },
     isPrioritas: { type: Boolean, default: true },
   },
   { 
     timestamps: true,
-    collection: "satwa_dilindungi" // <--- NAMA KOLEKSI BAHASA INDONESIA EKSPLISIT
+    // Memaksa nama koleksi di MongoDB menjadi 'satwa_dilindungi'
+    collection: "satwa_dilindungi" 
   }
 );
 

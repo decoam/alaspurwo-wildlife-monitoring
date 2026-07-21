@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import path from "path";
 import SatwaDilindungi from "@/models/SatwaDilindungi";
 
-dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
-const MONGODB_URI = process.env.MONGODB_URI || "";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const dataAwalSatwa = [
   {
@@ -52,27 +54,32 @@ const dataAwalSatwa = [
 ];
 
 async function seedSatwa() {
+  console.log("\n========================================");
+  console.log("🌱 PROSES SEEDING KOLEKSI SATWA DILINDUNGI...");
+  console.log("========================================\n");
+
   if (!MONGODB_URI) {
-    console.error("Error: MONGODB_URI tidak ditemukan di file .env!");
+    console.error("❌ ERROR: MONGODB_URI tidak ditemukan!");
     process.exit(1);
   }
 
   try {
-    console.log("Menghubungkan ke MongoDB Cluster...");
-    await mongoose.connect(MONGODB_URI);
-    console.log("Terhubung!");
+    const conn = await mongoose.connect(MONGODB_URI);
+    console.log(`✅ Terhubung ke database: ${conn.connection.name}`);
 
-    // Bersihkan koleksi 'satwa_dilindungi'
+    // Bersihkan data lama
     await SatwaDilindungi.deleteMany({});
-    console.log("Koleksi 'satwa_dilindungi' berhasil dibersihkan.");
+    console.log("🧹 Koleksi 'satwa_dilindungi' dibersihkan.");
 
     // Insert data baru
     const result = await SatwaDilindungi.insertMany(dataAwalSatwa);
-    console.log(`Berhasil menambahkan ${result.length} data ke koleksi 'satwa_dilindungi'!`);
+    console.log(`🎉 Berhasil menambahkan ${result.length} data ke koleksi 'satwa_dilindungi'!`);
+    console.log("========================================\n");
 
+    await mongoose.disconnect();
     process.exit(0);
   } catch (error) {
-    console.error("Gagal melakukan seeding:", error);
+    console.error("❌ GAGAL MEMBUAT KOLEKSI:", error);
     process.exit(1);
   }
 }
