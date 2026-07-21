@@ -77,7 +77,7 @@ export default async function ManajerLaporanKementerianPage() {
           <div className="print:hidden">
             <ManagerHeader 
               title="Pelaporan Kementerian LHK" 
-              subtitle="Pusat Kepatuhan Kepatuhan Kehati & Validasi Dokumen Negara" 
+              subtitle="Pusat Kepatuhan Kehati & Validasi Dokumen Negara" 
               user={managerProfile} 
             />
           </div>
