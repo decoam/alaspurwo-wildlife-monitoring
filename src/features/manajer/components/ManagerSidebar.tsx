@@ -75,15 +75,15 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
         <div>
           {/* Bagian Profil User */}
           <div className="mb-8 flex items-center gap-3 border-b border-emerald-900/20 pb-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-white">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-white">
               {user.avatarInitials || "MG"}
             </div>
 
             <div className="min-w-0 flex-1 leading-tight">
-              <p className="text-sm font-semibold text-white break-words">
+              <p className="text-sm font-semibold text-white wrap-break-words">
                 {user.fullName || "Manajer TNAP"}
               </p>
-              <p className="text-xs text-emerald-200/70 mt-0.5 break-words">
+              <p className="text-xs text-emerald-200/70 mt-0.5 wrap-break-words">
                 {user.role || "Manajer"}
               </p>
             </div>
