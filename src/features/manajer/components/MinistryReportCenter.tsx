@@ -17,19 +17,25 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
   const [submitStatus, setSubmitStatus] = useState<"draft" | "sent">("draft");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  // State Dinamis dari Database
+  // State Dinamis dari Database Master Satwa Universal
   const [protectedKeywords, setProtectedKeywords] = useState<string[]>([]);
   const [isLoadingSpecies, setIsLoadingSpecies] = useState(true);
 
-  // 1. Fetch Data Master Satwa Dilindungi dari API Database
+  // 1. Fetch Data Master Satwa Dilindungi dari Endpoint Universal (/api/satwa?protected=true)
   useEffect(() => {
     const fetchProtectedSpecies = async () => {
       try {
-        const res = await fetch("/api/satwa-dilindungi");
+        const res = await fetch("/api/satwa?protected=true");
+
+        // Memastikan HTTP response OK (bukan 404/500 HTML Page)
+        if (!res.ok) {
+          throw new Error(`Gagal mengambil data satwa. Status: ${res.status}`);
+        }
+
         const result = await res.json();
 
         if (result.success && Array.isArray(result.data)) {
-          // Mengambil semua array kata kunci dari koleksi satwa_dilindungi
+          // Mengambil semua array kata kunci dari koleksi satwa universal
           const keywords = result.data.flatMap(
             (spesies: { keywords: string[]; namaSpesies: string }) =>
               spesies.keywords || [spesies.namaSpesies.toLowerCase()]

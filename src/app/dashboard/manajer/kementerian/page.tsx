@@ -8,7 +8,8 @@ import { ManagerSidebar } from "@/features/manajer/components/ManagerSidebar";
 import { ManagerHeader } from "@/features/manajer/components/ManagerHeader";
 import { MinistryReportCenter } from "@/features/manajer/components/MinistryReportCenter";
 
-export const runtime = "nodejs";
+// Memastikan halaman selalu mengambil data observasi terbaru tanpa stale cache
+export const revalidate = 0;
 
 const getInitials = (name: string) => {
   if (!name) return "M";
