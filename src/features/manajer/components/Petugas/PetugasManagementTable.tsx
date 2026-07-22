@@ -186,7 +186,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         <div className="shrink-0">
           <button
             onClick={openAddModal}
-            className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-lime-600 px-5 py-3 text-sm font-semibold text-white transition hover:from-emerald-500 hover:to-lime-500 shadow-md"
+            className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-600 to-lime-600 px-5 py-3 text-sm font-semibold text-white transition hover:from-emerald-500 hover:to-lime-500 shadow-md"
           >
             <UserPlus className="h-4 w-4" />
             Tambah Petugas
