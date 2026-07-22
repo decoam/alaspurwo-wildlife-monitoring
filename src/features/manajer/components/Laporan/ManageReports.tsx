@@ -227,14 +227,27 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
           {/* Input Tanggal Tambahan - Hanya tampil saat tab "Pilih Tanggal" aktif */}
           {exportScope === "date" && (
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-xl bg-[#040906] border border-emerald-950/60 animate-in fade-in slide-in-from-top-1 duration-200">
-              <label className="text-xs text-slate-400 flex items-center gap-1.5 shrink-0">
+              <label 
+                htmlFor="filter-date-input" 
+                className="text-xs text-slate-400 flex items-center gap-1.5 shrink-0 cursor-pointer select-none"
+              >
                 Saring Tanggal Observasi:
               </label>
               <input
+                id="filter-date-input"
                 type="date"
                 value={filterDate}
+                onClick={(e) => {
+                  if ("showPicker" in HTMLInputElement.prototype) {
+                    try {
+                      e.currentTarget.showPicker();
+                    } catch (error) {
+                      console.error("Gagal membuka date picker:", error);
+                    }
+                  }
+                }}
                 onChange={(e) => setFilterDate(e.target.value)}
-                className="bg-[#ffffff] border border-emerald-900/60 rounded-lg px-3 py-1.5 text-xs text-black focus:outline-none focus:border-emerald-500 transition-colors w-full sm:w-auto"
+                className="bg-[#ffffff] border border-emerald-900/60 rounded-lg px-3 py-1.5 text-xs text-black focus:outline-none focus:border-emerald-500 transition-colors w-full sm:w-auto cursor-pointer"
               />
             </div>
           )}
