@@ -44,11 +44,10 @@ export const ReportTables: React.FC<ReportTablesProps> = ({
                 <th className="p-3 font-semibold">Spesies Prioritas</th>
                 <th className="p-3 font-semibold">Akumulasi Populasi</th>
                 <th className="p-3 font-semibold">Pos Pengamatan</th>
-                <th className="p-3 font-semibold">Status Perlindungan</th>
+                <th className="p-3 font-semibold text-center sm:text-left">Status Perlindungan</th>
               </tr>
             </thead>
             <tbody>
-              {/* PERBAIKAN: Empty state jika data kosong */}
               {monthlySummary.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="p-6 text-center text-slate-500">
@@ -61,10 +60,14 @@ export const ReportTables: React.FC<ReportTablesProps> = ({
                     <td className="p-3 font-medium text-white italic">{item.namaSatwa}</td>
                     <td className="p-3 text-emerald-400 font-bold">{item.totalJumlah} Ekor</td>
                     <td className="p-3">{item.lokasiList.join(", ")}</td>
-                    <td className="p-3">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-red-950/60 border border-red-900/40 text-red-400">
-                        Dilindungi (Prioritas)
-                      </span>
+                    <td className="p-3 text-center sm:text-left">
+                      
+                      {/* BADGE BERSUSUN RAPI (Flex-col dengan satu kotak border yang utuh) */}
+                      <div className="inline-flex flex-col items-center justify-center px-2.5 py-1 rounded-lg bg-red-950/50 border border-red-800/60 text-red-400 shadow-sm leading-tight text-center">
+                        <span className="font-semibold text-[10px] tracking-wide">Dilindungi</span>
+                        <span className="text-[9px] opacity-80 font-normal">(Prioritas)</span>
+                      </div>
+
                     </td>
                   </tr>
                 ))
@@ -83,7 +86,6 @@ export const ReportTables: React.FC<ReportTablesProps> = ({
               </tr>
             </thead>
             <tbody>
-              {/* Empty state jika data kosong */}
               {protectedAnimalReports.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="p-6 text-center text-slate-500">
