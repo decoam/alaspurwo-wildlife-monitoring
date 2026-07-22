@@ -4,9 +4,9 @@ import { Observation } from "@/models/Observation";
 import { redirect } from "next/navigation";
 import React from "react";
 
-import { ManagerSidebar } from "@/features/manajer/components/ManagerSidebar";
-import { ManagerHeader } from "@/features/manajer/components/ManagerHeader";
-import { ManageReports } from "@/features/manajer/components/ManageReports";
+import { ManagerSidebar } from "@/features/manajer/components/Dashboard/ManagerSidebar";
+import { ManagerHeader } from "@/features/manajer/components/Dashboard/ManagerHeader";
+import { ManageReports } from "@/features/manajer/components/Laporan/ManageReports";
 
 export const runtime = "nodejs";
 

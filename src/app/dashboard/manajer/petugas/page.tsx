@@ -4,9 +4,9 @@ import { User } from "@/models/User";
 import { redirect } from "next/navigation";
 import React from "react";
 
-import { ManagerSidebar } from "@/features/manajer/components/ManagerSidebar";
-import { ManagerHeader } from "@/features/manajer/components/ManagerHeader";
-import { PetugasManagementTable } from "@/features/manajer/components/PetugasManagementTable";
+import { ManagerSidebar } from "@/features/manajer/components/Dashboard/ManagerSidebar";
+import { ManagerHeader } from "@/features/manajer/components/Dashboard/ManagerHeader";
+import { PetugasManagementTable } from "@/features/manajer/components/Petugas/PetugasManagementTable";
 
 export const runtime = "nodejs";
 

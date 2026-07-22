@@ -4,9 +4,9 @@ import { Observation } from "@/models/Observation"; // Sesuaikan nama model data
 import { redirect } from "next/navigation";
 import React from "react";
 
-import { ManagerSidebar } from "@/features/manajer/components/ManagerSidebar";
-import { ManagerHeader } from "@/features/manajer/components/ManagerHeader";
-import { ManagerObservationTable } from "@/features/manajer/components/ManagerObservationTable";
+import { ManagerSidebar } from "@/features/manajer/components/Dashboard/ManagerSidebar";
+import { ManagerHeader } from "@/features/manajer/components/Dashboard/ManagerHeader";
+import { ManagerObservationTable } from "@/features/manajer/components/Histori/ManagerObservationTable";
 
 export const runtime = "nodejs";
 
