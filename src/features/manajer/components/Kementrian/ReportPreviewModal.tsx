@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { FileText, Send, X } from "lucide-react";
 
 interface ReportPreviewModalProps {
@@ -27,6 +27,26 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   isSubmitting,
   submitStatus,
 }) => {
+  // PERBAIKAN 1: Penanganan Tombol Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  // PERBAIKAN 2: Fallback Stringify aman dari Circular Reference Error
+  const formattedJsonData = useMemo(() => {
+    try {
+      return JSON.stringify(currentPayload.data, null, 2);
+    } catch {
+      return "// [Gagal mengonversi data ke format JSON]";
+    }
+  }, [currentPayload.data]);
+
   if (!isOpen) return null;
 
   return (
@@ -64,7 +84,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           <div className="pt-2">
             <p className="text-slate-400 mb-2 font-sans font-semibold text-[11px]">Daftar Data Terlampir:</p>
             <pre className="bg-[#030705] p-3 rounded-xl border border-emerald-950 text-[11px] overflow-x-auto text-emerald-300">
-              {JSON.stringify(currentPayload.data, null, 2)}
+              {formattedJsonData}
             </pre>
           </div>
         </div>
