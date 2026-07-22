@@ -71,7 +71,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
     setModalType("delete");
   };
 
-  // PERBAIKAN: Reset errorMsg dan successMsg saat modal ditutup
+  // Reset errorMsg dan successMsg saat modal ditutup
   const closeModal = () => {
     setModalType(null);
     setSelectedUser(null);

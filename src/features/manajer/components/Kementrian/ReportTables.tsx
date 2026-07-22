@@ -20,6 +20,14 @@ export const ReportTables: React.FC<ReportTablesProps> = ({
   monthlySummary,
   protectedAnimalReports,
 }) => {
+  // Helper validasi tanggal aman
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return "-";
+    const parsedDate = new Date(dateStr);
+    if (isNaN(parsedDate.getTime())) return "-";
+    return parsedDate.toLocaleDateString("id-ID");
+  };
+
   return (
     <div className="space-y-3">
       <h4 className="text-xs font-bold tracking-wider text-emerald-400 uppercase px-1">
@@ -40,18 +48,27 @@ export const ReportTables: React.FC<ReportTablesProps> = ({
               </tr>
             </thead>
             <tbody>
-              {monthlySummary.map((item, idx) => (
-                <tr key={idx} className="border-b border-emerald-950/40 hover:bg-emerald-950/10 text-slate-300">
-                  <td className="p-3 font-medium text-white italic">{item.namaSatwa}</td>
-                  <td className="p-3 text-emerald-400 font-bold">{item.totalJumlah} Ekor</td>
-                  <td className="p-3">{item.lokasiList.join(", ")}</td>
-                  <td className="p-3">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-red-950/60 border border-red-900/40 text-red-400">
-                      Dilindungi (Prioritas)
-                    </span>
+              {/* PERBAIKAN: Empty state jika data kosong */}
+              {monthlySummary.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="p-6 text-center text-slate-500">
+                    Tidak ada data laporan akumulasi bulanan.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                monthlySummary.map((item, idx) => (
+                  <tr key={idx} className="border-b border-emerald-950/40 hover:bg-emerald-950/10 text-slate-300">
+                    <td className="p-3 font-medium text-white italic">{item.namaSatwa}</td>
+                    <td className="p-3 text-emerald-400 font-bold">{item.totalJumlah} Ekor</td>
+                    <td className="p-3">{item.lokasiList.join(", ")}</td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-red-950/60 border border-red-900/40 text-red-400">
+                        Dilindungi (Prioritas)
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         ) : (
@@ -66,17 +83,26 @@ export const ReportTables: React.FC<ReportTablesProps> = ({
               </tr>
             </thead>
             <tbody>
-              {protectedAnimalReports.map((rep) => (
-                <tr key={rep._id} className="border-b border-emerald-950/40 hover:bg-emerald-950/10 text-slate-300">
-                  <td className="p-3 font-medium text-white italic">{rep.namaSatwa}</td>
-                  <td className="p-3 text-emerald-400 font-bold">{rep.jumlah} Ekor</td>
-                  <td className="p-3">{rep.posPengamatan || rep.lokasi}</td>
-                  <td className="p-3 text-slate-200">{rep.namaPetugas}</td>
-                  <td className="p-3">
-                    {new Date(rep.tanggalPengamatan).toLocaleDateString("id-ID")}
+              {/* Empty state jika data kosong */}
+              {protectedAnimalReports.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="p-6 text-center text-slate-500">
+                    Tidak ada data laporan perjumpaan lapangan (BAP).
                   </td>
                 </tr>
-              ))}
+              ) : (
+                protectedAnimalReports.map((rep) => (
+                  <tr key={rep._id} className="border-b border-emerald-950/40 hover:bg-emerald-950/10 text-slate-300">
+                    <td className="p-3 font-medium text-white italic">{rep.namaSatwa}</td>
+                    <td className="p-3 text-emerald-400 font-bold">{rep.jumlah} Ekor</td>
+                    <td className="p-3">{rep.posPengamatan || rep.lokasi}</td>
+                    <td className="p-3 text-slate-200">{rep.namaPetugas}</td>
+                    <td className="p-3">
+                      {formatDate(rep.tanggalPengamatan)}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         )}

@@ -20,7 +20,7 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
 
-  // PERBAIKAN: Validasi tanggal agar aman dari Invalid Date
+  // Validasi tanggal agar aman dari Invalid Date
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return "-";
     const parsedDate = new Date(dateStr);

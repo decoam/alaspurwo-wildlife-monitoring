@@ -27,7 +27,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   isSubmitting,
   submitStatus,
 }) => {
-  // PERBAIKAN 1: Penanganan Tombol Escape
+  // Penanganan Tombol Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -38,7 +38,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // PERBAIKAN 2: Fallback Stringify aman dari Circular Reference Error
+  // Fallback Stringify aman dari Circular Reference Error
   const formattedJsonData = useMemo(() => {
     try {
       return JSON.stringify(currentPayload.data, null, 2);
