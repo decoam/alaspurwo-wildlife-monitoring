@@ -6,7 +6,7 @@ import React from "react";
 
 import { ManagerSidebar } from "@/features/manajer/components/Dashboard/ManagerSidebar";
 import { ManagerHeader } from "@/features/manajer/components/Dashboard/ManagerHeader";
-import { MinistryReportCenter } from "@/features/manajer/components/Kementrian/MinistryReportCenter";
+import { MinistryReportCenter } from "@/features/manajer/components/Kementerian/MinistryReportCenter";
 
 // Memastikan halaman selalu mengambil data observasi terbaru tanpa stale cache
 export const revalidate = 0;

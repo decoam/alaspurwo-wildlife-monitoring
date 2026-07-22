@@ -13,7 +13,7 @@ import { PerformanceCharts } from "@/features/manajer/components/Dashboard/Perfo
 import { LiveObservationTable } from "@/features/manajer/components/Dashboard/LiveObservationTable";
 import { AccessControlCard } from "@/features/manajer/components/Petugas/AccessControlCard";
 import { ExportReportCard } from "@/features/manajer/components/Laporan/ExportReportCard";
-import { MinistryReportCard } from "@/features/manajer/components/Kementrian/MinistryReportCard";
+import { MinistryReportCard } from "@/features/manajer/components/Kementerian/MinistryReportCard";
 
 export const runtime = "nodejs";
 
