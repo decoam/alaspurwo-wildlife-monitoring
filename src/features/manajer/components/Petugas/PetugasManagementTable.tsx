@@ -71,9 +71,12 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
     setModalType("delete");
   };
 
+  // PERBAIKAN: Reset errorMsg dan successMsg saat modal ditutup
   const closeModal = () => {
     setModalType(null);
     setSelectedUser(null);
+    setErrorMsg(null);
+    setSuccessMsg(null);
   };
 
   // Aksi Tambah Akun
@@ -102,8 +105,8 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         closeModal();
         router.refresh();
       }, 1500);
-    } catch (err: any) {
-      setErrorMsg(err.message);
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Terjadi kesalahan.");
     } finally {
       setIsLoading(false);
     }
@@ -135,8 +138,8 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         closeModal();
         router.refresh();
       }, 1500);
-    } catch (err: any) {
-      setErrorMsg(err.message);
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Terjadi kesalahan.");
     } finally {
       setIsLoading(false);
     }
@@ -164,8 +167,8 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         closeModal();
         router.refresh();
       }, 1500);
-    } catch (err: any) {
-      setErrorMsg(err.message);
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Terjadi kesalahan.");
     } finally {
       setIsLoading(false);
     }
@@ -174,7 +177,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
   return (
     <div className="rounded-[28px] border border-emerald-900/60 bg-[#0c1914]/85 p-4 sm:p-6 shadow-xl space-y-6">
       
-      {/* BAGIAN ATAS CARD: Judul, Teks Keterangan, dan Tombol Tambah Petugas */}
+      {/* BAGIAN ATAS CARD */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
@@ -186,7 +189,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
           </p>
         </div>
 
-        {/* Tombol Tambah Petugas */}
         <div className="shrink-0">
           <button
             onClick={openAddModal}
@@ -212,9 +214,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         />
       </div>
 
-      {/* ================= TAMPILAN RESPONSIVE LAYER ================= */}
-
-      {/* BENTUK CARD BERSUSUN (Mobile/HP) */}
+      {/* MOBILE LIST CARD */}
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {filteredUsers.length === 0 ? (
           <div className="text-center py-8 text-slate-500 text-sm">
@@ -228,7 +228,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
               key={user._id} 
               className="rounded-2xl border border-emerald-900/50 bg-[#0f2218]/60 p-4 space-y-4 shadow-sm"
             >
-              {/* Header Card: Hanya Nama & Username */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="p-2 rounded-xl bg-emerald-950/80 border border-emerald-900/50 text-emerald-400">
@@ -240,7 +239,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
                   </div>
                 </div>
 
-                {/* Tombol Tindakan */}
                 <div className="flex gap-2">
                   <button
                     onClick={() => openEditModal(user)}
@@ -263,7 +261,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         )}
       </div>
 
-      {/* BENTUK TABEL KLASIK & SEIMBANG (Tablet & Desktop - md ke atas) */}
+      {/* DESKTOP TABLE */}
       <div className="hidden md:block overflow-hidden rounded-2xl border border-emerald-900/60 bg-[#0c1914]/85">
         <table className="w-full text-left text-sm text-slate-300 table-fixed">
           <thead className="bg-[#10241a] text-xs font-semibold uppercase tracking-wider text-emerald-400 border-b border-emerald-900/60">
@@ -312,21 +310,19 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         </table>
       </div>
 
-      {/* ================= MODAL DIALOG POP-UP INTERAKTIF ================= */}
+      {/* MODAL DIALOG */}
       {modalType && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-[28px] border border-emerald-900/60 bg-[#0c1914] p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
-            {/* Tombol Close */}
             <button onClick={closeModal} className="absolute top-4 right-4 text-slate-400 hover:text-white transition">
               <X className="h-5 w-5" />
             </button>
 
-            {/* Konten Sesuai Tipe Modal */}
             {modalType === "delete" ? (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-white">Konfirmasi Hapus Akun</h3>
                 <p className="text-sm text-slate-400">
-                  Apakah Anda yakin ingin menghapus akun petugas <strong className="text-emerald-400">@{selectedUser?.username}</strong>? Aktivitas terkait petugas ini tidak akan terhapus, tetapi akun ini tidak bisa masuk lagi ke sistem.
+                  Apakah Anda yakin ingin menghapus akun petugas <strong className="text-emerald-400">@{selectedUser?.username}</strong>?
                 </p>
                 {errorMsg && <div className="text-sm bg-red-950/40 text-red-400 p-3 rounded-xl border border-red-900/60">{errorMsg}</div>}
                 {successMsg && <div className="text-sm bg-emerald-950/40 text-emerald-400 p-3 rounded-xl border border-emerald-900/60">{successMsg}</div>}
@@ -339,7 +335,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
                 </div>
               </div>
             ) : (
-              // FORM UNTUK ADD / EDIT PETUGAS
               <form onSubmit={modalType === "add" ? handleAddPetugas : handleEditPetugas} className="space-y-4">
                 <h3 className="text-lg font-semibold text-white">
                   {modalType === "add" ? "Tambah Akun Petugas Baru" : "Edit Akun Petugas"}
@@ -374,7 +369,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
                     Password {modalType === "edit" && <span className="text-[10px] text-slate-500 lowercase">(kosongkan jika tidak diubah)</span>}
                   </label>
                   
-                  {/* Pembungkus Input Password */}
                   <div className="relative flex items-center">
                     <input
                       type={showPassword ? "text" : "password"}
@@ -385,7 +379,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
                       placeholder={modalType === "add" ? "••••••••" : "Masukkan password baru"}
                     />
                     
-                    {/* Tombol Ikon Mata Interaktif */}
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}

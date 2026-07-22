@@ -36,7 +36,7 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
           <table className="min-w-full divide-y divide-emerald-900/60 text-sm text-slate-300">
             <thead className="bg-emerald-950/50 text-left text-slate-200">
               <tr>
-                <th className="px-4 py-3 w-[70px]">Foto</th>
+                <th className="px-4 py-3 w-17.5">Foto</th>
                 <th className="px-4 py-3">Nama Satwa</th>
                 <th className="px-4 py-3">Kategori</th>
                 {/* Kolom yang disembunyikan di mobile (hidden), muncul di desktop (md:table-cell) */}
@@ -46,7 +46,7 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
                 <th className="px-4 py-3 hidden md:table-cell">Tanggal</th>
                 <th className="px-4 py-3">Petugas</th>
                 <th className="px-4 py-3 hidden md:table-cell">Status Upload</th>
-                <th className="px-4 py-3 text-center w-[60px]">Aksi</th>
+                <th className="px-4 py-3 text-center w-15">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-emerald-900/60 bg-[#0d1d14]">
@@ -109,7 +109,7 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
             </button>
 
             {/* SISI KIRI: Foto (Fix Error Aspect Ratio Next.js/Browser dengan w-full h-auto) */}
-            <div className="lg:col-span-6 flex flex-col justify-center bg-[#07140e] rounded-2xl overflow-hidden border border-emerald-900/20 max-h-[350px] lg:max-h-full">
+            <div className="lg:col-span-6 flex flex-col justify-center bg-[#07140e] rounded-2xl overflow-hidden border border-emerald-900/20 max-h-87.5 lg:max-h-full">
               <img 
                 src={selectedItem.foto || "/placeholder.svg"} 
                 alt={selectedItem.namaSatwa} 

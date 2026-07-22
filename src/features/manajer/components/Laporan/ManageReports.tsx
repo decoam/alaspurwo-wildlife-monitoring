@@ -6,9 +6,7 @@ import {
   FileText, 
   CheckSquare, 
   Square,
-  Sparkles,
-  Info,
-  Calendar
+  Info
 } from "lucide-react";
 import { ExportReportTable } from "./ExportReportTable";
 import { ReportCardItem } from "./ReportCardItem";
@@ -33,24 +31,35 @@ interface ManageReportsProps {
   initialReports: FieldReport[];
 }
 
+const getLocalDateString = (dateInput?: string | Date): string => {
+  const d = dateInput ? new Date(dateInput) : new Date();
+  if (isNaN(d.getTime())) return "";
+  
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  
+  return `${year}-${month}-${day}`;
+};
+
 export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) => {
   const [reports] = useState<FieldReport[]>(initialReports);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [exportScope, setExportScope] = useState<"all" | "today" | "selected" | "date">("all");
-  // State baru untuk menyimpan tanggal filter pilihan user
+  // State untuk menyimpan tanggal filter pilihan user
   const [filterDate, setFilterDate] = useState<string>("");
 
+  // Menggunakan perbandingan string
   const todayReports = useMemo(() => {
-    const todayStr = new Date().toDateString();
-    return reports.filter(rep => new Date(rep.tanggalPengamatan).toDateString() === todayStr);
+    const todayStr = getLocalDateString(new Date());
+    return reports.filter(rep => getLocalDateString(rep.tanggalPengamatan) === todayStr);
   }, [reports]);
 
-  // Filter laporan berdasarkan tanggal spesifik yang dipilih user
+  // Filter laporan berdasarkan tanggal spesifik
   const customDateReports = useMemo(() => {
     if (!filterDate) return [];
-    // Menyamakan format tanggal (YYYY-MM-DD)
     return reports.filter(rep => {
-      const repDate = new Date(rep.tanggalPengamatan).toISOString().split("T")[0];
+      const repDate = getLocalDateString(rep.tanggalPengamatan);
       return repDate === filterDate;
     });
   }, [reports, filterDate]);
@@ -133,11 +142,12 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
     window.print();
   };
 
-  // Helper logic untuk mengelompokkan laporan berdasarkan tanggal YYYY-MM-DD
+  // Helper logic untuk mengelompokkan laporan berdasarkan tanggal YYYY-MM-DD lokal
   const groupedReports = useMemo(() => {
     const groups: { [key: string]: FieldReport[] } = {};
     listToShow.forEach((report) => {
-      const dateKey = new Date(report.tanggalPengamatan).toISOString().split("T")[0];
+      const dateKey = getLocalDateString(report.tanggalPengamatan);
+      if (!dateKey) return;
       if (!groups[dateKey]) {
         groups[dateKey] = [];
       }
@@ -174,7 +184,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
             <span className="text-xs font-semibold text-white">Tentukan Cakupan Data Yang Akan Diekspor:</span>
           </div>
 
-          {/* Grid Tab Selector - Sekarang Menjadi 4 Kolom Pilihan */}
+          {/* Grid Tab Selector */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 p-1 bg-[#040906] rounded-xl border border-emerald-950">
             <button
               type="button"
@@ -279,7 +289,9 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
         ) : (
           sortedDates.map((dateKey) => {
             const reportsInDate = groupedReports[dateKey];
-            const formattedDate = new Date(dateKey).toLocaleDateString("id-ID", {
+            // Mencegah timezone offset pada tampilan header tanggal
+            const [year, month, day] = dateKey.split("-").map(Number);
+            const formattedDate = new Date(year, month - 1, day).toLocaleDateString("id-ID", {
               weekday: "long",
               day: "numeric",
               month: "long",

@@ -1,6 +1,5 @@
 import React from "react";
-import Link from "next/link";
-import { FileSpreadsheet, Download, ArrowUpRight, FileText } from "lucide-react";
+import { FileSpreadsheet, FileText } from "lucide-react";
 
 interface ExportReportCardProps {
   totalReportReady: number;

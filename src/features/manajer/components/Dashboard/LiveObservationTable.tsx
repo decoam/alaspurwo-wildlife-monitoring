@@ -59,7 +59,7 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
                 </div>
 
                 {/* SISI KANAN: Lokasi, Tanggal & Shift (Rata Kanan) */}
-                <div className="flex flex-col items-end gap-1 text-[11px] text-slate-300 text-right max-w-[160px] shrink-0">
+                <div className="flex flex-col items-end gap-1 text-[11px] text-slate-300 text-right max-w-40 shrink-0">
                   <div className="flex items-center gap-1.5 min-w-0 justify-end">
                     <span className="truncate font-medium text-white">{record.location}</span>
                     <MapPin size={11} className="text-emerald-500 shrink-0" />

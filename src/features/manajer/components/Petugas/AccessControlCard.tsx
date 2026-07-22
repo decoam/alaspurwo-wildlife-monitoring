@@ -1,6 +1,5 @@
 import React from "react";
-import Link from "next/link";
-import { ShieldCheck, ArrowUpRight, UserCheck } from "lucide-react";
+import { ShieldCheck, UserCheck } from "lucide-react";
 
 interface AccessControlCardProps {
   totalPetugas: number;
