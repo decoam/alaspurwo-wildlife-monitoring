@@ -37,10 +37,11 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
           : "cursor-default border-emerald-900/30"
       } ${isSelected && isSelectedTab ? "border-emerald-500 bg-emerald-950/20" : "border-emerald-900/60"}`}
     >
-      <div className={`flex flex-col md:flex-row md:items-center gap-4 ${isSelectedTab ? "pr-8 md:pr-0" : ""}`}>
+      <div className={`flex flex-col md:flex-row md:items-center gap-4 ${isSelectedTab ? "pr-10 md:pr-12" : ""}`}>
         
+        {/* Checkbox di posisi tengah kanan secara presisi */}
         {isSelectedTab && (
-          <div className="absolute top-4 right-4 md:relative md:top-auto md:right-auto md:flex md:items-center md:justify-center md:px-2 md:shrink-0">
+          <div className="absolute top-1/2 -translate-y-1/2 right-4 flex items-center justify-center shrink-0 z-10">
             {isSelected ? (
               <CheckSquare size={20} className="text-emerald-500 transition-transform scale-110" />
             ) : (
