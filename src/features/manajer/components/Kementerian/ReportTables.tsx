@@ -1,0 +1,114 @@
+"use client";
+
+import React from "react";
+import { FieldReport } from "../Laporan/ManageReports";
+
+interface MonthlySummaryItem {
+  namaSatwa: string;
+  totalJumlah: number;
+  lokasiList: string[];
+}
+
+interface ReportTablesProps {
+  documentType: "BULANAN" | "BAP";
+  monthlySummary: MonthlySummaryItem[];
+  protectedAnimalReports: FieldReport[];
+}
+
+export const ReportTables: React.FC<ReportTablesProps> = ({
+  documentType,
+  monthlySummary,
+  protectedAnimalReports,
+}) => {
+  // Helper validasi tanggal aman
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return "-";
+    const parsedDate = new Date(dateStr);
+    if (isNaN(parsedDate.getTime())) return "-";
+    return parsedDate.toLocaleDateString("id-ID");
+  };
+
+  return (
+    <div className="space-y-3">
+      <h4 className="text-xs font-bold tracking-wider text-emerald-400 uppercase px-1">
+        {documentType === "BULANAN"
+          ? "Tabel Akumulasi Populasi Bulanan (Format KLHK 01)"
+          : "Tabel Berita Acara Perjumpaan Lapangan (Format BAP KLHK 02)"}
+      </h4>
+
+      <div className="overflow-x-auto rounded-xl border border-emerald-950 bg-[#040906]">
+        {documentType === "BULANAN" ? (
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="border-b border-emerald-950 bg-[#07130d] text-slate-300">
+                <th className="p-3 font-semibold">Spesies Prioritas</th>
+                <th className="p-3 font-semibold">Akumulasi Populasi</th>
+                <th className="p-3 font-semibold">Pos Pengamatan</th>
+                <th className="p-3 font-semibold text-center sm:text-left">Status Perlindungan</th>
+              </tr>
+            </thead>
+            <tbody>
+              {monthlySummary.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="p-6 text-center text-slate-500">
+                    Tidak ada data laporan akumulasi bulanan.
+                  </td>
+                </tr>
+              ) : (
+                monthlySummary.map((item, idx) => (
+                  <tr key={idx} className="border-b border-emerald-950/40 hover:bg-emerald-950/10 text-slate-300">
+                    <td className="p-3 font-medium text-white italic">{item.namaSatwa}</td>
+                    <td className="p-3 text-emerald-400 font-bold">{item.totalJumlah} Ekor</td>
+                    <td className="p-3">{item.lokasiList.join(", ")}</td>
+                    <td className="p-3 text-center sm:text-left">
+                      
+                      {/* BADGE BERSUSUN RAPI (Flex-col dengan satu kotak border yang utuh) */}
+                      <div className="inline-flex flex-col items-center justify-center px-2.5 py-1 rounded-lg bg-red-950/50 border border-red-800/60 text-red-400 shadow-sm leading-tight text-center">
+                        <span className="font-semibold text-[10px] tracking-wide">Dilindungi</span>
+                        <span className="text-[9px] opacity-80 font-normal">(Prioritas)</span>
+                      </div>
+
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        ) : (
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="border-b border-emerald-950 bg-[#07130d] text-slate-300">
+                <th className="p-3 font-semibold">Spesies</th>
+                <th className="p-3 font-semibold">Jumlah</th>
+                <th className="p-3 font-semibold">Pos Pengamatan</th>
+                <th className="p-3 font-semibold">Petugas Pelapor</th>
+                <th className="p-3 font-semibold">Waktu Kejadian</th>
+              </tr>
+            </thead>
+            <tbody>
+              {protectedAnimalReports.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="p-6 text-center text-slate-500">
+                    Tidak ada data laporan perjumpaan lapangan (BAP).
+                  </td>
+                </tr>
+              ) : (
+                protectedAnimalReports.map((rep) => (
+                  <tr key={rep._id} className="border-b border-emerald-950/40 hover:bg-emerald-950/10 text-slate-300">
+                    <td className="p-3 font-medium text-white italic">{rep.namaSatwa}</td>
+                    <td className="p-3 text-emerald-400 font-bold">{rep.jumlah} Ekor</td>
+                    <td className="p-3">{rep.posPengamatan || rep.lokasi}</td>
+                    <td className="p-3 text-slate-200">{rep.namaPetugas}</td>
+                    <td className="p-3">
+                      {formatDate(rep.tanggalPengamatan)}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+};

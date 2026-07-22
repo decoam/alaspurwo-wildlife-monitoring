@@ -20,6 +20,14 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
 
+  // Validasi tanggal agar aman dari Invalid Date
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return "-";
+    const parsedDate = new Date(dateStr);
+    if (isNaN(parsedDate.getTime())) return "-";
+    return parsedDate.toLocaleDateString("id-ID");
+  };
+
   return (
     <div
       onClick={() => isSelectedTab && onSelect(report._id)}
@@ -29,20 +37,11 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
           : "cursor-default border-emerald-900/30"
       } ${isSelected && isSelectedTab ? "border-emerald-500 bg-emerald-950/20" : "border-emerald-900/60"}`}
     >
-      {/* 
-        KONTROLLER TATA LETAK UTAMA:
-        - Jika tab "Pilihan Saja" aktif, kita buat layout flexbox di desktop (md:flex) 
-          supaya checkbox berada murni di sisi paling kiri dan konten di sisi kanan.
-      */}
-      <div className={`flex flex-col md:flex-row md:items-center gap-4 ${isSelectedTab ? "pr-8 md:pr-0" : ""}`}>
+      <div className={`flex flex-col md:flex-row md:items-center gap-4 ${isSelectedTab ? "pr-10 md:pr-12" : ""}`}>
         
-        {/* =========================================================================
-            1. CHECKBOX ADAPTIF
-               - Mobile (< md): Melayang manis di pojok kanan atas (absolute).
-               - Desktop (>= md): Menjadi elemen flex paling kiri, rapi dan sejajar vertikal.
-            ========================================================================= */}
+        {/* Checkbox di posisi tengah kanan secara presisi */}
         {isSelectedTab && (
-          <div className="absolute top-4 right-4 md:relative md:top-auto md:right-auto md:flex md:items-center md:justify-center md:px-2 md:shrink-0">
+          <div className="absolute top-1/2 -translate-y-1/2 right-4 flex items-center justify-center shrink-0 z-10">
             {isSelected ? (
               <CheckSquare size={20} className="text-emerald-500 transition-transform scale-110" />
             ) : (
@@ -51,10 +50,6 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
           </div>
         )}
 
-        {/* =========================================================================
-            2. GRID KONTEN UTAMA
-               - Lebar penuh (w-full) agar fleksibel mengisi sisa ruang di sebelah kanan checkbox.
-            ========================================================================= */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center w-full">
           
           {/* Kolom Info Satwa & Petugas */}
@@ -80,7 +75,6 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
               </div>
             </div>
 
-            {/* UPGRADE TATA LETAK: Jumlah hewan dipindahkan ke samping kanan info satwa berbentuk badge yang bersih */}
             <div className="shrink-0 pl-2">
               <span className="inline-block px-2 py-0.5 rounded-md bg-emerald-950/80 border border-emerald-500/20 text-emerald-400 font-semibold text-[10px]">
                 {report.jumlah} Ekor
@@ -93,13 +87,12 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
             <div className="flex items-start gap-1.5">
               <MapPin size={12} className="text-emerald-500 shrink-0 mt-0.5" />
               <div className="leading-tight">
-                {/* LOKASI BERSIH: Hanya menampilkan nama pos/lokasi tunggal tanpa kurung ganda */}
                 <span className="font-semibold text-slate-100">{report.posPengamatan || report.lokasi}</span>
               </div>
             </div>
             <div className="flex items-center gap-1.5">
               <Calendar size={12} className="text-emerald-500 shrink-0" />
-              <span>{new Date(report.tanggalPengamatan).toLocaleDateString("id-ID")} | Shift {report.shift}</span>
+              <span>{formatDate(report.tanggalPengamatan)} | Shift {report.shift}</span>
             </div>
           </div>
 

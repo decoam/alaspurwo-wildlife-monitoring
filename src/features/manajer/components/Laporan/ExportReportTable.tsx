@@ -40,7 +40,9 @@ export const ExportReportTable: React.FC<ExportReportTableProps> = ({ data }) =>
                 <div className="text-slate-500 font-normal">({report.lokasi})</div>
               </td>
               <td className="border border-slate-400 px-3 py-2.5">
-                <div>{new Date(report.tanggalPengamatan).toLocaleDateString("id-ID")}</div>
+                <div>{report.tanggalPengamatan ?
+                  new Date(report.tanggalPengamatan).toLocaleDateString("id-ID")
+                    : "-"}</div>
                 <div className="text-slate-500 font-normal">Shift {report.shift}</div>
               </td>
               <td className="border border-slate-400 px-3 py-2.5 capitalize">

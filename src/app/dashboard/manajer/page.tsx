@@ -7,13 +7,13 @@ import { Eye, Camera } from "lucide-react";
 import React from "react";
 
 import { SummaryCard } from "@/features/dashboard/components/SummaryCard";
-import { ManagerSidebar } from "@/features/manajer/components/ManagerSidebar";
-import { ManagerHeader } from "@/features/manajer/components/ManagerHeader";
-import { PerformanceCharts } from "@/features/manajer/components/PerformanceCharts";
-import { LiveObservationTable } from "@/features/manajer/components/LiveObservationTable";
-import { AccessControlCard } from "@/features/manajer/components/AccessControlCard";
-import { ExportReportCard } from "@/features/manajer/components/ExportReportCard";
-import { MinistryReportCard } from "@/features/manajer/components/MinistryReportCard";
+import { ManagerSidebar } from "@/features/manajer/components/Dashboard/ManagerSidebar";
+import { ManagerHeader } from "@/features/manajer/components/Dashboard/ManagerHeader";
+import { PerformanceCharts } from "@/features/manajer/components/Dashboard/PerformanceCharts";
+import { LiveObservationTable } from "@/features/manajer/components/Dashboard/LiveObservationTable";
+import { AccessControlCard } from "@/features/manajer/components/Petugas/AccessControlCard";
+import { ExportReportCard } from "@/features/manajer/components/Laporan/ExportReportCard";
+import { MinistryReportCard } from "@/features/manajer/components/Kementerian/MinistryReportCard";
 
 export const runtime = "nodejs";
 
