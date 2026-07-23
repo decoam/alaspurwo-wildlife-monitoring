@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { X, User, Calendar, CloudSun } from "lucide-react";
+import { User, Calendar, CloudSun } from "lucide-react";
 import { ManagerObservationItem } from "./ManagerObservationTable";
 
 interface ObservationDetailModalProps {
@@ -16,18 +16,18 @@ export const ObservationDetailModal: React.FC<ObservationDetailModalProps> = ({
   if (!item) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
-      <div className="w-full max-w-5xl rounded-3xl border border-emerald-900/40 bg-[#040e0a] p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto grid grid-cols-1 lg:grid-cols-12 gap-6 animate-in fade-in zoom-in-95 duration-150">
+    /* OVERLAY / BACKDROP: Klik di area latar mana saja akan memicu onClose */
+    <div 
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 cursor-pointer"
+    >
+      {/* KARTU MODAL: e.stopPropagation() mencegah modal tertutup jika area dalam modal diklik */}
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-5xl rounded-3xl border border-emerald-900/40 bg-[#040e0a] p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto grid grid-cols-1 lg:grid-cols-12 gap-6 animate-in fade-in zoom-in-95 duration-150 cursor-default"
+      >
         
-        {/* Tombol Close di Pojok Kanan Atas */}
-        <button 
-          onClick={onClose} 
-          className="absolute top-4 right-4 text-slate-400 hover:text-white p-1.5 rounded-xl bg-[#0b1c13] border border-emerald-900/40 transition z-10"
-        >
-          <X size={20} />
-        </button>
-
-        {/* SISI KIRI: Foto modal dibuat Aspect-Square Persegi Rapi */}
+        {/* SISI KIRI: Foto modal Aspect-Square */}
         <div className="lg:col-span-6 flex items-center justify-center bg-[#07140e] rounded-2xl overflow-hidden border border-emerald-900/30 aspect-square w-full">
           <img 
             src={item.foto || "/placeholder.svg"} 
@@ -90,12 +90,12 @@ export const ObservationDetailModal: React.FC<ObservationDetailModalProps> = ({
             </p>
           </div>
 
-          {/* Tombol Tutup Bottom */}
+          {/* Tombol Tutup Utama */}
           <div className="pt-2 flex justify-end">
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2 rounded-xl bg-[#0b1c13] text-xs font-semibold text-slate-300 hover:bg-emerald-950/60 transition border border-emerald-900/40 w-full sm:w-auto text-center"
+              className="px-5 py-2 rounded-xl bg-[#0b1c13] text-xs font-semibold text-slate-300 hover:bg-emerald-950/60 transition border border-emerald-900/40 w-full sm:w-auto text-center cursor-pointer"
             >
               Tutup Detail
             </button>
