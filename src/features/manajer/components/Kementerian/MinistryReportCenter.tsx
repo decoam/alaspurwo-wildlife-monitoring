@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { FileText, ShieldAlert, CheckCircle2, Clock, Send, Info, Eye, Loader2 } from "lucide-react";
-import { FieldReport } from "@/features/manajer/components/Laporan/ManageReports";
+import { FieldReport } from "@/features/manajer/ReportUtils";
 import { ReportPreviewModal } from "./ReportPreviewModal";
 import { ReportTables } from "./ReportTables";
 
