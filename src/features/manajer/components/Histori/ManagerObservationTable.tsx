@@ -39,7 +39,6 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
                 <th className="px-4 py-3 w-17.5">Foto</th>
                 <th className="px-4 py-3">Nama Satwa</th>
                 <th className="px-4 py-3">Kategori</th>
-                {/* Kolom yang disembunyikan di mobile (hidden), muncul di desktop (md:table-cell) */}
                 <th className="px-4 py-3 hidden md:table-cell">Jumlah</th>
                 <th className="px-4 py-3 hidden md:table-cell">Lokasi</th>
                 <th className="px-4 py-3 hidden md:table-cell">Shift</th>
@@ -53,20 +52,21 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
               {items.map((item) => (
                 <tr key={item._id} className="transition hover:bg-emerald-950/30">
                   <td className="px-4 py-3">
-                    <Image
-                      src={failedImages[item._id] || !item.foto ? "/placeholder.svg" : item.foto}
-                      alt={item.namaSatwa}
-                      width={48}
-                      height={48}
-                      className="h-12 w-12 rounded-xl object-cover"
-                      unoptimized
-                      onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
-                    />
+                    <div className="shrink-0">
+                      <Image
+                        src={failedImages[item._id] || !item.foto ? "/placeholder.svg" : item.foto}
+                        alt={item.namaSatwa}
+                        width={44}
+                        height={44}
+                        className="h-11 w-11 rounded-xl object-cover border border-emerald-500/20 shrink-0"
+                        unoptimized
+                        onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
+                      />
+                    </div>
                   </td>
                   <td className="px-4 py-3 font-medium text-white">{item.namaSatwa}</td>
                   <td className="px-4 py-3">{item.kategori}</td>
                   
-                  {/* Sembunyikan di mobile dengan hidden md:table-cell */}
                   <td className="px-4 py-3 hidden md:table-cell">{item.jumlah}</td>
                   <td className="px-4 py-3 hidden md:table-cell">{item.lokasi}</td>
                   <td className="px-4 py-3 hidden md:table-cell">{item.shift}</td>
@@ -96,7 +96,7 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
         </div>
       </div>
 
-      {/* POP UP MODAL DETAIL VIEW (HANYA BISA LIHAT) */}
+      {/* POP UP MODAL DETAIL VIEW */}
       {selectedItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
           <div className="w-full max-w-5xl rounded-3xl border border-emerald-900/40 bg-[#040e0a] p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto grid grid-cols-1 lg:grid-cols-12 gap-6 animate-in fade-in zoom-in-95 duration-150">
@@ -108,12 +108,12 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
               <X size={20} />
             </button>
 
-            {/* SISI KIRI: Foto (Fix Error Aspect Ratio Next.js/Browser dengan w-full h-auto) */}
-            <div className="lg:col-span-6 flex flex-col justify-center bg-[#07140e] rounded-2xl overflow-hidden border border-emerald-900/20 max-h-87.5 lg:max-h-full">
+            {/* SISI KIRI: Foto modal dibuat Aspect-Square Persegi Rapi */}
+            <div className="lg:col-span-6 flex items-center justify-center bg-[#07140e] rounded-2xl overflow-hidden border border-emerald-900/30 aspect-square w-full">
               <img 
                 src={selectedItem.foto || "/placeholder.svg"} 
                 alt={selectedItem.namaSatwa} 
-                className="w-full h-auto max-h-full object-cover" 
+                className="w-full h-full object-cover" 
               />
             </div>
 
@@ -141,7 +141,7 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
                 </div>
               </div>
 
-              {/* Aktivitas & Catatan Polos */}
+              {/* Aktivitas & Catatan */}
               <div className="rounded-xl border border-emerald-950 bg-[#07140e]/60 p-4 space-y-1.5">
                 <h3 className="text-sm font-bold text-emerald-400">Aktivitas & Catatan</h3>
                 <p className="text-xs text-white font-medium leading-relaxed break-all">
