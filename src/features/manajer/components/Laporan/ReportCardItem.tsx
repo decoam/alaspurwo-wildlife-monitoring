@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { MapPin, Calendar, User, CheckSquare, Square } from "lucide-react";
-import { FieldReport } from "./ManageReports";
+import { FieldReport } from "@/features/manajer/ReportUtils";
 
 interface ReportCardItemProps {
   report: FieldReport;

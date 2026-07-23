@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FieldReport } from "./ManageReports";
+import { FieldReport } from "@/features/manajer/ReportUtils";
 
 interface ExportReportTableProps {
   data: FieldReport[];
@@ -40,9 +40,11 @@ export const ExportReportTable: React.FC<ExportReportTableProps> = ({ data }) =>
                 <div className="text-slate-500 font-normal">({report.lokasi})</div>
               </td>
               <td className="border border-slate-400 px-3 py-2.5">
-                <div>{report.tanggalPengamatan ?
-                  new Date(report.tanggalPengamatan).toLocaleDateString("id-ID")
-                    : "-"}</div>
+                <div>
+                  {report.tanggalPengamatan
+                    ? new Date(report.tanggalPengamatan).toLocaleDateString("id-ID")
+                    : "-"}
+                </div>
                 <div className="text-slate-500 font-normal">Shift {report.shift}</div>
               </td>
               <td className="border border-slate-400 px-3 py-2.5 capitalize">
@@ -52,7 +54,9 @@ export const ExportReportTable: React.FC<ExportReportTableProps> = ({ data }) =>
                 {report.namaPetugas}
               </td>
               <td className="border border-slate-400 px-3 py-2.5 italic text-slate-800">
-                {report.aktivitasSatwa || report.catatan ? `"${report.aktivitasSatwa || report.catatan}"` : "-"}
+                {report.aktivitasSatwa || report.catatan
+                  ? `"${report.aktivitasSatwa || report.catatan}"`
+                  : "-"}
               </td>
             </tr>
           ))}

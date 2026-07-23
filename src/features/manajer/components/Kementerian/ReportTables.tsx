@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FieldReport } from "../Laporan/ManageReports";
+import { FieldReport } from "@/features/manajer/ReportUtils";
 
 interface MonthlySummaryItem {
   namaSatwa: string;

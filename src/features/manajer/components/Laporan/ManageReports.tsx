@@ -6,86 +6,45 @@ import {
   FileText, 
   CheckSquare, 
   Square,
-  Info
+  Info,
+  Loader2
 } from "lucide-react";
 import { ExportReportTable } from "./ExportReportTable";
 import { ReportCardItem } from "./ReportCardItem";
-
-export type FieldReport = {
-  _id: string;
-  namaSatwa: string;
-  kategori: string;
-  jumlah: number;
-  lokasi: string;
-  shift: string;
-  tanggalPengamatan: string;
-  foto: string;
-  namaPetugas: string;
-  kondisiCuaca?: string;
-  posPengamatan?: string;
-  catatan?: string;
-  aktivitasSatwa?: string;
-};
+import { FieldReport, getLocalDateString } from "@/features/manajer/ReportUtils";
+import { exportToExcel, exportToPDF } from "@/features/manajer/ExportServices";
 
 interface ManageReportsProps {
   initialReports: FieldReport[];
 }
 
-const getLocalDateString = (dateInput?: string | Date): string => {
-  const d = dateInput ? new Date(dateInput) : new Date();
-  if (isNaN(d.getTime())) return "";
-  
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  
-  return `${year}-${month}-${day}`;
-};
-
 export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) => {
   const [reports] = useState<FieldReport[]>(initialReports);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [exportScope, setExportScope] = useState<"all" | "today" | "selected" | "date">("all");
-  // State untuk menyimpan tanggal filter pilihan user
   const [filterDate, setFilterDate] = useState<string>("");
+  const [isExporting, setIsExporting] = useState(false);
 
-  // Menggunakan perbandingan string
   const todayReports = useMemo(() => {
     const todayStr = getLocalDateString(new Date());
     return reports.filter(rep => getLocalDateString(rep.tanggalPengamatan) === todayStr);
   }, [reports]);
 
-  // Filter laporan berdasarkan tanggal spesifik
   const customDateReports = useMemo(() => {
     if (!filterDate) return [];
-    return reports.filter(rep => {
-      const repDate = getLocalDateString(rep.tanggalPengamatan);
-      return repDate === filterDate;
-    });
+    return reports.filter(rep => getLocalDateString(rep.tanggalPengamatan) === filterDate);
   }, [reports, filterDate]);
 
-  // Tab atau cakupan yang aktif menentukan apa saja daftar kartu yang bisa terlihat
   const listToShow = useMemo(() => {
-    if (exportScope === "today") {
-      return todayReports;
-    }
-    if (exportScope === "date") {
-      return customDateReports;
-    }
+    if (exportScope === "today") return todayReports;
+    if (exportScope === "date") return customDateReports;
     return reports;
   }, [reports, todayReports, customDateReports, exportScope]);
 
-  // Data final yang akan masuk ke generator Excel atau Print PDF
   const dataToExport = useMemo(() => {
-    if (exportScope === "today") {
-      return todayReports;
-    }
-    if (exportScope === "selected") {
-      return reports.filter((r) => selectedIds.includes(r._id));
-    }
-    if (exportScope === "date") {
-      return customDateReports;
-    }
+    if (exportScope === "today") return todayReports;
+    if (exportScope === "selected") return reports.filter((r) => selectedIds.includes(r._id));
+    if (exportScope === "date") return customDateReports;
     return reports;
   }, [reports, todayReports, customDateReports, selectedIds, exportScope]);
 
@@ -103,60 +62,17 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
     }
   };
 
-  const handleExportExcel = () => {
-    if (dataToExport.length === 0) {
-      alert("Tidak ada data untuk diekspor.");
-      return;
-    }
-    const headers = ["ID Laporan", "Nama Satwa", "Kategori", "Jumlah", "Lokasi", "Pos", "Shift", "Tanggal", "Petugas", "Cuaca", "Catatan"];
-    const rows = dataToExport.map((r) => [
-      r._id,
-      r.namaSatwa,
-      r.kategori,
-      r.jumlah,
-      r.lokasi,
-      r.posPengamatan || r.lokasi,
-      r.shift,
-      new Date(r.tanggalPengamatan).toLocaleDateString("id-ID"),
-      r.namaPetugas,
-      r.kondisiCuaca || "Cerah",
-      `"${(r.aktivitasSatwa || r.catatan || "-").replace(/"/g, '""')}"`
-    ]);
-
-    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `Rekap_Observasi_${exportScope}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const handleExportPDF = () => {
-    if (dataToExport.length === 0) {
-      alert("Tidak ada data untuk dicetak.");
-      return;
-    }
-    window.print();
-  };
-
-  // Helper logic untuk mengelompokkan laporan berdasarkan tanggal YYYY-MM-DD lokal
   const groupedReports = useMemo(() => {
     const groups: { [key: string]: FieldReport[] } = {};
     listToShow.forEach((report) => {
       const dateKey = getLocalDateString(report.tanggalPengamatan);
       if (!dateKey) return;
-      if (!groups[dateKey]) {
-        groups[dateKey] = [];
-      }
+      if (!groups[dateKey]) groups[dateKey] = [];
       groups[dateKey].push(report);
     });
     return groups;
   }, [listToShow]);
 
-  // Urutan tanggal terkompilasi dari yang paling baru ke terlama
   const sortedDates = useMemo(() => {
     return Object.keys(groupedReports).sort(
       (a, b) => new Date(b).getTime() - new Date(a).getTime()
@@ -166,7 +82,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
   return (
     <div className="space-y-6 p-4 md:p-6 bg-[#060d0a] text-slate-200 print:bg-white print:text-black print:p-0 print:m-0">
       
-      {/* ==================== ONLY WEB VIEW: HEADER & CONTROLS ==================== */}
+      {/* HEADER & CONTROLS */}
       <div className="print:hidden space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-emerald-900/40 pb-5">
           <div>
@@ -177,14 +93,13 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
           </div>
         </div>
 
-        {/* Panel Filter Cakupan */}
+        {/* Panel Filter */}
         <div className="p-5 rounded-2xl border border-emerald-900/40 bg-[#07130d] space-y-4">
           <div className="flex items-center gap-2">
             <Info size={16} className="text-emerald-500" />
             <span className="text-xs font-semibold text-white">Tentukan Cakupan Data Yang Akan Diekspor:</span>
           </div>
 
-          {/* Grid Tab Selector */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 p-1 bg-[#040906] rounded-xl border border-emerald-950">
             <button
               type="button"
@@ -224,7 +139,6 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
             </button>
           </div>
 
-          {/* Input Tanggal Tambahan - Hanya tampil saat tab "Pilih Tanggal" aktif */}
           {exportScope === "date" && (
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-xl bg-[#040906] border border-emerald-950/60 animate-in fade-in slide-in-from-top-1 duration-200">
               <label 
@@ -239,11 +153,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
                 value={filterDate}
                 onClick={(e) => {
                   if ("showPicker" in HTMLInputElement.prototype) {
-                    try {
-                      e.currentTarget.showPicker();
-                    } catch (error) {
-                      console.error("Gagal membuka date picker:", error);
-                    }
+                    try { e.currentTarget.showPicker(); } catch (err) { console.error(err); }
                   }
                 }}
                 onChange={(e) => setFilterDate(e.target.value)}
@@ -258,14 +168,17 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
             </div>
             <div className="flex gap-2 w-full sm:w-auto">
               <button
-                onClick={handleExportExcel}
-                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-900/60 rounded-xl hover:bg-emerald-900/30 transition-all flex-1 sm:flex-initial"
+                onClick={() => exportToExcel(dataToExport, exportScope, setIsExporting)}
+                disabled={isExporting || dataToExport.length === 0}
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-900/60 rounded-xl hover:bg-emerald-900/30 transition-all flex-1 sm:flex-initial disabled:opacity-50"
               >
-                <FileSpreadsheet size={14} /> Simpan Excel
+                {isExporting ? <Loader2 size={14} className="animate-spin" /> : <FileSpreadsheet size={14} />}
+                Simpan Excel
               </button>
               <button
-                onClick={handleExportPDF}
-                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white bg-emerald-600 rounded-xl hover:bg-emerald-500 transition-all flex-1 sm:flex-initial"
+                onClick={() => exportToPDF(dataToExport, exportScope)}
+                disabled={dataToExport.length === 0}
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white bg-emerald-600 rounded-xl hover:bg-emerald-500 transition-all flex-1 sm:flex-initial disabled:opacity-50"
               >
                 <FileText size={14} /> Cetak PDF
               </button>
@@ -273,7 +186,6 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
           </div>
         </div>
 
-        {/* Toggle Select All (Hanya Muncul di Tab "Pilihan Saja") */}
         {exportScope === "selected" && (
           <div className="flex items-center gap-2 px-2">
             <button
@@ -291,7 +203,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
         )}
       </div>
 
-      {/* ==================== SCREEN ONLY: CARDS LIST ==================== */}
+      {/* CARDS LIST */}
       <div className="space-y-6 print:hidden">
         {listToShow.length === 0 ? (
           <div className="p-10 text-center text-slate-500 text-sm border border-dashed border-emerald-900/40 rounded-2xl">
@@ -302,7 +214,6 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
         ) : (
           sortedDates.map((dateKey) => {
             const reportsInDate = groupedReports[dateKey];
-            // Mencegah timezone offset pada tampilan header tanggal
             const [year, month, day] = dateKey.split("-").map(Number);
             const formattedDate = new Date(year, month - 1, day).toLocaleDateString("id-ID", {
               weekday: "long",
@@ -313,7 +224,6 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
 
             return (
               <div key={dateKey} className="space-y-3">
-                {/* Header Tanggal */}
                 <div className="flex items-center gap-3 px-1 pt-2">
                   <span className="text-xs font-bold tracking-wider text-emerald-400 uppercase">
                     {formattedDate}
@@ -324,7 +234,6 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
                   </span>
                 </div>
 
-                {/* List Kartu Laporan */}
                 <div className="space-y-3">
                   {reportsInDate.map((report) => (
                     <ReportCardItem
@@ -342,7 +251,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
         )}
       </div>
 
-      {/* ==================== PRINT ONLY: TABEL BERGARIS ==================== */}
+      {/* PRINT TABLE */}
       <ExportReportTable data={dataToExport} />
 
     </div>
