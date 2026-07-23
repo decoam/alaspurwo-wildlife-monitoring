@@ -6,8 +6,13 @@ import {
   FileText, 
   CheckSquare, 
   Square,
-  Info
+  Info,
+  Loader2
 } from "lucide-react";
+import XLSX from "xlsx-js-style";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { toast } from "sonner";
 import { ExportReportTable } from "./ExportReportTable";
 import { ReportCardItem } from "./ReportCardItem";
 
@@ -46,8 +51,8 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
   const [reports] = useState<FieldReport[]>(initialReports);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [exportScope, setExportScope] = useState<"all" | "today" | "selected" | "date">("all");
-  // State untuk menyimpan tanggal filter pilihan user
   const [filterDate, setFilterDate] = useState<string>("");
+  const [isExporting, setIsExporting] = useState(false);
 
   // Menggunakan perbandingan string
   const todayReports = useMemo(() => {
@@ -66,26 +71,16 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
 
   // Tab atau cakupan yang aktif menentukan apa saja daftar kartu yang bisa terlihat
   const listToShow = useMemo(() => {
-    if (exportScope === "today") {
-      return todayReports;
-    }
-    if (exportScope === "date") {
-      return customDateReports;
-    }
+    if (exportScope === "today") return todayReports;
+    if (exportScope === "date") return customDateReports;
     return reports;
   }, [reports, todayReports, customDateReports, exportScope]);
 
   // Data final yang akan masuk ke generator Excel atau Print PDF
   const dataToExport = useMemo(() => {
-    if (exportScope === "today") {
-      return todayReports;
-    }
-    if (exportScope === "selected") {
-      return reports.filter((r) => selectedIds.includes(r._id));
-    }
-    if (exportScope === "date") {
-      return customDateReports;
-    }
+    if (exportScope === "today") return todayReports;
+    if (exportScope === "selected") return reports.filter((r) => selectedIds.includes(r._id));
+    if (exportScope === "date") return customDateReports;
     return reports;
   }, [reports, todayReports, customDateReports, selectedIds, exportScope]);
 
@@ -103,43 +98,217 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
     }
   };
 
-  const handleExportExcel = () => {
+  // ==========================================
+  // FUNGSI 1: EKSPOR EXCEL TERSTYLING
+  // ==========================================
+  const handleExportExcel = async () => {
     if (dataToExport.length === 0) {
-      alert("Tidak ada data untuk diekspor.");
+      toast.error("Tidak ada data untuk diekspor.");
       return;
     }
-    const headers = ["ID Laporan", "Nama Satwa", "Kategori", "Jumlah", "Lokasi", "Pos", "Shift", "Tanggal", "Petugas", "Cuaca", "Catatan"];
-    const rows = dataToExport.map((r) => [
-      r._id,
-      r.namaSatwa,
-      r.kategori,
-      r.jumlah,
-      r.lokasi,
-      r.posPengamatan || r.lokasi,
-      r.shift,
-      new Date(r.tanggalPengamatan).toLocaleDateString("id-ID"),
-      r.namaPetugas,
-      r.kondisiCuaca || "Cerah",
-      `"${(r.aktivitasSatwa || r.catatan || "-").replace(/"/g, '""')}"`
-    ]);
 
-    const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `Rekap_Observasi_${exportScope}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const toastId = toast.loading("Sedang menyiapkan file Excel...");
+    try {
+      setIsExporting(true);
+
+      const totalIndividu = dataToExport.reduce((sum, item) => sum + item.jumlah, 0);
+
+      // Header Meta Info
+      const headerMeta = [
+        ["KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN"],
+        ["BALAI TAMAN NASIONAL ALAS PURWO"],
+        ["LAPORAN OBSERVASI DAN REKAPITULASI SATWA LIAR"],
+        [`Cakupan Export: ${exportScope.toUpperCase()}`],
+        [],
+        ["Tanggal Cetak", ":", new Date().toLocaleDateString("id-ID", { dateStyle: "full" })],
+        ["Satuan Kerja", ":", "Balai Taman Nasional Alas Purwo"],
+        ["Total Temuan Satwa", ":", `${totalIndividu} Ekor (${dataToExport.length} Laporan/Kasus)`],
+        [],
+      ];
+
+      const worksheet = XLSX.utils.aoa_to_sheet(headerMeta);
+
+      // Data Tabel
+      const tableHeader = [["NO", "NAMA SATWA", "KATEGORI", "JUMLAH (EKOR)", "POS / LOKASI PENGAMATAN", "WAKTU OBSERVASI", "PETUGAS", "CUACA", "CATATAN"]];
+      const tableBody = dataToExport.map((rep, idx) => [
+        idx + 1,
+        rep.namaSatwa,
+        rep.kategori,
+        rep.jumlah,
+        rep.posPengamatan || rep.lokasi,
+        `${new Date(rep.tanggalPengamatan).toLocaleDateString("id-ID")} (Shift ${rep.shift})`,
+        rep.namaPetugas,
+        rep.kondisiCuaca || "Cerah",
+        rep.aktivitasSatwa || rep.catatan || "-"
+      ]);
+
+      XLSX.utils.sheet_add_aoa(worksheet, tableHeader, { origin: "A10" });
+      XLSX.utils.sheet_add_aoa(worksheet, tableBody, { origin: "A11" });
+
+      // Styling Sel
+      const range = XLSX.utils.decode_range(worksheet["!ref"] || "A1");
+      const thinBorder = {
+        top: { style: "thin", color: { rgb: "D1D5DB" } },
+        bottom: { style: "thin", color: { rgb: "D1D5DB" } },
+        left: { style: "thin", color: { rgb: "D1D5DB" } },
+        right: { style: "thin", color: { rgb: "D1D5DB" } },
+      };
+
+      for (let r = range.s.r; r <= range.e.r; r++) {
+        for (let c = range.s.c; c <= range.e.c; c++) {
+          const addr = XLSX.utils.encode_cell({ r, c });
+          if (!worksheet[addr]) continue;
+
+          worksheet[addr].s = {
+            font: { name: "Calibri", sz: 10 },
+            alignment: { vertical: "center", horizontal: "left" },
+          };
+
+          // Header Tabel (Baris ke-10 / Index 9)
+          if (r === 9) {
+            worksheet[addr].s = {
+              fill: { fgColor: { rgb: "065F46" } }, // Emerald Dark
+              font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "FFFFFF" } },
+              alignment: { horizontal: "center", vertical: "center" },
+              border: {
+                top: { style: "medium", color: { rgb: "064E3B" } },
+                bottom: { style: "medium", color: { rgb: "064E3B" } },
+                left: { style: "thin", color: { rgb: "064E3B" } },
+                right: { style: "thin", color: { rgb: "064E3B" } },
+              }
+            };
+          }
+
+          // Data Tabel (Baris >= 11 / Index 10)
+          if (r >= 10) {
+            worksheet[addr].s.border = thinBorder;
+            if (r % 2 === 1) {
+              worksheet[addr].s.fill = { fgColor: { rgb: "F0FDF4" } }; // Zebra Striping Light Green
+            }
+            if (c === 0 || c === 3 || c === 7) {
+              worksheet[addr].s.alignment.horizontal = "center";
+            }
+          }
+        }
+      }
+
+      // Title Styling
+      worksheet["A1"].s = { font: { name: "Calibri", sz: 13, bold: true, color: { rgb: "064E3B" } }, alignment: { horizontal: "center" } };
+      worksheet["A2"].s = { font: { name: "Calibri", sz: 11, bold: true, color: { rgb: "047857" } }, alignment: { horizontal: "center" } };
+      worksheet["A3"].s = { font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "111827" } }, alignment: { horizontal: "center" } };
+
+      worksheet["!cols"] = [{ wch: 6 }, { wch: 25 }, { wch: 18 }, { wch: 15 }, { wch: 30 }, { wch: 22 }, { wch: 20 }, { wch: 15 }, { wch: 35 }];
+      worksheet["!merges"] = [
+        { s: { r: 0, c: 0 }, e: { r: 0, c: 8 } },
+        { s: { r: 1, c: 0 }, e: { r: 1, c: 8 } },
+        { s: { r: 2, c: 0 }, e: { r: 2, c: 8 } },
+        { s: { r: 3, c: 0 }, e: { r: 3, c: 8 } },
+      ];
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, worksheet, "Laporan Observasi");
+      XLSX.writeFile(wb, `Rekap_Observasi_${exportScope}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+
+      toast.success("Ekspor Excel Berhasil", { id: toastId });
+    } catch (err) {
+      console.error(err);
+      toast.error("Gagal Ekspor Excel", { id: toastId });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
+  // ==========================================
+  // FUNGSI 2: EKSPOR PDF RESMI (KOP SURAT & AUTOTABLE)
+  // ==========================================
   const handleExportPDF = () => {
     if (dataToExport.length === 0) {
-      alert("Tidak ada data untuk dicetak.");
+      toast.error("Tidak ada data untuk dicetak.");
       return;
     }
-    window.print();
+
+    const doc = new jsPDF();
+    const totalIndividu = dataToExport.reduce((sum, item) => sum + item.jumlah, 0);
+
+    // Kop Surat KLHK
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(6, 78, 59);
+    doc.text("KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN", 105, 15, { align: "center" });
+
+    doc.setFontSize(11);
+    doc.setTextColor(15, 118, 110);
+    doc.text("BALAI TAMAN NASIONAL ALAS PURWO", 105, 21, { align: "center" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(100, 116, 139);
+    doc.text("Seksi Pengelolaan Taman Nasional Wilayah I - Semanjung", 105, 26, { align: "center" });
+
+    // Line Pemisah
+    doc.setDrawColor(6, 95, 70);
+    doc.setLineWidth(0.8);
+    doc.line(14, 29, 196, 29);
+    doc.setLineWidth(0.2);
+    doc.line(14, 30.2, 196, 30.2);
+
+    // Judul
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(17, 24, 39);
+    doc.text("LAPORAN OBSERVASI LAPANGAN SATWA LIAR", 105, 38, { align: "center" });
+
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(9);
+    doc.setTextColor(75, 85, 99);
+    doc.text(`Cakupan Data: ${exportScope.toUpperCase()}`, 105, 43, { align: "center" });
+
+    // Meta Info
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(31, 41, 55);
+    doc.text(`Tanggal Cetak : ${new Date().toLocaleDateString("id-ID", { dateStyle: "full" })}`, 14, 52);
+    doc.text(`Total Temuan   : ${totalIndividu} Ekor (${dataToExport.length} Laporan/Kasus)`, 14, 57);
+
+    // AutoTable PDF
+    autoTable(doc, {
+      startY: 62,
+      head: [["No", "Nama Satwa", "Jumlah", "Pos / Lokasi", "Petugas", "Waktu", "Catatan"]],
+      body: dataToExport.map((rep, idx) => [
+        idx + 1,
+        rep.namaSatwa,
+        `${rep.jumlah} Ekor`,
+        rep.posPengamatan || rep.lokasi,
+        rep.namaPetugas,
+        new Date(rep.tanggalPengamatan).toLocaleDateString("id-ID"),
+        rep.aktivitasSatwa || rep.catatan || "-"
+      ]),
+      headStyles: {
+        fillColor: [6, 95, 70],
+        textColor: [255, 255, 255],
+        fontStyle: "bold",
+        halign: "center"
+      },
+      alternateRowStyles: { fillColor: [240, 253, 244] },
+      styles: { fontSize: 8, cellPadding: 3, valign: "middle" },
+      columnStyles: {
+        0: { halign: "center", cellWidth: 10 },
+        2: { halign: "center", cellWidth: 22 },
+        5: { halign: "center", cellWidth: 25 },
+      },
+    });
+
+    // Tanda Tangan
+    const finalY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY || 120;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(31, 41, 55);
+    doc.text("Mengetahui,", 140, finalY + 15);
+    doc.text("Petugas Penanggung Jawab,", 140, finalY + 20);
+    doc.setFont("helvetica", "bold");
+    doc.text("( _______________________ )", 140, finalY + 40);
+
+    doc.save(`Laporan_Observasi_${exportScope}_${new Date().toISOString().slice(0, 10)}.pdf`);
   };
 
   // Helper logic untuk mengelompokkan laporan berdasarkan tanggal YYYY-MM-DD lokal
@@ -224,7 +393,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
             </button>
           </div>
 
-          {/* Input Tanggal Tambahan - Hanya tampil saat tab "Pilih Tanggal" aktif */}
+          {/* Input Tanggal Tambahan */}
           {exportScope === "date" && (
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-xl bg-[#040906] border border-emerald-950/60 animate-in fade-in slide-in-from-top-1 duration-200">
               <label 
@@ -259,13 +428,16 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
             <div className="flex gap-2 w-full sm:w-auto">
               <button
                 onClick={handleExportExcel}
-                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-900/60 rounded-xl hover:bg-emerald-900/30 transition-all flex-1 sm:flex-initial"
+                disabled={isExporting || dataToExport.length === 0}
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-900/60 rounded-xl hover:bg-emerald-900/30 transition-all flex-1 sm:flex-initial disabled:opacity-50"
               >
-                <FileSpreadsheet size={14} /> Simpan Excel
+                {isExporting ? <Loader2 size={14} className="animate-spin" /> : <FileSpreadsheet size={14} />}
+                Simpan Excel
               </button>
               <button
                 onClick={handleExportPDF}
-                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white bg-emerald-600 rounded-xl hover:bg-emerald-500 transition-all flex-1 sm:flex-initial"
+                disabled={dataToExport.length === 0}
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white bg-emerald-600 rounded-xl hover:bg-emerald-500 transition-all flex-1 sm:flex-initial disabled:opacity-50"
               >
                 <FileText size={14} /> Cetak PDF
               </button>
@@ -273,7 +445,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
           </div>
         </div>
 
-        {/* Toggle Select All (Hanya Muncul di Tab "Pilihan Saja") */}
+        {/* Toggle Select All */}
         {exportScope === "selected" && (
           <div className="flex items-center gap-2 px-2">
             <button
@@ -302,7 +474,6 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
         ) : (
           sortedDates.map((dateKey) => {
             const reportsInDate = groupedReports[dateKey];
-            // Mencegah timezone offset pada tampilan header tanggal
             const [year, month, day] = dateKey.split("-").map(Number);
             const formattedDate = new Date(year, month - 1, day).toLocaleDateString("id-ID", {
               weekday: "long",
@@ -313,7 +484,6 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
 
             return (
               <div key={dateKey} className="space-y-3">
-                {/* Header Tanggal */}
                 <div className="flex items-center gap-3 px-1 pt-2">
                   <span className="text-xs font-bold tracking-wider text-emerald-400 uppercase">
                     {formattedDate}
@@ -324,7 +494,6 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
                   </span>
                 </div>
 
-                {/* List Kartu Laporan */}
                 <div className="space-y-3">
                   {reportsInDate.map((report) => (
                     <ReportCardItem
