@@ -34,7 +34,7 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
         </div>
       ) : (
         <>
-          {/* Tampilan Mobile - Bersih & Rapi Tanpa Aksi/Pop-up */}
+          {/* Tampilan Mobile */}
           <div className="block md:hidden divide-y divide-emerald-900/40 bg-[#0f2218]">
             {records.map((record) => (
               <div key={record._id} className="p-4 flex flex-row items-center justify-between gap-4 hover:bg-emerald-950/20 transition">
@@ -46,7 +46,6 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
                       src={record.foto} 
                       alt={record.speciesName} 
                       className="h-11 w-11 rounded-xl object-cover border border-emerald-500/20 shrink-0" 
-                      style={{ height: "auto" }} // Memperbaiki warning aspek rasio Next.js
                     />
                   ) : (
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-900/70 text-base shrink-0">
@@ -58,7 +57,7 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
                   </div>
                 </div>
 
-                {/* SISI KANAN: Lokasi, Tanggal & Shift (Rata Kanan) */}
+                {/* SISI KANAN: Lokasi, Tanggal & Shift */}
                 <div className="flex flex-col items-end gap-1 text-[11px] text-slate-300 text-right max-w-40 shrink-0">
                   <div className="flex items-center gap-1.5 min-w-0 justify-end">
                     <span className="truncate font-medium text-white">{record.location}</span>
@@ -93,11 +92,10 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
                         <img 
                           src={record.foto} 
                           alt={record.speciesName} 
-                          className="h-10 w-10 rounded-full object-cover border border-emerald-500/20" 
-                          style={{ height: "auto" }} // Memperbaiki warning aspek rasio Next.js
+                          className="h-11 w-11 rounded-xl object-cover border border-emerald-500/20 shrink-0" 
                         />
                       ) : (
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-900/70 text-lg">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-900/70 text-lg shrink-0">
                           🐾
                         </div>
                       )}
