@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Eye, X, User, Calendar, MapPin, CloudSun } from "lucide-react";
+import { Eye, X, User, Calendar, CloudSun } from "lucide-react";
 
 export type ManagerObservationItem = {
   _id: string;
@@ -50,7 +50,12 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
             </thead>
             <tbody className="divide-y divide-emerald-900/60 bg-[#0d1d14]">
               {items.map((item) => (
-                <tr key={item._id} className="transition hover:bg-emerald-950/30">
+                /* EVENT ONCLICK DIPINDAHKAN KE BARIS (TR) */
+                <tr 
+                  key={item._id} 
+                  onClick={() => setSelectedItem(item)}
+                  className="transition cursor-pointer hover:bg-emerald-900/30 active:bg-emerald-900/50"
+                >
                   <td className="px-4 py-3">
                     <div className="shrink-0">
                       <Image
@@ -80,14 +85,12 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
                     </span>
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedItem(item)}
-                      className="rounded-full border border-emerald-900/60 p-2 text-emerald-200 transition hover:bg-emerald-900/60"
+                    <div 
+                      className="inline-flex rounded-full border border-emerald-900/60 p-2 text-emerald-200 transition hover:bg-emerald-900/60"
                       title="Lihat Detail"
                     >
                       <Eye className="h-4 w-4" />
-                    </button>
+                    </div>
                   </td>
                 </tr>
               ))}
