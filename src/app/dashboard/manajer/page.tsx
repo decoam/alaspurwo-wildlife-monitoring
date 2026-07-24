@@ -54,26 +54,31 @@ export default async function ManagerDashboardPage() {
   // Hitung Total Observasi Keseluruhan
   const totalObservations = await Observation.countDocuments();
   
-  // Hitung Observasi Khusus Hari Ini secara Dinamis (WIB)
+  // PERBAIKAN: Hitung Observasi Khusus Hari Ini dengan Rentang Dua Sisi (startOfToday s/d endOfToday WIB)
   const nowWIB = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+  
   const startOfToday = new Date(nowWIB);
   startOfToday.setHours(0, 0, 0, 0);
 
+  const endOfToday = new Date(nowWIB);
+  endOfToday.setHours(23, 59, 59, 999);
+
   const observationsToday = await Observation.countDocuments({
-    tanggalPengamatan: { $gte: startOfToday }
+    tanggalPengamatan: { 
+      $gte: startOfToday,
+      $lte: endOfToday 
+    }
   });
   
-  // Menghitung status sinkronisasi berdasarkan data lokal.
-  // Catatan: Karena API integrasi pihak Kementerian/Kehutanan belum dihubungkan (masih tahap mock),
-  // status sinkronisasi dikelola secara internal melalui flag `isSynced` / `status`.
-const pendingValidation = await Observation.countDocuments({
-  $or: [
-    { isSynced: false },
-    { isSynced: { $exists: false } },
-    { status: "Pending" },
-    { status: { $exists: false } }
-  ]
-}); 
+  // Menghitung status sinkronisasi berdasarkan data lokal
+  const pendingValidation = await Observation.countDocuments({
+    $or: [
+      { isSynced: false },
+      { isSynced: { $exists: false } },
+      { status: "Pending" },
+      { status: { $exists: false } }
+    ]
+  }); 
   
   const today = new Date();
   const lastGeneratedDate = today.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
@@ -95,7 +100,14 @@ const pendingValidation = await Observation.countDocuments({
   sevenDaysAgo.setHours(0, 0, 0, 0);
 
   const weeklyRaw = await Observation.aggregate([
-    { $match: { tanggalPengamatan: { $gte: sevenDaysAgo } } },
+    { 
+      $match: { 
+        tanggalPengamatan: { 
+          $gte: sevenDaysAgo,
+          $lte: endOfToday 
+        } 
+      } 
+    },
     {
       $group: {
         _id: { $dayOfWeek: "$tanggalPengamatan" },
@@ -141,7 +153,6 @@ const pendingValidation = await Observation.countDocuments({
     observedAt: rec.tanggalPengamatan 
       ? new Date(rec.tanggalPengamatan).toLocaleDateString("id-ID") + " | " + (rec.shift || "Pagi")
       : "-",
-    // PERBAIKAN: Gunakan nilai status dari database
     status: (rec.status as "Pending" | "Validated" | "Rejected") || "Pending", 
   }));
 

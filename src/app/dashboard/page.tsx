@@ -1,3 +1,5 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 import { ClipboardList, Camera, Eye, PlusCircle, Sunrise, Sunset } from "lucide-react";
 import { DashboardHeader } from "@/features/dashboard/components/DashboardHeader";
 import { DashboardSidebar } from "@/features/dashboard/components/DashboardSidebar";
@@ -13,6 +15,13 @@ export default async function DashboardPage({
 }: {
   searchParams: Promise<{ search?: string }> | { search?: string };
 }) {
+  // PERBAIKAN: Guard auth() eksplisit di Server Component
+  const session = await auth();
+
+  if (!session) {
+    redirect("/login");
+  }
+
   const resolvedSearchParams = await searchParams;
   const search = typeof resolvedSearchParams.search === "string" ? resolvedSearchParams.search : "";
 
@@ -48,9 +57,9 @@ export default async function DashboardPage({
       accent: "from-orange-500 to-rose-500",
     },
   ];
+
   return (
     <main className="min-h-screen bg-[#07110c] px-4 py-4 text-slate-100 sm:px-6 lg:px-8 lg:py-6">
-
       <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row">
         <div className="w-full lg:w-72">
           <DashboardSidebar user={user} />
@@ -65,12 +74,9 @@ export default async function DashboardPage({
             ))}
           </div>
 
-        
-
           <div className="mt-2 rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
             <RecentObservationTable observations={recentObservations} />
           </div>
-
         </section>
       </div>
     </main>
