@@ -1,10 +1,18 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse, type NextRequest } from "next/server";
 
+const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+
+if (!authSecret) {
+  throw new Error(
+    "FATAL: AUTH_SECRET atau NEXTAUTH_SECRET belum diatur di environment variable."
+  );
+}
+
 export async function middleware(request: NextRequest) {
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "dev-secret-change-me",
+    secret: authSecret,
   });
 
   const isAuthenticated = Boolean(token);
@@ -23,7 +31,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
-      if (pathname === "/dashboard" && userRole === "manajer") {
+    if (pathname === "/dashboard" && userRole === "manajer") {
       return NextResponse.redirect(new URL("/dashboard/manajer", request.url));
     }
   }
