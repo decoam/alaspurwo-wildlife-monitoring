@@ -63,7 +63,17 @@ export default async function ManagerDashboardPage() {
     tanggalPengamatan: { $gte: startOfToday }
   });
   
-  const pendingValidation = totalObservations; 
+  // Menghitung status sinkronisasi berdasarkan data lokal.
+  // Catatan: Karena API integrasi pihak Kementerian/Kehutanan belum dihubungkan (masih tahap mock),
+  // status sinkronisasi dikelola secara internal melalui flag `isSynced` / `status`.
+const pendingValidation = await Observation.countDocuments({
+  $or: [
+    { isSynced: false },
+    { isSynced: { $exists: false } },
+    { status: "Pending" },
+    { status: { $exists: false } }
+  ]
+}); 
   
   const today = new Date();
   const lastGeneratedDate = today.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
@@ -131,7 +141,8 @@ export default async function ManagerDashboardPage() {
     observedAt: rec.tanggalPengamatan 
       ? new Date(rec.tanggalPengamatan).toLocaleDateString("id-ID") + " | " + (rec.shift || "Pagi")
       : "-",
-    status: "Pending" as const, 
+    // PERBAIKAN: Gunakan nilai status dari database
+    status: (rec.status as "Pending" | "Validated" | "Rejected") || "Pending", 
   }));
 
   const realFullName = sessionUser?.fullName || sessionUser?.name || "Manajer Konservasi";
