@@ -92,13 +92,14 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
     setErrorMsg(null);
 
     try {
-      const res = await fetch("/api/register", {
+      // PERBAIKAN: Mengarahkan endpoint ke API terproteksi manajer
+      const res = await fetch("/api/manajer/petugas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullName, username, password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal menambahkan petugas.");
+      if (!res.ok) throw new Error(data.error || data.message || "Gagal menambahkan petugas.");
 
       setSuccessMsg("Petugas baru berhasil didaftarkan!");
       setTimeout(() => {
