@@ -116,7 +116,9 @@ export default async function ProfilePage() {
   const username = session.user.username || "";
   const email = session.user.email || "";
   const role = session.user.role || userDoc?.role || "Petugas";
-  const posPengamatan = session.user.posPengamatan || (session.user.fullName ? "" : userDoc?.fullName) || "";
+  
+  // PERBAIKAN: Cast session.user ke any agar TypeScript tidak melempar error
+  const posPengamatan = (session.user as any)?.posPengamatan || (session.user.fullName ? "" : userDoc?.fullName) || "";
 
   const createdAt = userDoc?.createdAt ? new Date(userDoc.createdAt) : null;
 
