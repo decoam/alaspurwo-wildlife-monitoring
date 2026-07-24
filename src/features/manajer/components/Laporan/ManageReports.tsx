@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { 
   FileSpreadsheet, 
   FileText, 
   CheckSquare, 
   Square,
   Info,
-  Loader2
+  Loader2,
+  Calendar as CalendarIcon
 } from "lucide-react";
 import { ExportReportTable } from "./ExportReportTable";
 import { ReportCardItem } from "./ReportCardItem";
@@ -24,6 +25,50 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
   const [exportScope, setExportScope] = useState<"all" | "today" | "selected" | "date">("all");
   const [filterDate, setFilterDate] = useState<string>("");
   const [isExporting, setIsExporting] = useState(false);
+
+  // State Kontrol Toggle Dropdown
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+  const calendarRef = useRef<HTMLElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  // Dynamic import 'cally' di sisi browser
+  useEffect(() => {
+    import("cally");
+  }, []);
+
+  // Event handler untuk milih tanggal & nutup dropdown
+  useEffect(() => {
+    const calendarEl = calendarRef.current;
+    if (!calendarEl) return;
+
+    const handleChange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      if (target && target.value) {
+        setFilterDate(target.value);
+        setIsCalendarOpen(false); // Otomatis tutup setelah pilih tanggal
+      }
+    };
+
+    calendarEl.addEventListener("change", handleChange);
+    return () => calendarEl.removeEventListener("change", handleChange);
+  }, [exportScope, isCalendarOpen]);
+
+  // Close dropdown kalau user klik di luar area calendar
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsCalendarOpen(false);
+      }
+    };
+
+    if (isCalendarOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCalendarOpen]);
 
   const todayReports = useMemo(() => {
     const todayStr = getLocalDateString(new Date());
@@ -139,26 +184,59 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
             </button>
           </div>
 
+          {/* DROPDOWN KALENDER SAMPING KANAN & LEBIH RINGKAS */}
           {exportScope === "date" && (
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-xl bg-[#040906] border border-emerald-950/60 animate-in fade-in slide-in-from-top-1 duration-200">
-              <label 
-                htmlFor="filter-date-input" 
-                className="text-xs text-slate-400 flex items-center gap-1.5 shrink-0 cursor-pointer select-none"
-              >
+              <label className="text-xs text-slate-400 flex items-center gap-1.5 shrink-0 select-none">
                 Saring Tanggal Observasi:
               </label>
-              <input
-                id="filter-date-input"
-                type="date"
-                value={filterDate}
-                onClick={(e) => {
-                  if ("showPicker" in HTMLInputElement.prototype) {
-                    try { e.currentTarget.showPicker(); } catch (err) { console.error(err); }
-                  }
-                }}
-                onChange={(e) => setFilterDate(e.target.value)}
-                className="bg-[#ffffff] border border-emerald-900/60 rounded-lg px-3 py-1.5 text-xs text-black focus:outline-none focus:border-emerald-500 transition-colors w-full sm:w-auto cursor-pointer"
-              />
+              
+              {/* Relative Container */}
+              <div className="relative inline-block" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsCalendarOpen((prev) => !prev)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-900/60 bg-[#07130d] text-xs text-slate-200 hover:border-emerald-500 transition-colors cursor-pointer"
+                >
+                  <CalendarIcon size={14} className="text-emerald-500" />
+                  <span>{filterDate || "Pilih Tanggal Pengamatan"}</span>
+                </button>
+
+                {/* Popover Kompak di Samping Kanan */}
+                {isCalendarOpen && (
+                  <div className="absolute left-full top-0 ml-3 z-[999] border border-emerald-900/80 bg-[#07130d] p-2 text-slate-100 shadow-2xl backdrop-blur-md rounded-xl origin-top-left scale-90 sm:scale-95 animate-in fade-in zoom-in-95 duration-150">
+                    <calendar-date
+                      ref={calendarRef}
+                      value={filterDate}
+                      className="cally text-emerald-400 text-xs"
+                      style={{
+                        "--cally-color-accent": "#10b981",
+                        "fontSize": "0.75rem"
+                      } as React.CSSProperties}
+                    >
+                      <svg
+                        aria-label="Previous"
+                        className="fill-current size-3.5 text-emerald-400 hover:text-white cursor-pointer"
+                        slot="previous"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M15.75 19.5 8.25 12l7.5-7.5" />
+                      </svg>
+                      <svg
+                        aria-label="Next"
+                        className="fill-current size-3.5 text-emerald-400 hover:text-white cursor-pointer"
+                        slot="next"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                      </svg>
+                      <calendar-month></calendar-month>
+                    </calendar-date>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
