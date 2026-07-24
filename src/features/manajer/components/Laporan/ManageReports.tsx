@@ -26,15 +26,18 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
   const [filterDate, setFilterDate] = useState<string>("");
   const [isExporting, setIsExporting] = useState(false);
 
-  // Ref untuk elemen kalender Cally
+  // State Kontrol Toggle Dropdown
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
   const calendarRef = useRef<HTMLElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   // Dynamic import 'cally' di sisi browser
   useEffect(() => {
     import("cally");
   }, []);
 
-  // Listen event change dari Cally
+  // Event handler untuk milih tanggal & nutup dropdown
   useEffect(() => {
     const calendarEl = calendarRef.current;
     if (!calendarEl) return;
@@ -43,12 +46,29 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
       const target = e.target as HTMLInputElement;
       if (target && target.value) {
         setFilterDate(target.value);
+        setIsCalendarOpen(false); // Otomatis tutup setelah pilih tanggal
       }
     };
 
     calendarEl.addEventListener("change", handleChange);
     return () => calendarEl.removeEventListener("change", handleChange);
-  }, [exportScope]);
+  }, [exportScope, isCalendarOpen]);
+
+  // Close dropdown kalau user klik di luar area calendar
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsCalendarOpen(false);
+      }
+    };
+
+    if (isCalendarOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCalendarOpen]);
 
   const todayReports = useMemo(() => {
     const todayStr = getLocalDateString(new Date());
@@ -164,57 +184,58 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
             </button>
           </div>
 
-          {/* IMPLEMENTASI CALLY DATE PICKER */}
+          {/* DROPDOWN KALENDER SAMPING KANAN & LEBIH RINGKAS */}
           {exportScope === "date" && (
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-xl bg-[#040906] border border-emerald-950/60 animate-in fade-in slide-in-from-top-1 duration-200">
               <label className="text-xs text-slate-400 flex items-center gap-1.5 shrink-0 select-none">
                 Saring Tanggal Observasi:
               </label>
               
-              <div className="relative">
+              {/* Relative Container */}
+              <div className="relative inline-block" ref={dropdownRef}>
                 <button
                   type="button"
-                  popoverTarget="cally-popover1"
-                  id="cally1"
-                  style={{ anchorName: "--cally1" } as React.CSSProperties}
+                  onClick={() => setIsCalendarOpen((prev) => !prev)}
                   className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-900/60 bg-[#07130d] text-xs text-slate-200 hover:border-emerald-500 transition-colors cursor-pointer"
                 >
                   <CalendarIcon size={14} className="text-emerald-500" />
                   <span>{filterDate || "Pilih Tanggal Pengamatan"}</span>
                 </button>
 
-                <div
-                  popover="auto"
-                  id="cally-popover1"
-                  style={{ positionAnchor: "--cally1" } as React.CSSProperties}
-                  className="dropdown rounded-2xl border border-emerald-900/80 bg-[#07130d] p-3 text-slate-100 shadow-2xl backdrop-blur-md"
-                >
-                  <calendar-date
-                    ref={calendarRef}
-                    value={filterDate}
-                    className="cally text-emerald-400"
-                  >
-                    <svg
-                      aria-label="Previous"
-                      className="fill-current size-4 text-emerald-400 hover:text-white cursor-pointer"
-                      slot="previous"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
+                {/* Popover Kompak di Samping Kanan */}
+                {isCalendarOpen && (
+                  <div className="absolute left-full top-0 ml-3 z-[999] border border-emerald-900/80 bg-[#07130d] p-2 text-slate-100 shadow-2xl backdrop-blur-md rounded-xl origin-top-left scale-90 sm:scale-95 animate-in fade-in zoom-in-95 duration-150">
+                    <calendar-date
+                      ref={calendarRef}
+                      value={filterDate}
+                      className="cally text-emerald-400 text-xs"
+                      style={{
+                        "--cally-color-accent": "#10b981",
+                        "fontSize": "0.75rem"
+                      } as React.CSSProperties}
                     >
-                      <path d="M15.75 19.5 8.25 12l7.5-7.5" />
-                    </svg>
-                    <svg
-                      aria-label="Next"
-                      className="fill-current size-4 text-emerald-400 hover:text-white cursor-pointer"
-                      slot="next"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                    </svg>
-                    <calendar-month></calendar-month>
-                  </calendar-date>
-                </div>
+                      <svg
+                        aria-label="Previous"
+                        className="fill-current size-3.5 text-emerald-400 hover:text-white cursor-pointer"
+                        slot="previous"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M15.75 19.5 8.25 12l7.5-7.5" />
+                      </svg>
+                      <svg
+                        aria-label="Next"
+                        className="fill-current size-3.5 text-emerald-400 hover:text-white cursor-pointer"
+                        slot="next"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                      </svg>
+                      <calendar-month></calendar-month>
+                    </calendar-date>
+                  </div>
+                )}
               </div>
             </div>
           )}
