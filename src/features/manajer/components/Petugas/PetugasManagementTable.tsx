@@ -98,7 +98,8 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         body: JSON.stringify({ fullName, username, password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal menambahkan petugas.");
+      // /api/register returns { message } for all responses (not { error })
+      if (!res.ok) throw new Error(data.message || "Gagal menambahkan petugas.");
 
       setSuccessMsg("Petugas baru berhasil didaftarkan!");
       setTimeout(() => {
@@ -128,7 +129,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         body: JSON.stringify({ id: selectedUser._id, fullName, username, password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal memperbarui data.");
+      if (!res.ok) throw new Error(data.message || "Gagal memperbarui data.");
 
       setSuccessMsg("Data petugas berhasil diperbarui!");
       setTimeout(() => {
@@ -154,7 +155,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         body: JSON.stringify({ id: selectedUser._id }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal menghapus petugas.");
+      if (!res.ok) throw new Error(data.message || "Gagal menghapus petugas.");
 
       setSuccessMsg("Akun petugas berhasil dihapus.");
       setTimeout(() => {

@@ -36,8 +36,8 @@ export default async function ObservationDetailPage({ params }: DetailObservatio
         </Link>
 
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="overflow-hidden rounded-[24px] border border-emerald-900/60 bg-[#08140e]">
-            <Image src={observation.foto || "/placeholder.svg"} alt={observation.namaSatwa} width={1200} height={800} className="h-[380px] w-full object-cover" unoptimized />
+          <div className="overflow-hidden rounded-[24px] border border-emerald-900/60 bg-[#08140e] w-full aspect-video">
+            <Image src={observation.foto || "/placeholder.svg"} alt={observation.namaSatwa} width={1200} height={800} className="h-full w-full object-cover" unoptimized />
           </div>
 
           <div className="space-y-4">

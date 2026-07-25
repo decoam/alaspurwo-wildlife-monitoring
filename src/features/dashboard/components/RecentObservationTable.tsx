@@ -34,7 +34,6 @@ export function RecentObservationTable({ observations }: RecentObservationTableP
               <th className="px-5 py-3 font-medium">Lokasi</th>
               <th className="px-5 py-3 font-medium">Shift</th>
             </tr>
-            
           </thead>
           <tbody className="divide-y divide-emerald-900/50 bg-[#0f2218] text-slate-200">
             {observations.map((item) => (
@@ -60,7 +59,8 @@ export function RecentObservationTable({ observations }: RecentObservationTableP
                   >
                     {item.shift || "-"}
                   </span>
-                </td>              </tr>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
