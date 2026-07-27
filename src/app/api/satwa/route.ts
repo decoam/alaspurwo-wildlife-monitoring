@@ -1,20 +1,21 @@
 import { NextResponse } from "next/server";
-import mongoose from "mongoose";
+import { connectDB } from "@/lib/mongodb";
 import Satwa from "@/models/Satwa";
-
-const MONGODB_URI = process.env.MONGODB_URI;
-
-async function connectToDatabase() {
-  if (mongoose.connection.readyState >= 1) return;
-  if (!MONGODB_URI) {
-    throw new Error("MONGODB_URI belum dikonfigurasi!");
-  }
-  await mongoose.connect(MONGODB_URI);
-}
+import { auth } from "@/auth";
 
 export async function GET(request: Request) {
   try {
-    await connectToDatabase();
+    // 1. Proteksi Autentikasi: Memastikan pengguna sudah terautentikasi (login)
+    const session = await auth();
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: "Akses ditolak. Silakan login terlebih dahulu." },
+        { status: 401 }
+      );
+    }
+
+    // 2. Gunakan koneksi tercache terpusat dari @/lib/mongodb
+    await connectDB();
 
     const { searchParams } = new URL(request.url);
     const isProtectedQuery = searchParams.get("protected");
@@ -34,7 +35,7 @@ export async function GET(request: Request) {
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Gagal mengambil data satwa:", error);
     return NextResponse.json(
       {

@@ -13,6 +13,8 @@ export interface IObservation extends Document {
   catatan: string;
   namaPetugas: string;
   posPengamatan: string;
+  status: "Pending" | "Validated" | "Rejected"; // Tambahan field status
+  isSynced: boolean;                          // Tambahan field sync
   createdBy: Types.ObjectId;
   deletedAt: Date | null;
   createdAt: Date;
@@ -33,6 +35,12 @@ const observationSchema = new Schema<IObservation>(
     catatan: { type: String, default: "" },
     namaPetugas: { type: String, required: true, trim: true },
     posPengamatan: { type: String, required: true, trim: true },
+    status: {
+      type: String,
+      enum: ["Pending", "Validated", "Rejected"],
+      default: "Pending",
+    },
+    isSynced: { type: Boolean, default: false },
     deletedAt: { type: Date, default: null },
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },

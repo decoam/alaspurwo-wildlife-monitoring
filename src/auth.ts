@@ -20,8 +20,6 @@ declare module "next-auth" {
       username: string;
       fullName: string;
       role: string;
-      email?: string;
-      posPengamatan?: string;
     } & DefaultSession["user"];
   }
 
@@ -30,8 +28,6 @@ declare module "next-auth" {
     username: string;
     fullName: string;
     role: string;
-    email?: string;
-    posPengamatan?: string;
   }
 }
 
@@ -55,7 +51,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         try {
           await connectDB();
         } catch (err) {
-          // Prevent noisy NextAuth CallbackRouteError; treat DB failure as auth failure.
           console.error("[Auth] DB connection error during authorize", {
             message: err instanceof Error ? err.message : String(err),
           });
@@ -79,14 +74,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
+        // PERBAIKAN: Hanya mapping field yang sesuai dengan schema User
         return {
           id: user._id.toString(),
           username: user.username,
           fullName: user.fullName,
           role: user.role,
-          name: user.fullName,
-          email: user.username,
-          posPengamatan: user.fullName,
+          name: user.fullName, // Tetap sediakan untuk kompatibilitas bawaan NextAuth
         };
       },
     }),
@@ -98,8 +92,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.username = user.username;
         token.fullName = user.fullName;
         token.role = user.role;
-        token.email = user.email;
-        token.posPengamatan = user.posPengamatan;
       }
       return token;
     },
@@ -109,9 +101,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.username = token.username as string;
         session.user.fullName = token.fullName as string;
         session.user.role = token.role as string;
-        // token.email bisa undefined, pastikan field session.user.email selalu string
-        session.user.email = (token.email as string | undefined) ?? "";
-        session.user.posPengamatan = token.posPengamatan as string | undefined;
       }
       return session;
     },
