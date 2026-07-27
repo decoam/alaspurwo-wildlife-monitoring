@@ -5,6 +5,13 @@ import type { DefaultSession } from "next-auth";
 import { connectDB } from "@/lib/mongodb";
 import { User } from "@/models/User";
 
+const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+
+if (!authSecret) {
+  throw new Error(
+    "FATAL: AUTH_SECRET atau NEXTAUTH_SECRET belum diatur di environment variable."
+  );
+}
 
 declare module "next-auth" {
   interface Session {
@@ -29,7 +36,7 @@ declare module "next-auth" {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "dev-secret-change-me",
+  secret: authSecret,
   session: {
     strategy: "jwt",
   },
@@ -71,7 +78,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!passwordMatches) {
           return null;
         }
-        
 
         return {
           id: user._id.toString(),

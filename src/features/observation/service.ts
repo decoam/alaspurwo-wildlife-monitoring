@@ -79,6 +79,14 @@ export async function updateObservation(formData: FormData): Promise<ActionResul
       return { success: false, message: "Data pengamatan tidak ditemukan." };
     }
 
+    // === PERBAIKAN IDOR: Cek Kepemilikan ===
+    if (String(existing.createdBy) !== String(session.user.id)) {
+      return {
+        success: false,
+        message: "Anda tidak memiliki izin untuk mengubah data pengamatan ini.",
+      };
+    }
+
     const rawData = parseObservationFormData(formData);
     const parsed = observationSchema.safeParse(rawData);
 
@@ -116,7 +124,11 @@ export async function updateObservation(formData: FormData): Promise<ActionResul
     }
   } catch (error) {
     console.error("Update observation error", error);
-    return { success: false, message: error instanceof Error ? error.message : "Gagal memperbarui data pengamatan." };
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Gagal memperbarui data pengamatan.",
+    };
   }
 
   revalidatePath("/dashboard/observations");
