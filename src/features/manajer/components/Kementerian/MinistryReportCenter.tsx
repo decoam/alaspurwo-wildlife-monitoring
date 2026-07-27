@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { FileText, ShieldAlert, CheckCircle2, Clock, Send, Info, Eye, Loader2 } from "lucide-react";
 import { FieldReport } from "@/features/manajer/ReportUtils";
 import { ReportPreviewModal } from "./ReportPreviewModal";
@@ -15,6 +15,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
   const [documentType, setDocumentType] = useState<"BULANAN" | "BAP">("BULANAN");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"draft" | "sent">("draft");
+  const [newCount, setNewCount] = useState<number>(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // State Dinamis dari Database Master Satwa Universal
@@ -27,7 +28,6 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
       try {
         const res = await fetch("/api/satwa?protected=true");
 
-        // Memastikan HTTP response OK (bukan 404/500 HTML Page)
         if (!res.ok) {
           throw new Error(`Gagal mengambil data satwa. Status: ${res.status}`);
         }
@@ -35,7 +35,6 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
         const result = await res.json();
 
         if (result.success && Array.isArray(result.data)) {
-          // Mengambil semua array kata kunci dari koleksi satwa universal
           const keywords = result.data.flatMap(
             (spesies: { keywords: string[]; namaSpesies: string }) =>
               spesies.keywords || [spesies.namaSpesies.toLowerCase()]
@@ -52,7 +51,27 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
     fetchProtectedSpecies();
   }, []);
 
-  // 2. Filter Laporan Satwa Dilindungi berdasarkan Kata Kunci Dinamis
+  // 2. Fetch Status Sinkronisasi/Pengiriman Dokumen dari Database berdasarkan tipeDokumen
+  const fetchDocumentStatus = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/manajer/observation/sync?tipeDokumen=${documentType}`);
+      if (res.ok) {
+        const data = await res.json();
+        // Jika data.isSynced = true -> "sent" (Terverifikasi)
+        // Jika data.isSynced = false (ada data observasi baru) -> "draft" (Menunggu Pengiriman)
+        setSubmitStatus(data.isSynced ? "sent" : "draft");
+        setNewCount(data.newCount || 0);
+      }
+    } catch (error) {
+      console.error("Gagal mengecek status sinkronisasi dokumen:", error);
+    }
+  }, [documentType]);
+
+  useEffect(() => {
+    fetchDocumentStatus();
+  }, [fetchDocumentStatus]);
+
+  // 3. Filter Laporan Satwa Dilindungi berdasarkan Kata Kunci Dinamis
   const protectedAnimalReports = useMemo(() => {
     if (protectedKeywords.length === 0) return [];
 
@@ -68,7 +87,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
     return protectedAnimalReports.reduce((sum, item) => sum + item.jumlah, 0);
   }, [protectedAnimalReports]);
 
-  // 3. Akumulasi data bulanan per spesies & lokasi pos
+  // 4. Akumulasi data bulanan per spesies & lokasi pos
   const monthlySummary = useMemo(() => {
     const summaryMap: { [key: string]: { namaSatwa: string; totalJumlah: number; lokasiList: string[] } } = {};
 
@@ -103,6 +122,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
     tanggalDibuat: new Date().toLocaleDateString("id-ID", { dateStyle: "full" }),
   }), [documentType, protectedAnimalReports, totalProtectedEkor, monthlySummary]);
 
+  // 5. Handler Kirim Dokumen Resmi ke Kementerian
   const handleSendToMinistry = async () => {
     setIsSubmitting(true);
 
@@ -112,6 +132,12 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          tipeDokumen: documentType,
+          nomorSurat: currentPayload.nomorSurat,
+          totalKasus: currentPayload.totalKasus,
+          totalIndividu: currentPayload.totalIndividu,
+        }),
       });
 
       const data = await res.json();
@@ -125,8 +151,8 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
       setIsPreviewOpen(false);
       alert(`Berhasil mengirimkan ${currentPayload.tipeDokumen} ke Server Pusat Kementerian LHK!`);
 
-      // Refresh halaman untuk langsung memperbarui angka ringkasan di dashboard
-      window.location.reload();
+      // Refresh status secara transparan dari DB tanpa memuat ulang seluruh halaman
+      await fetchDocumentStatus();
     } catch (error: any) {
       console.error("Gagal mengirim laporan:", error);
       alert(`Terjadi kesalahan: ${error.message || "Gagal menghubungi server"}`);
@@ -179,9 +205,15 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
           <div>
             <p className="text-xs text-slate-400">Status Sinkronisasi Berkas</p>
             <span className={`inline-block text-xs font-semibold mt-1 px-2.5 py-0.5 rounded-full ${
-              submitStatus === "sent" ? "bg-blue-950 text-blue-400 border border-blue-800" : "bg-amber-950 text-amber-400 border border-amber-800"
+              submitStatus === "sent" 
+                ? "bg-blue-950 text-blue-400 border border-blue-800" 
+                : "bg-amber-950 text-amber-400 border border-amber-800"
             }`}>
-              {submitStatus === "sent" ? "Terverifikasi Pusat" : "Menunggu Pengiriman"}
+              {submitStatus === "sent" 
+                ? "Terverifikasi Pusat" 
+                : newCount > 0 
+                  ? `Menunggu Pengiriman (${newCount} Data Baru)` 
+                  : "Menunggu Pengiriman"}
             </span>
           </div>
         </div>
