@@ -286,11 +286,11 @@ npm run dev
 
 ### Deco Akbar Maulana
 
-AI Engineer & Fullstack Developer
+As a Fullstack Developer
 
 ### Ahmad Bintang Rafli Maulana
 
-Frontend Developer & System Designer
+As a Fullstack Developer
 
 ---
 
