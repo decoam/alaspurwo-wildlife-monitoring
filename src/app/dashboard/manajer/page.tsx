@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { connectDB } from "@/lib/mongodb";
 import { Observation } from "@/models/Observation";
 import { User } from "@/models/User";
+import { LogLaporanKementerian } from "@/models/LogLaporanKementerian";
 import { redirect } from "next/navigation";
 import { Eye, Camera } from "lucide-react";
 import React from "react";
@@ -54,7 +55,7 @@ export default async function ManagerDashboardPage() {
   // Hitung Total Observasi Keseluruhan
   const totalObservations = await Observation.countDocuments();
   
-  // PERBAIKAN: Hitung Observasi Khusus Hari Ini dengan Rentang Dua Sisi (startOfToday s/d endOfToday WIB)
+  // Hitung Observasi Khusus Hari Ini dengan Rentang Dua Sisi (startOfToday s/d endOfToday WIB)
   const nowWIB = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
   
   const startOfToday = new Date(nowWIB);
@@ -70,20 +71,25 @@ export default async function ManagerDashboardPage() {
     }
   });
   
-  // Menghitung status sinkronisasi berdasarkan data lokal
-  const pendingValidation = await Observation.countDocuments({
-    $or: [
-      { isSynced: false },
-      { isSynced: { $exists: false } },
-      { status: "Pending" },
-      { status: { $exists: false } }
-    ]
-  }); 
-  
-  const today = new Date();
-  const lastGeneratedDate = today.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+  // =========================================================================
+  // LOGIKA PENDING VALIDATION & SINKRONISASI KEMENTERIAN (KHUSUS DOKUMEN BULANAN)
+  // =========================================================================
+  const lastBulananLog = await LogLaporanKementerian.findOne({ tipeDokumen: "BULANAN" })
+    .sort({ createdAt: -1 })
+    .lean() as any;
 
-  // Grafik Bergulir Secara Real - Time
+  // Jika pernah kirim Laporan Bulanan, hitung observasi baru yang dibuat SETELAH pengiriman tersebut
+  // Jika belum pernah kirim sama sekali, anggap seluruh observasi belum di-sync
+  const pendingValidation = lastBulananLog
+    ? await Observation.countDocuments({ createdAt: { $gt: lastBulananLog.createdAt } })
+    : totalObservations;
+
+  const today = new Date();
+  const lastGeneratedDate = lastBulananLog
+    ? new Date(lastBulananLog.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })
+    : today.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+
+  // Grafik Bergulir Secara Real-Time
   const rollingDays: { name: string; dayIndex: number }[] = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date(nowWIB);
