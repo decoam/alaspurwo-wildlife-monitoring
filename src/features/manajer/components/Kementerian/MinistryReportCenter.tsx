@@ -1,170 +1,37 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React from "react";
 import { FileText, ShieldAlert, CheckCircle2, Clock, Send, Info, Eye, Loader2 } from "lucide-react";
 import { FieldReport } from "@/features/manajer/ReportUtils";
 import { ReportPreviewModal } from "./ReportPreviewModal";
 import { ReportTables } from "./ReportTables";
+import { useMinistryReportLogic } from "@/features/manajer/MinistryReportLogic";
 
 interface MinistryReportCenterProps {
   initialReports: FieldReport[];
 }
 
 export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ initialReports }) => {
-  const [reports] = useState<FieldReport[]>(initialReports);
-  const [documentType, setDocumentType] = useState<"BULANAN" | "BAP">("BULANAN");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"draft" | "sent">("draft");
-  const [newCount, setNewCount] = useState<number>(0);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-
-  // State Dinamis dari Database Master Satwa Universal
-  const [protectedKeywords, setProtectedKeywords] = useState<string[]>([]);
-  const [isLoadingSpecies, setIsLoadingSpecies] = useState(true);
-
-  // 1. Fetch Data Master Satwa Dilindungi dari Endpoint Universal (/api/satwa?protected=true)
-  useEffect(() => {
-    const fetchProtectedSpecies = async () => {
-      try {
-        const res = await fetch("/api/satwa?protected=true");
-
-        if (!res.ok) {
-          throw new Error(`Gagal mengambil data satwa. Status: ${res.status}`);
-        }
-
-        const result = await res.json();
-
-        if (result.success && Array.isArray(result.data)) {
-          const keywords = result.data.flatMap(
-            (spesies: { keywords: string[]; namaSpesies: string }) =>
-              spesies.keywords || [spesies.namaSpesies.toLowerCase()]
-          );
-          setProtectedKeywords(keywords);
-        }
-      } catch (error) {
-        console.error("Gagal memuat master satwa dilindungi dari database:", error);
-      } finally {
-        setIsLoadingSpecies(false);
-      }
-    };
-
-    fetchProtectedSpecies();
-  }, []);
-
-  // 2. Fetch Status Sinkronisasi/Pengiriman Dokumen dari Database berdasarkan tipeDokumen
-  const fetchDocumentStatus = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/manajer/observation/sync?tipeDokumen=${documentType}`);
-      if (res.ok) {
-        const data = await res.json();
-        // Jika data.isSynced = true -> "sent" (Terverifikasi)
-        // Jika data.isSynced = false (ada data observasi baru) -> "draft" (Menunggu Pengiriman)
-        setSubmitStatus(data.isSynced ? "sent" : "draft");
-        setNewCount(data.newCount || 0);
-      }
-    } catch (error) {
-      console.error("Gagal mengecek status sinkronisasi dokumen:", error);
-    }
-  }, [documentType]);
-
-  useEffect(() => {
-    fetchDocumentStatus();
-  }, [fetchDocumentStatus]);
-
-  // 3. Filter Laporan Satwa Dilindungi berdasarkan Kata Kunci Dinamis
-  const protectedAnimalReports = useMemo(() => {
-    if (protectedKeywords.length === 0) return [];
-
-    return reports.filter((rep) =>
-      protectedKeywords.some((keyword) =>
-        rep.namaSatwa.toLowerCase().includes(keyword.toLowerCase())
-      )
-    );
-  }, [reports, protectedKeywords]);
-
-  // Total individu
-  const totalProtectedEkor = useMemo(() => {
-    return protectedAnimalReports.reduce((sum, item) => sum + item.jumlah, 0);
-  }, [protectedAnimalReports]);
-
-  // 4. Akumulasi data bulanan per spesies & lokasi pos
-  const monthlySummary = useMemo(() => {
-    const summaryMap: { [key: string]: { namaSatwa: string; totalJumlah: number; lokasiList: string[] } } = {};
-
-    protectedAnimalReports.forEach((item) => {
-      const key = item.namaSatwa.toLowerCase();
-      const pos = item.posPengamatan || item.lokasi || "Sadengan";
-
-      if (!summaryMap[key]) {
-        summaryMap[key] = {
-          namaSatwa: item.namaSatwa,
-          totalJumlah: 0,
-          lokasiList: [],
-        };
-      }
-      summaryMap[key].totalJumlah += item.jumlah;
-      if (!summaryMap[key].lokasiList.includes(pos)) {
-        summaryMap[key].lokasiList.push(pos);
-      }
-    });
-
-    return Object.values(summaryMap);
-  }, [protectedAnimalReports]);
-
-  // Data Payload Dokumen
-  const currentPayload = useMemo(() => ({
-    nomorSurat: `KLHK/TN-AP/${documentType}/${new Date().getFullYear()}/001`,
-    tipeDokumen: documentType === "BULANAN" ? "Laporan Rekapitulasi Populasi Bulanan" : "Berita Acara Perjumpaan",
-    satker: "Balai Taman Nasional Alas Purwo",
-    totalKasus: protectedAnimalReports.length,
-    totalIndividu: totalProtectedEkor,
-    data: documentType === "BULANAN" ? monthlySummary : protectedAnimalReports,
-    tanggalDibuat: new Date().toLocaleDateString("id-ID", { dateStyle: "full" }),
-  }), [documentType, protectedAnimalReports, totalProtectedEkor, monthlySummary]);
-
-  // 5. Handler Kirim Dokumen Resmi ke Kementerian
-  const handleSendToMinistry = async () => {
-    setIsSubmitting(true);
-
-    try {
-      const res = await fetch("/api/manajer/observation/sync", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tipeDokumen: documentType,
-          nomorSurat: currentPayload.nomorSurat,
-          totalKasus: currentPayload.totalKasus,
-          totalIndividu: currentPayload.totalIndividu,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Gagal melakukan sinkronisasi data.");
-      }
-
-      // Update state UI lokal jika sukses
-      setSubmitStatus("sent");
-      setIsPreviewOpen(false);
-      alert(`Berhasil mengirimkan ${currentPayload.tipeDokumen} ke Server Pusat Kementerian LHK!`);
-
-      // Refresh status secara transparan dari DB tanpa memuat ulang seluruh halaman
-      await fetchDocumentStatus();
-    } catch (error: any) {
-      console.error("Gagal mengirim laporan:", error);
-      alert(`Terjadi kesalahan: ${error.message || "Gagal menghubungi server"}`);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const {
+    documentType,
+    setDocumentType,
+    isSubmitting,
+    submitStatus,
+    newCount,
+    isPreviewOpen,
+    setIsPreviewOpen,
+    isLoadingSpecies,
+    protectedAnimalReports,
+    totalProtectedEkor,
+    monthlySummary,
+    currentPayload,
+    handleSendToMinistry,
+  } = useMinistryReportLogic(initialReports);
 
   return (
     <div className="p-4 md:p-6 bg-[#060d0a] text-slate-200 space-y-6 relative">
       
-      {/* Ringkasan Analitik */}
+      {/* 1. Ringkasan Analitik */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-4 rounded-2xl bg-[#091710] border border-emerald-900/40 flex items-center gap-4">
           <div className="p-3 rounded-xl bg-amber-950/50 border border-amber-500/20 text-amber-400">
@@ -219,7 +86,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
         </div>
       </div>
 
-      {/* Kontrol Generator Dokumen Naskah Dinas */}
+      {/* 2. Kontrol Generator Dokumen Naskah Dinas */}
       <div className="p-5 rounded-2xl border border-emerald-900/40 bg-[#07130d] space-y-4">
         <div className="flex items-center gap-2">
           <Info size={16} className="text-emerald-500" />
@@ -275,14 +142,14 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
         </div>
       </div>
 
-      {/* TABEL ADAPTIF */}
+      {/* 3. TABEL ADAPTIF */}
       <ReportTables
         documentType={documentType}
         monthlySummary={monthlySummary}
         protectedAnimalReports={protectedAnimalReports}
       />
 
-      {/* MODAL PREVIEW DOKUMEN */}
+      {/* 4. MODAL PREVIEW DOKUMEN */}
       <ReportPreviewModal
         isOpen={isPreviewOpen}
         onClose={() => setIsPreviewOpen(false)}

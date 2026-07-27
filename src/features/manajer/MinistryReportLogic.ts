@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { FieldReport } from "@/features/manajer/ReportUtils";
 
-export function useMinistryReport(initialReports: FieldReport[]) {
+export function useMinistryReportLogic(initialReports: FieldReport[]) {
   const [reports] = useState<FieldReport[]>(initialReports);
   const [documentType, setDocumentType] = useState<"BULANAN" | "BAP">("BULANAN");
   const [isSubmitting, setIsSubmitting] = useState(false);
