@@ -103,16 +103,36 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
     tanggalDibuat: new Date().toLocaleDateString("id-ID", { dateStyle: "full" }),
   }), [documentType, protectedAnimalReports, totalProtectedEkor, monthlySummary]);
 
-  const handleSendToMinistry = () => {
+  const handleSendToMinistry = async () => {
     setIsSubmitting(true);
-    console.log("Mengirim payload ke KLHK:", currentPayload);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const res = await fetch("/api/manajer/observation/sync", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Gagal melakukan sinkronisasi data.");
+      }
+
+      // Update state UI lokal jika sukses
       setSubmitStatus("sent");
       setIsPreviewOpen(false);
       alert(`Berhasil mengirimkan ${currentPayload.tipeDokumen} ke Server Pusat Kementerian LHK!`);
-    }, 1500);
+
+      // Refresh halaman untuk langsung memperbarui angka ringkasan di dashboard
+      window.location.reload();
+    } catch (error: any) {
+      console.error("Gagal mengirim laporan:", error);
+      alert(`Terjadi kesalahan: ${error.message || "Gagal menghubungi server"}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
