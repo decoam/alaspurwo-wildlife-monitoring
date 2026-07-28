@@ -6,12 +6,26 @@ import { LogLaporanKementerian } from "@/models/LogLaporanKementerian";
 
 export const runtime = "nodejs";
 
+interface LogDocument {
+  _id: string;
+  tipeDokumen: string;
+  createdAt: Date;
+}
+
+interface ObservationDocument {
+  _id: string;
+  createdAt: Date;
+}
+
 // GET: Cek status sync berdasarkan tipe dokumen (BULANAN / BAP)
 export async function GET(req: Request) {
   try {
     const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    const sessionUser = session?.user;
+
+    // Batasi akses GET khusus untuk Manajer
+    if (!sessionUser || sessionUser.role?.toLowerCase() !== "manajer") {
+      return NextResponse.json({ message: "Akses ditolak" }, { status: 403 });
     }
 
     await connectDB();
@@ -21,15 +35,16 @@ export async function GET(req: Request) {
     // Ambil log pengiriman terakhir untuk tipe dokumen ini
     const lastLog = await LogLaporanKementerian.findOne({ tipeDokumen })
       .sort({ createdAt: -1 })
-      .lean() as any;
+      .lean<LogDocument>();
 
     if (!lastLog) {
-      return NextResponse.json({ isSynced: false, status: "draft" });
+      return NextResponse.json({ isSynced: false, status: "draft", newCount: 0 });
     }
 
-    // Cek apakah ada observasi baru yang dibuat SETELAH pengiriman terakhir
+    // Cek apakah ada observasi baru (eksplisit abaikan data soft-deleted)
     const newObservationsCount = await Observation.countDocuments({
       createdAt: { $gt: lastLog.createdAt },
+      deletedAt: null,
     });
 
     const isSynced = newObservationsCount === 0;
@@ -40,8 +55,12 @@ export async function GET(req: Request) {
       lastSentAt: lastLog.createdAt,
       newCount: newObservationsCount,
     });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error) {
+    console.error("GET /api/manajer/observation/sync error:", error);
+    return NextResponse.json(
+      { message: "Terjadi kesalahan internal pada server" },
+      { status: 500 }
+    );
   }
 }
 
@@ -49,9 +68,9 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const session = await auth();
-    const sessionUser = session?.user as any;
+    const sessionUser = session?.user;
 
-    if (!session || sessionUser?.role?.toLowerCase() !== "manajer") {
+    if (!sessionUser || sessionUser.role?.toLowerCase() !== "manajer") {
       return NextResponse.json({ message: "Akses ditolak" }, { status: 403 });
     }
 
@@ -59,23 +78,39 @@ export async function POST(req: Request) {
     const body = await req.json().catch(() => ({}));
     const { tipeDokumen = "BULANAN", nomorSurat, totalKasus, totalIndividu } = body;
 
-    // Ambil timestamp observasi paling akhir
-    const latestObs = await Observation.findOne().sort({ createdAt: -1 }).lean() as any;
+    // Validasi Sederhana Input Body
+    if (
+      typeof tipeDokumen !== "string" ||
+      !["BULANAN", "BAP"].includes(tipeDokumen) ||
+      (nomorSurat && typeof nomorSurat !== "string") ||
+      (totalKasus !== undefined && typeof totalKasus !== "number") ||
+      (totalIndividu !== undefined && typeof totalIndividu !== "number")
+    ) {
+      return NextResponse.json(
+        { message: "Format payload/body request tidak valid" },
+        { status: 400 }
+      );
+    }
+
+    // Ambil timestamp observasi paling akhir (eksplisit abaikan soft-deleted)
+    const latestObs = await Observation.findOne({ deletedAt: null })
+      .sort({ createdAt: -1 })
+      .lean<ObservationDocument>();
 
     // Simpan catatan log ke koleksi baru
     await LogLaporanKementerian.create({
       tipeDokumen,
       nomorSurat: nomorSurat || `KLHK/TN-AP/${tipeDokumen}/${Date.now()}`,
-      totalKasus: totalKasus || 0,
-      totalIndividu: totalIndividu || 0,
+      totalKasus: typeof totalKasus === "number" ? totalKasus : 0,
+      totalIndividu: typeof totalIndividu === "number" ? totalIndividu : 0,
       lastObservationCreatedAt: latestObs?.createdAt || new Date(),
       createdBy: sessionUser.id,
     });
 
-    // Update status observasi jika dokumen yang dikirim adalah laporan Bulanan
+    // Update status observasi jika dokumen yang dikirim adalah laporan Bulanan (abaikan soft-deleted)
     if (tipeDokumen === "BULANAN") {
       await Observation.updateMany(
-        { status: "Pending" },
+        { status: "Pending", deletedAt: null },
         { $set: { status: "Validated", isSynced: true } }
       );
     }
@@ -84,7 +119,11 @@ export async function POST(req: Request) {
       success: true,
       message: `Berhasil mencatat log dan mengirimkan dokumen ${tipeDokumen}`,
     });
-  } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+  } catch (error) {
+    console.error("POST /api/manajer/observation/sync error:", error);
+    return NextResponse.json(
+      { message: "Terjadi kesalahan internal pada server" },
+      { status: 500 }
+    );
   }
 }
