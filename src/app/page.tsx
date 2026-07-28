@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { connectDB } from "@/lib/mongodb";
+import { Observation } from "@/models/Observation";
+import { User } from "@/models/User";
 import {
   Trees,
   PawPrint,
@@ -8,7 +11,31 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-export default function HomePage() {
+export const runtime = "nodejs";
+
+async function getLandingStats() {
+  try {
+    await connectDB();
+    const [distinctSpecies, totalObservations, totalPetugas] = await Promise.all([
+      Observation.distinct("namaSatwa"),
+      Observation.countDocuments(),
+      User.countDocuments({ role: /^petugas$/i }),
+    ]);
+
+    return {
+      distinctSpecies: distinctSpecies.length,
+      totalObservations,
+      totalPetugas,
+    };
+  } catch (error) {
+    console.error("Failed to fetch landing stats:", error);
+    return { distinctSpecies: 0, totalObservations: 0, totalPetugas: 0 };
+  }
+}
+
+export default async function HomePage() {
+  const stats = await getLandingStats();
+
   return (
     <main className="landing-main">
       {/* Background Image */}
@@ -58,17 +85,17 @@ export default function HomePage() {
 
             <div className="landing-stats-row">
               <div>
-                <h2 className="landing-stat-number">42</h2>
+                <h2 className="landing-stat-number">{stats.totalPetugas || "—"}</h2>
                 <p className="landing-stat-label">Pos Pengamatan</p>
               </div>
 
               <div>
-                <h2 className="landing-stat-number">1.256</h2>
+                <h2 className="landing-stat-number">{stats.totalObservations || "—"}</h2>
                 <p className="landing-stat-label">Observasi</p>
               </div>
 
               <div>
-                <h2 className="landing-stat-number">87</h2>
+                <h2 className="landing-stat-number">{stats.distinctSpecies || "—"}</h2>
                 <p className="landing-stat-label">Spesies</p>
               </div>
             </div>

@@ -116,9 +116,6 @@ export default async function ProfilePage() {
   const username = session.user.username || "";
   const email = session.user.email || "";
   const role = session.user.role || userDoc?.role || "Petugas";
-  
-  // PERBAIKAN: Cast session.user ke any agar TypeScript tidak melempar error
-  const posPengamatan = (session.user as any)?.posPengamatan || (session.user.fullName ? "" : userDoc?.fullName) || "";
 
   const createdAt = userDoc?.createdAt ? new Date(userDoc.createdAt) : null;
 
@@ -169,7 +166,7 @@ export default async function ProfilePage() {
                 <h2 className="prof-section-title">{fullName || "Alas Purwo"}</h2>
                 <p className="prof-username">@{username || "unknown"}</p>
                 <p className="prof-badge-pos">
-                  {posPengamatan ? `Pos: ${posPengamatan}` : "Pos Pengamatan: —"}
+                  {role ? `Peran: ${role}` : "Pos Pengamatan: —"}
                 </p>
               </div>
             </div>

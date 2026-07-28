@@ -30,7 +30,6 @@ export type DashboardUserProfile = {
   email: string;
   fullName: string;
   role: string;
-  posPengamatan: string;
   avatarInitials: string;
 };
 
@@ -218,7 +217,6 @@ export async function getDashboardData(search = "") {
       ?.user ?? undefined) as
       | {
           email?: string;
-          posPengamatan?: string;
           fullName?: string;
           role?: string;
           name?: string;
@@ -230,7 +228,6 @@ export async function getDashboardData(search = "") {
       email: sessionUser?.email ?? "",
       fullName: sessionUser?.fullName ?? sessionUser?.name ?? "",
       role: sessionUser?.role ?? "Petugas",
-      posPengamatan: sessionUser?.posPengamatan ?? "",
       avatarInitials: (sessionUser?.fullName ?? sessionUser?.name ?? "AP")
         .trim()
         .split(/\s+/)

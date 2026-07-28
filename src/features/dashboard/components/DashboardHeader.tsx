@@ -3,7 +3,6 @@ type DashboardHeaderProps = {
   user: {
     fullName: string;
     role: string;
-    posPengamatan: string;
     avatarInitials: string;
   };
 };
@@ -29,7 +28,7 @@ export function DashboardHeader({ searchValue, user }: DashboardHeaderProps) {
             </div>
             <div>
               <p className="text-sm font-semibold text-white">{user.fullName || user.role}</p>
-              <p className="text-xs text-slate-400">{user.posPengamatan || "Pos Pengamatan Utama"}</p>
+              <p className="text-xs text-slate-400">{user.role || "Pos Pengamatan Utama"}</p>
             </div>
           </div>
         </div>
