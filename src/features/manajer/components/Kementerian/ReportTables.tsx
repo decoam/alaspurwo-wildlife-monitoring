@@ -2,6 +2,7 @@
 
 import React from "react";
 import { FieldReport } from "@/features/manajer/ReportUtils";
+import { formatDate } from "@/lib/date";
 
 interface MonthlySummaryItem {
   namaSatwa: string;
@@ -20,14 +21,6 @@ export const ReportTables: React.FC<ReportTablesProps> = ({
   monthlySummary,
   protectedAnimalReports,
 }) => {
-  // Helper validasi tanggal aman
-  const formatDate = (dateStr?: string) => {
-    if (!dateStr) return "-";
-    const parsedDate = new Date(dateStr);
-    if (isNaN(parsedDate.getTime())) return "-";
-    return parsedDate.toLocaleDateString("id-ID");
-  };
-
   return (
     <div className="space-y-3">
       <h4 className="text-xs font-bold tracking-wider text-emerald-400 uppercase px-1">

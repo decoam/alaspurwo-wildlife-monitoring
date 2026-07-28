@@ -2,6 +2,7 @@
 
 import React from "react";
 import { FieldReport } from "@/features/manajer/ReportUtils";
+import { formatDate } from "@/lib/date";
 
 interface ExportReportTableProps {
   data: FieldReport[];
@@ -41,9 +42,7 @@ export const ExportReportTable: React.FC<ExportReportTableProps> = ({ data }) =>
               </td>
               <td className="border border-slate-400 px-3 py-2.5">
                 <div>
-                  {report.tanggalPengamatan
-                    ? new Date(report.tanggalPengamatan).toLocaleDateString("id-ID")
-                    : "-"}
+                  {formatDate(report.tanggalPengamatan)}
                 </div>
                 <div className="text-slate-500 font-normal">Shift {report.shift}</div>
               </td>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Eye } from "lucide-react";
 import { ObservationDetailModal } from "./ObservationDetailModal";
+import { formatDate } from "@/lib/date";
 
 export type ManagerObservationItem = {
   _id: string;
@@ -76,7 +77,7 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
                   <td className="px-4 py-3 hidden md:table-cell">{item.lokasi}</td>
                   <td className="px-4 py-3 hidden md:table-cell">{item.shift}</td>
                   <td className="px-4 py-3 hidden md:table-cell">
-                    {new Date(item.tanggalPengamatan).toLocaleDateString("id-ID")}
+                    {formatDate(item.tanggalPengamatan)}
                   </td>
                   
                   <td className="px-4 py-3">{item.namaPetugas}</td>

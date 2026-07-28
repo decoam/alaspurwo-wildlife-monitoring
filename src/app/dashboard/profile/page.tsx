@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { connectDB } from "@/lib/mongodb";
 import { Observation } from "@/models/Observation";
 import { User } from "@/models/User";
+import { formatDateLong } from "@/lib/date";
 
 export const runtime = "nodejs";
 
@@ -184,7 +185,7 @@ export default async function ProfilePage() {
               <div className="prof-detail-row">
                 <span className="prof-detail-label">Tanggal Bergabung</span>
                 <span className="prof-detail-value">
-                  {createdAt ? createdAt.toLocaleDateString("id-ID", { year: "numeric", month: "long", day: "numeric" }) : "—"}
+                  {createdAt ? formatDateLong(createdAt) : "—"}
                 </span>
               </div>
             </div>

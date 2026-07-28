@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { FileText, Send, X } from "lucide-react";
+import { formatDate } from "@/lib/date";
 
 interface ReportPreviewModalProps {
   isOpen: boolean;
@@ -103,7 +104,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                         <td className="px-3 py-2">{item.jumlah || item.totalJumlah || "-"}</td>
                         <td className="px-3 py-2">{item.lokasi || (item.lokasiList ? item.lokasiList.join(", ") : "-")}</td>
                         <td className="px-3 py-2">{item.shift || "-"}</td>
-                        <td className="px-3 py-2">{item.tanggalPengamatan ? new Date(item.tanggalPengamatan).toLocaleDateString("id-ID") : "-"}</td>
+                        <td className="px-3 py-2">{item.tanggalPengamatan ? formatDate(item.tanggalPengamatan) : "-"}</td>
                       </tr>
                     ))
                   )}

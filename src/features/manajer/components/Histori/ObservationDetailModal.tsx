@@ -3,6 +3,7 @@
 import React from "react";
 import { User, Calendar, CloudSun } from "lucide-react";
 import { ManagerObservationItem } from "./ManagerObservationTable";
+import { formatDate } from "@/lib/date";
 
 interface ObservationDetailModalProps {
   item: ManagerObservationItem | null;
@@ -53,7 +54,7 @@ export const ObservationDetailModal: React.FC<ObservationDetailModalProps> = ({
             </div>
             <div className="flex items-center gap-3">
               <Calendar size={16} className="text-emerald-500 shrink-0" /> 
-              <span>Tanggal: <strong className="text-white">{new Date(item.tanggalPengamatan).toLocaleDateString("id-ID")}</strong></span>
+              <span>Tanggal: <strong className="text-white">{formatDate(item.tanggalPengamatan)}</strong></span>
             </div>
           </div>
 

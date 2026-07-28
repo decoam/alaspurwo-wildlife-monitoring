@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, PencilLine, Trash2, Lock } from "lucide-react";
+import { formatDate } from "@/lib/date";
 
 export type ObservationListItem = {
   _id: string;
@@ -73,7 +74,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                 </div>
                 <div className="space-y-1">
                   <p className="text-slate-500 text-[10px] uppercase tracking-wider">Tanggal</p>
-                  <p className="font-medium text-white">{new Date(item.tanggalPengamatan).toLocaleDateString("id-ID")}</p>
+                  <p className="font-medium text-white">{formatDate(item.tanggalPengamatan)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-slate-500 text-[10px] uppercase tracking-wider">Lokasi</p>
@@ -164,7 +165,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                   <td className="px-4 py-3">{item.lokasi}</td>
                   <td className="px-4 py-3">{item.shift}</td>
                   <td className="px-4 py-3">
-                    {new Date(item.tanggalPengamatan).toLocaleDateString("id-ID")}
+                    {formatDate(item.tanggalPengamatan)}
                   </td>
                   <td className="px-4 py-3">{item.namaPetugas}</td>
                   <td className="px-4 py-3">

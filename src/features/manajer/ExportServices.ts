@@ -3,6 +3,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "sonner";
 import { FieldReport } from "./ReportUtils";
+import { formatDate, formatDateFull } from "@/lib/date";
 
 export const exportToExcel = async (
   dataToExport: FieldReport[], 
@@ -25,7 +26,7 @@ export const exportToExcel = async (
       ["LAPORAN OBSERVASI DAN REKAPITULASI SATWA LIAR"],
       [`Cakupan Export: ${exportScope.toUpperCase()}`],
       [],
-      ["Tanggal Cetak", ":", new Date().toLocaleDateString("id-ID", { dateStyle: "full" })],
+      ["Tanggal Cetak", ":", formatDateFull(new Date())],
       ["Satuan Kerja", ":", "Balai Taman Nasional Alas Purwo"],
       ["Total Temuan Satwa", ":", `${totalIndividu} Ekor (${dataToExport.length} Laporan/Kasus)`],
       [],
@@ -40,7 +41,7 @@ export const exportToExcel = async (
       rep.kategori,
       rep.jumlah,
       rep.posPengamatan || rep.lokasi,
-      `${new Date(rep.tanggalPengamatan).toLocaleDateString("id-ID")} (Shift ${rep.shift})`,
+      `${formatDate(rep.tanggalPengamatan)} (Shift ${rep.shift})`,
       rep.namaPetugas,
       rep.kondisiCuaca || "Cerah",
       rep.aktivitasSatwa || rep.catatan || "-"
@@ -160,7 +161,7 @@ export const exportToPDF = (dataToExport: FieldReport[], exportScope: string) =>
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8.5);
   doc.setTextColor(31, 41, 55);
-  doc.text(`Tanggal Cetak : ${new Date().toLocaleDateString("id-ID", { dateStyle: "full" })}`, 14, 52);
+  doc.text(`Tanggal Cetak : ${formatDateFull(new Date())}`, 14, 52);
   doc.text(`Total Temuan   : ${totalIndividu} Ekor (${dataToExport.length} Laporan/Kasus)`, 14, 57);
 
   autoTable(doc, {
@@ -172,7 +173,7 @@ export const exportToPDF = (dataToExport: FieldReport[], exportScope: string) =>
       `${rep.jumlah} Ekor`,
       rep.posPengamatan || rep.lokasi,
       rep.namaPetugas,
-      new Date(rep.tanggalPengamatan).toLocaleDateString("id-ID"),
+      formatDate(rep.tanggalPengamatan),
       rep.aktivitasSatwa || rep.catatan || "-"
     ]),
     headStyles: {

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { MapPin, Calendar, User, CheckSquare, Square } from "lucide-react";
 import { FieldReport } from "@/features/manajer/ReportUtils";
+import { formatDate } from "@/lib/date";
 
 interface ReportCardItemProps {
   report: FieldReport;
@@ -20,13 +21,7 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
 
-  // Validasi tanggal agar aman dari Invalid Date
-  const formatDate = (dateStr?: string) => {
-    if (!dateStr) return "-";
-    const parsedDate = new Date(dateStr);
-    if (isNaN(parsedDate.getTime())) return "-";
-    return parsedDate.toLocaleDateString("id-ID");
-  };
+  // formatDate imported from @/lib/date
 
   return (
     <div

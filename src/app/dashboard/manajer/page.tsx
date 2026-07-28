@@ -6,6 +6,7 @@ import { LogLaporanKementerian } from "@/models/LogLaporanKementerian";
 import { redirect } from "next/navigation";
 import { Eye, Camera } from "lucide-react";
 import React from "react";
+import { formatDate, formatDateShort } from "@/lib/date";
 
 import { SummaryCard } from "@/features/dashboard/components/SummaryCard";
 import { ManagerSidebar } from "@/features/manajer/components/Dashboard/ManagerSidebar";
@@ -116,12 +117,8 @@ export default async function ManagerDashboardPage() {
 
   const today = new Date();
   const lastGeneratedDate = lastBulananLog
-    ? new Date(lastBulananLog.createdAt).toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
-    : today.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+    ? formatDateShort(new Date(lastBulananLog.createdAt))
+    : formatDateShort(today);
 
   // Grafik Bergulir Secara Real-Time
   const rollingDays: { name: string; dayIndex: number }[] = [];
@@ -194,7 +191,7 @@ export default async function ManagerDashboardPage() {
     location: rec.lokasi || "Area TNAP",
     foto: rec.foto || "",
     observedAt: rec.tanggalPengamatan
-      ? new Date(rec.tanggalPengamatan).toLocaleDateString("id-ID") + " | " + (rec.shift || "Pagi")
+      ? formatDate(rec.tanggalPengamatan) + " | " + (rec.shift || "Pagi")
       : "-",
     status: (rec.status as "Pending" | "Validated" | "Rejected") || "Pending",
   }));

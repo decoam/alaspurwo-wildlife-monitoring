@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { FieldReport } from "@/features/manajer/ReportUtils";
+import { formatDateFull } from "@/lib/date";
 
 export function useMinistryReportLogic(initialReports: FieldReport[]) {
   const [reports] = useState<FieldReport[]>(initialReports);
@@ -101,7 +102,7 @@ export function useMinistryReportLogic(initialReports: FieldReport[]) {
     totalKasus: protectedAnimalReports.length,
     totalIndividu: totalProtectedEkor,
     data: documentType === "BULANAN" ? monthlySummary : protectedAnimalReports,
-    tanggalDibuat: new Date().toLocaleDateString("id-ID", { dateStyle: "full" }),
+    tanggalDibuat: formatDateFull(new Date()),
   }), [documentType, protectedAnimalReports, totalProtectedEkor, monthlySummary]);
 
   // Handle Kirim
