@@ -126,9 +126,10 @@ export function useMinistryReportLogic(initialReports: FieldReport[]) {
       setIsPreviewOpen(false);
       alert(`Berhasil mengirimkan ${currentPayload.tipeDokumen} ke Server Pusat Kementerian LHK!`);
       await fetchDocumentStatus();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Gagal mengirim laporan:", error);
-      alert(`Terjadi kesalahan: ${error.message || "Gagal menghubungi server"}`);
+      const errorMessage = error instanceof Error ? error.message : "Gagal menghubungi server";
+      alert(`Terjadi kesalahan: ${errorMessage}`);
     } finally {
       setIsSubmitting(false);
     }
