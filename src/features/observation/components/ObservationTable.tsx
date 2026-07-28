@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { formatDate } from "@/lib/date";
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, PencilLine, Trash2, Lock } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { PencilLine, Trash2, Lock, Eye } from "lucide-react";
+import { Table } from "@/components/ui/Table";
 
 export type ObservationListItem = {
   _id: string;
@@ -25,113 +28,230 @@ type ObservationTableProps = {
 };
 
 export function ObservationTable({ items, currentUserId, deleteAction }: ObservationTableProps) {
+  const router = useRouter();
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
 
+  const desktopColumns = [
+    {
+      key: "foto",
+      header: "Foto",
+      cell: (item: ObservationListItem) => (
+        <Image
+          src={failedImages[item._id] ?? !item.foto ? "/placeholder.svg" : item.foto}
+          alt={item.namaSatwa}
+          width={96}
+          height={64}
+          className="h-16 w-24 rounded-xl object-cover"
+          unoptimized
+          onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
+        />
+      ),
+    },
+    {
+      key: "namaSatwa",
+      header: "Nama Satwa",
+      cellClassName: "font-medium text-text-heading",
+      cell: (item: ObservationListItem) => item.namaSatwa,
+    },
+    {
+      key: "kategori",
+      header: "Kategori",
+      cell: (item: ObservationListItem) => item.kategori,
+    },
+    {
+      key: "jumlah",
+      header: "Jumlah",
+      cell: (item: ObservationListItem) => item.jumlah,
+    },
+    {
+      key: "lokasi",
+      header: "Lokasi",
+      cell: (item: ObservationListItem) => item.lokasi,
+    },
+    {
+      key: "shift",
+      header: "Shift",
+      cell: (item: ObservationListItem) => item.shift,
+    },
+    {
+      key: "tanggal",
+      header: "Tanggal",
+      cell: (item: ObservationListItem) => formatDate(item.tanggalPengamatan),
+    },
+    {
+      key: "petugas",
+      header: "Petugas",
+      cell: (item: ObservationListItem) => item.namaPetugas,
+    },
+    {
+      key: "statusUpload",
+      header: "Status Upload",
+      cell: (item: ObservationListItem) => (
+        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${item.foto ? "bg-brand-primary/60 text-brand-text-light" : "bg-surface-card text-text-muted"}`}>
+          {item.foto ? "Tersedia" : "Belum"}
+        </span>
+      ),
+    },
+    {
+      key: "aksi",
+      header: "Aksi",
+      cell: (item: ObservationListItem) => {
+        const isOwner = item.createdBy === currentUserId;
+        return (
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/dashboard/observations/${item._id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="rounded-full border border-brand-primary/60 p-2 text-brand-text-light transition hover:bg-brand-primary/60"
+              title="Detail"
+            >
+              <Eye className="h-4 w-4" />
+            </Link>
+            {isOwner ? (
+              <>
+                <Link
+                  href={`/dashboard/observations/edit/${item._id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="rounded-full border border-brand-primary/60 p-2 text-brand-text transition hover:bg-brand-primary/60 hover:text-text-heading"
+                  title="Edit"
+                >
+                  <PencilLine className="h-4 w-4" />
+                </Link>
+                <form action={deleteAction} onClick={(e) => e.stopPropagation()}>
+                  <input type="hidden" name="id" value={item._id} />
+                  <button
+                    type="submit"
+                    onClick={(e) => {
+                      if (!window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                        e.preventDefault();
+                      }
+                    }}
+                    className="rounded-full border border-error-bg/60 bg-rose/20 p-2 text-error-dark transition hover:bg-rose/30 hover:text-text-heading"
+                    title="Hapus"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </form>
+              </>
+            ) : (
+              <div
+                className="rounded-full border border-border-input p-2 text-text-muted cursor-not-allowed"
+                title="Hanya pemilik yang dapat mengedit atau menghapus"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Lock className="h-4 w-4" />
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
-    <div className="overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-card/90">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-brand-primary/60 text-sm text-text-secondary">
-          <thead className="bg-brand-primary/50 text-left text-text-body">
-            <tr>
-              <th className="px-4 py-3">Foto</th>
-              <th className="px-4 py-3">Nama Satwa</th>
-              <th className="px-4 py-3">Kategori</th>
-              <th className="px-4 py-3">Jumlah</th>
-              <th className="px-4 py-3">Lokasi</th>
-              <th className="px-4 py-3">Shift</th>
-              <th className="px-4 py-3">Tanggal</th>
-              <th className="px-4 py-3">Petugas</th>
-              <th className="px-4 py-3">Status Upload</th>
-              <th className="px-4 py-3">Aksi</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-brand-primary/60 bg-hover-bg">
-            {items.map((item) => {
-              const isOwner = item.createdBy === currentUserId;
+    <div className="space-y-4">
+      {/* MOBILE CARD LAYOUT */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {items.map((item) => {
+          const isOwner = item.createdBy === currentUserId;
 
-              return (
-                <tr key={item._id} className="transition hover:bg-brand-primary/15">
-                  <td className="px-4 py-3">
-                    <Image
-                      src={failedImages[item._id] ?? !item.foto ? "/placeholder.svg" : item.foto}
-                      alt={item.namaSatwa}
-                      width={48}
-                      height={48}
-                      className="h-12 w-12 rounded-xl object-cover"
-                      unoptimized
-                      onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
-                    />
-                  </td>
-                  <td className="px-4 py-3 font-medium text-text-heading">{item.namaSatwa}</td>
-                  <td className="px-4 py-3">{item.kategori}</td>
-                  <td className="px-4 py-3">{item.jumlah}</td>
-                  <td className="px-4 py-3">{item.lokasi}</td>
-                  <td className="px-4 py-3">{item.shift}</td>
-                  <td className="px-4 py-3">
-                    {new Date(item.tanggalPengamatan).toLocaleDateString("id-ID")}
-                  </td>
-                  <td className="px-4 py-3">{item.namaPetugas}</td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${item.foto ? "bg-brand-primary/60 text-brand-text-light" : "bg-surface-card text-text-muted"}`}>
-                      {item.foto ? "Tersedia" : "Belum"}
+          return (
+            <div key={item._id} className="rounded-2xl border border-brand-primary/50 bg-surface-table/60 p-4 space-y-4 shadow-sm" onClick={() => router.push(`/dashboard/observations/${item._id}`)}>
+              <div className="flex gap-4">
+                <Image
+                  src={failedImages[item._id] ?? !item.foto ? "/placeholder.svg" : item.foto}
+                  alt={item.namaSatwa}
+                  width={96}
+                  height={64}
+                  className="h-16 w-24 rounded-xl object-cover shrink-0"
+                  unoptimized
+                  onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
+                />
+                <div className="flex-1 space-y-1">
+                  <div className="flex justify-between items-start">
+                    <Link href={`/dashboard/observations/${item._id}`} className="hover:underline">
+                      <h4 className="font-semibold text-text-heading">{item.namaSatwa}</h4>
+                    </Link>
+                    <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${item.foto ? "bg-brand-primary/60 text-brand-text-light" : "bg-surface-card text-text-muted"}`}>
+                      {item.foto ? "Foto Ada" : "No Foto"}
                     </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
+                  </div>
+                  <p className="text-xs text-text-muted">{item.kategori}</p>
+                  <p className="text-xs font-medium text-brand-text">{item.namaPetugas}</p>
+                </div>
+              </div>
 
-                      {/* Tombol detail — semua bisa lihat */}
-                      <Link
-                        href={`/dashboard/observations/${item._id}`}
-                        className="rounded-full border border-brand-primary/60 p-2 text-brand-text-light transition hover:bg-brand-primary/60"
-                        title="Detail"
+              <div className="grid grid-cols-2 gap-2 text-xs text-text-body bg-hover-bg/80 p-3 rounded-xl border border-brand-primary/30">
+                <div className="space-y-1">
+                  <p className="text-text-muted text-[10px] uppercase tracking-wider">Jumlah</p>
+                  <p className="font-medium text-text-heading">{item.jumlah} Ekor</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-text-muted text-[10px] uppercase tracking-wider">Shift</p>
+                  <p className="font-medium text-text-heading">{item.shift}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-text-muted text-[10px] uppercase tracking-wider">Tanggal</p>
+                  <p className="font-medium text-text-heading">{formatDate(item.tanggalPengamatan)}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-text-muted text-[10px] uppercase tracking-wider">Lokasi</p>
+                  <p className="font-medium text-text-heading truncate">{item.lokasi}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                {isOwner ? (
+                  <>
+                    <Link
+                      href={`/dashboard/observations/edit/${item._id}`}
+                      className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-brand-primary/60 bg-input-bg py-2.5 text-xs font-semibold text-accent-text transition hover:bg-brand-primary/60"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <PencilLine className="h-3.5 w-3.5" /> Edit
+                    </Link>
+                    <form action={deleteAction} className="flex-1 flex" onClick={(e) => e.stopPropagation()}>
+                      <input type="hidden" name="id" value={item._id} />
+                      <button
+                        type="submit"
+                        onClick={(e) => {
+                          if (!window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+                            e.preventDefault();
+                          }
+                        }}
+                        className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-error-bg bg-rose/25 py-2.5 text-xs font-semibold text-error-text transition hover:bg-rose/35"
                       >
-                        <Eye className="h-4 w-4" />
-                      </Link>
-
-                      {/* Tombol edit & hapus — hanya pemilik */}
-                      {isOwner ? (
-                        <>
-                          <Link
-                            href={`/dashboard/observations/edit/${item._id}`}
-                            className="rounded-full border border-brand-primary/60 p-2 text-brand-text transition hover:bg-brand-primary/60 hover:text-text-heading"
-                            title="Edit"
-                          >
-                            <PencilLine className="h-4 w-4" />
-                          </Link>
-                          <form action={deleteAction}>
-                            <input type="hidden" name="id" value={item._id} />
-                            <button
-                              type="submit"
-                              onClick={(e) => {
-                                if (!window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-                                  e.preventDefault();
-                                }
-                              }}
-                              className="rounded-full border border-error-bg/60 bg-rose/20 p-2 text-error-dark transition hover:bg-rose/30 hover:text-text-heading"
-                              title="Hapus"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </form>
-                        </>
-                      ) : (
-                        /* Tampilkan ikon kunci untuk data milik orang lain */
-                        <div
-                          className="rounded-full border border-border-input p-2 text-text-muted cursor-not-allowed"
-                          title="Hanya pemilik yang dapat mengedit atau menghapus"
-                        >
-                          <Lock className="h-4 w-4" />
-                        </div>
-                      )}
-
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                        <Trash2 className="h-3.5 w-3.5" /> Hapus
+                      </button>
+                    </form>
+                  </>
+                ) : (
+                  <div
+                    className="w-full flex items-center justify-center gap-2 rounded-xl border border-border-input bg-surface-dark/30 py-2.5 text-xs font-semibold text-text-muted cursor-not-allowed"
+                    title="Hanya pemilik yang dapat mengedit atau menghapus"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Lock className="h-3.5 w-3.5" /> Hanya Pemilik
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
+
+      {/* DESKTOP TABLE LAYOUT */}
+      <Table
+        data={items}
+        columns={desktopColumns}
+        rowKey={(item) => item._id}
+        onRowClick={(item) => router.push(`/dashboard/observations/${item._id}`)}
+        wrapperClassName="hidden md:block overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-card/90"
+        tableClassName="min-w-full divide-y divide-brand-primary/60 text-sm text-text-secondary"
+        theadClassName="bg-brand-primary/50 text-left text-text-body"
+        tbodyClassName="divide-y divide-brand-primary/60 bg-hover-bg"
+        trClassName={() => "transition hover:bg-brand-primary/15 cursor-pointer"}
+      />
     </div>
   );
 }

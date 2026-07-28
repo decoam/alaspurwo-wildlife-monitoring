@@ -2,6 +2,8 @@
 
 import React, { useEffect, useMemo } from "react";
 import { FileText, Send, X } from "lucide-react";
+import { formatDate } from "@/lib/date";
+import { Table } from "@/components/ui/Table";
 
 interface ReportPreviewModalProps {
   isOpen: boolean;
@@ -12,7 +14,7 @@ interface ReportPreviewModalProps {
     tanggalDibuat: string;
     totalIndividu: number;
     totalKasus: number;
-    data: unknown;
+    data: any[];
   };
   onSend: () => void;
   isSubmitting: boolean;
@@ -27,7 +29,6 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   isSubmitting,
   submitStatus,
 }) => {
-  // Penanganan Tombol Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -38,14 +39,15 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Fallback Stringify aman dari Circular Reference Error
-  const formattedJsonData = useMemo(() => {
-    try {
-      return JSON.stringify(currentPayload.data, null, 2);
-    } catch {
-      return "// [Gagal mengonversi data ke format JSON]";
-    }
-  }, [currentPayload.data]);
+  const columns = [
+      { header: "No", key: "no", cell: (_:any, idx:number) => idx + 1 },
+      { header: "Nama Satwa", key: "namaSatwa", cell: (item:any) => item.namaSatwa || item.namaSpesies || "-" },
+      { header: "Kategori", key: "kategori", cell: (item:any) => item.kategori || "-" },
+      { header: "Jumlah", key: "jumlah", cell: (item:any) => item.jumlah || item.totalJumlah || "-" },
+      { header: "Lokasi", key: "lokasi", cell: (item:any) => item.lokasi || (item.lokasiList ? item.lokasiList.join(", ") : "-") },
+      { header: "Shift", key: "shift", cell: (item:any) => item.shift || "-" },
+      { header: "Tanggal", key: "tanggal", cell: (item:any) => item.tanggalPengamatan ? formatDate(item.tanggalPengamatan) : "-" },
+  ];
 
   if (!isOpen) return null;
 
@@ -53,7 +55,6 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-panel-bg border border-brand-primary rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
         
-        {/* Header Modal */}
         <div className="p-4 border-b border-brand-primary/80 flex justify-between items-center bg-surface-dark">
           <div className="flex items-center gap-2 text-brand-text">
             <FileText size={18} />
@@ -67,7 +68,6 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           </button>
         </div>
 
-        {/* Isi Preview Surat */}
         <div className="p-6 overflow-y-auto space-y-4 text-xs font-mono text-text-secondary bg-surface-bg">
           <div className="border-b border-dashed border-brand-primary/60 pb-3 text-center space-y-1">
             <p className="font-bold text-text-heading text-sm">KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</p>
@@ -83,13 +83,20 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
 
           <div className="pt-2">
             <p className="text-text-muted mb-2 font-sans font-semibold text-xs">Daftar Data Terlampir:</p>
-            <pre className="bg-surface-dark p-3 rounded-xl border border-brand-primary/80 text-xs overflow-x-auto text-brand-text-light">
-              {formattedJsonData}
-            </pre>
+            <Table
+                data={Array.isArray(currentPayload.data) ? currentPayload.data : []}
+                columns={columns}
+                rowKey={(item: any, idx: number) => item._id || idx}
+                emptyMessage="Tidak ada data pengamatan terlampir."
+                wrapperClassName="overflow-x-auto rounded-xl border border-brand-primary/80"
+                tableClassName="w-full text-left text-xs"
+                theadClassName="bg-surface-dark text-brand-text-light border-b border-brand-primary/80"
+                tbodyClassName="divide-y divide-brand-primary/50 bg-surface-table text-text-body"
+                trClassName={() => "hover:bg-brand-primary/40"}
+            />
           </div>
         </div>
 
-        {/* Footer Modal */}
         <div className="p-4 border-t border-brand-primary/80 bg-surface-dark flex justify-end gap-3">
           <button
             onClick={onClose}

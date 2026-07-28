@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { ExportReportTable } from "./ExportReportTable";
 import { ReportCardItem } from "./ReportCardItem";
+import { formatDate, formatDateFull } from "@/lib/date";
 import { FieldReport, getLocalDateString } from "@/features/manajer/ReportUtils";
 import { exportToExcel, exportToPDF } from "@/features/manajer/ExportServices";
 
@@ -293,12 +294,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
           sortedDates.map((dateKey) => {
             const reportsInDate = groupedReports[dateKey];
             const [year, month, day] = dateKey.split("-").map(Number);
-            const formattedDate = new Date(year, month - 1, day).toLocaleDateString("id-ID", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-              year: "numeric"
-            });
+            const formattedDate = formatDateFull(new Date(year, month - 1, day));
 
             return (
               <div key={dateKey} className="space-y-3">
