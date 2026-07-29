@@ -87,7 +87,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
       </div>
 
       {/* 2. Kontrol Generator Dokumen Naskah Dinas */}
-      <div className="p-5 rounded-2xl border border-emerald-900/40 bg-[#07130d] space-y-4">
+      <div className="p-5 rounded-2xl border border-emerald-900/40 bg-panel-bg space-y-4">
         <div className="flex items-center gap-2">
           <Info size={16} className="text-brand-hover" />
           <span className="text-xs font-semibold text-text-heading">Pilih Format Standar Tata Naskah Dinas Kementerian LHK:</span>
