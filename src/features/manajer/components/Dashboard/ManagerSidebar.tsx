@@ -75,7 +75,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
         <div>
           {/* Bagian Profil User */}
           <div className="mb-8 flex items-center gap-3 border-b border-brand-primary/20 pb-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-text-heading">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-brand-hover to-accent-primary text-lg font-semibold text-text-heading">
               {user.avatarInitials || "MG"}
             </div>
 
@@ -104,7 +104,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-emerald-700/30 text-text-heading shadow-inner"
+                      ? "bg-brand-primary/30 text-text-heading shadow-inner"
                       : "text-text-secondary hover:bg-brand-primary/50 hover:text-text-heading"
                   }`}
                 >
@@ -120,7 +120,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
         <button
           type="button"
           onClick={handleLogout}
-          className="flex items-center gap-3 rounded-2xl border border-amber-900/40 bg-amber-950/30 px-3 py-3 text-sm font-medium text-amber-100 transition hover:bg-amber-900/40 w-full"
+          className="flex items-center gap-3 rounded-2xl border border-amber-bg bg-amber-bg px-3 py-3 text-sm font-medium text-amber-text transition hover:bg-amber-bg/80 w-full"
         >
           <LogOut className="h-4 w-4" />
           Logout

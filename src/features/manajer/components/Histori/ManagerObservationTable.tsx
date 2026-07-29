@@ -82,7 +82,7 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
                   <td className="px-4 py-3">{item.namaPetugas}</td>
                   
                   <td className="px-4 py-3 hidden md:table-cell">
-                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${item.foto ? "bg-brand-primary/60 text-brand-text-light" : "bg-slate-800 text-text-muted"}`}>
+                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${item.foto ? "bg-brand-primary/60 text-brand-text-light" : "bg-surface-card text-text-muted"}`}>
                       {item.foto ? "Tersedia" : "Belum"}
                     </span>
                   </td>

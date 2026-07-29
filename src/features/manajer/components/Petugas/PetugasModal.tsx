@@ -58,14 +58,14 @@ export function PetugasModal({
             <p className="text-sm text-text-muted">
               Apakah Anda yakin ingin menghapus akun petugas <strong className="text-brand-text">@{selectedUser?.username}</strong>?
             </p>
-            {errorMsg && <div className="text-sm bg-red-950/40 text-red-400 p-3 rounded-xl border border-red-900/60">{errorMsg}</div>}
+            {errorMsg && <div className="text-sm bg-error-bg text-error-text p-3 rounded-xl border border-error-bg">{errorMsg}</div>}
             {successMsg && <div className="text-sm bg-brand-primary/40 text-brand-text p-3 rounded-xl border border-brand-primary/60">{successMsg}</div>}
             
             <div className="flex justify-end gap-3 mt-4">
               <button onClick={closeModal} className="px-4 py-2 rounded-xl border border-brand-primary/60 bg-input-bg text-sm text-text-secondary hover:bg-brand-primary/40 transition">
                 Batal
               </button>
-              <button onClick={handleDeletePetugas} disabled={isLoading} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 text-sm font-semibold text-text-heading hover:bg-red-500 transition disabled:opacity-50">
+              <button onClick={handleDeletePetugas} disabled={isLoading} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose text-sm font-semibold text-text-heading hover:bg-error-text transition disabled:opacity-50">
                 {isLoading && <Loader2 className="h-4 w-4 animate-spin" />} Hapus Akun
               </button>
             </div>
@@ -83,7 +83,7 @@ export function PetugasModal({
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full bg-input-bg border border-brand-primary/60 rounded-xl px-3 py-2 text-sm text-text-heading focus:outline-none focus:border-brand-hover placeholder:text-slate-600"
+                className="w-full bg-input-bg border border-brand-primary/60 rounded-xl px-3 py-2 text-sm text-text-heading focus:outline-none focus:border-brand-hover placeholder:text-text-muted"
                 placeholder="Contoh: Ahmad Subari"
               />
             </div>
@@ -95,7 +95,7 @@ export function PetugasModal({
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-input-bg border border-brand-primary/60 rounded-xl px-3 py-2 text-sm text-text-heading focus:outline-none focus:border-brand-hover placeholder:text-slate-600"
+                className="w-full bg-input-bg border border-brand-primary/60 rounded-xl px-3 py-2 text-sm text-text-heading focus:outline-none focus:border-brand-hover placeholder:text-text-muted"
                 placeholder="Contoh: subari24"
               />
             </div>
@@ -111,7 +111,7 @@ export function PetugasModal({
                   required={modalType === "add"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#10241a] border border-emerald-900/60 rounded-xl pl-3 pr-10 py-2 text-sm text-text-heading focus:outline-none focus:border-emerald-500 placeholder:text-slate-600"
+                  className="w-full bg-input-bg border border-border-subtle rounded-xl pl-3 pr-10 py-2 text-sm text-text-heading focus:outline-none focus:border-brand-hover placeholder:text-text-muted"
                   placeholder={modalType === "add" ? "••••••••" : "Masukkan password baru"}
                 />
                 
@@ -126,14 +126,14 @@ export function PetugasModal({
               </div>
             </div>
 
-            {errorMsg && <div className="text-sm bg-red-950/40 text-red-400 p-3 rounded-xl border border-red-900/60">{errorMsg}</div>}
+            {errorMsg && <div className="text-sm bg-error-bg text-error-text p-3 rounded-xl border border-error-bg">{errorMsg}</div>}
             {successMsg && <div className="text-sm bg-brand-primary/40 text-brand-text p-3 rounded-xl border border-brand-primary/60">{successMsg}</div>}
 
             <div className="flex justify-end gap-3 pt-2">
               <button type="button" onClick={closeModal} className="px-4 py-2 rounded-xl border border-brand-primary/60 bg-input-bg text-sm text-text-secondary hover:bg-brand-primary/40 transition">
                 Batal
               </button>
-              <button type="submit" disabled={isLoading} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-emerald-600 to-lime-600 text-sm font-semibold text-text-heading hover:from-emerald-500 hover:to-lime-500 transition disabled:opacity-50">
+              <button type="submit" disabled={isLoading} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-brand-primary to-accent-primary text-sm font-semibold text-text-heading hover:from-brand-hover hover:to-accent-hover transition disabled:opacity-50">
                 {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                 {modalType === "add" ? "Simpan Akun" : "Simpan Perubahan"}
               </button>

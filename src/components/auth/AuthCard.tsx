@@ -29,7 +29,7 @@ export function AuthCard({
       <div className="absolute inset-0 bg-black/45" />
 
       {/* Blur Effect */}
-      <div className="absolute -top-40 left-1/2 h-125 w-125 -translate-x-1/2 rounded-full bg-emerald-500/20 blur-3xl" />
+      <div className="absolute -top-40 left-1/2 h-125 w-125 -translate-x-1/2 rounded-full bg-brand-hover/20 blur-3xl" />
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-6 py-10">
 
@@ -103,7 +103,7 @@ export function AuthCard({
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="flex flex-1 items-center justify-center bg-slate-950/70 p-10">
+          <div className="flex flex-1 items-center justify-center bg-app-bg/70 p-10">
 
             <div className="w-full max-w-md">
 

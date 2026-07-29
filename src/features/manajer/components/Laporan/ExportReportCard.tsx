@@ -28,7 +28,7 @@ export const ExportReportCard: React.FC<ExportReportCardProps> = ({
         {/* List Opsi Unduhan Cepat */}
         <div className="space-y-2 mb-4">
           <div className="flex items-center justify-between p-2.5 rounded-xl bg-black/20 border border-brand-primary/20 text-xs">
-            <div className="flex items-center gap-2 text-slate-300">
+            <div className="flex items-center gap-2 text-text-secondary">
               <FileSpreadsheet size={16} className="text-brand-hover" />
               <span>Format Data Mentah (.CSV / .XLSX)</span>
             </div>
@@ -36,8 +36,8 @@ export const ExportReportCard: React.FC<ExportReportCardProps> = ({
           </div>
 
           <div className="flex items-center justify-between p-2.5 rounded-xl bg-black/20 border border-brand-primary/20 text-xs">
-            <div className="flex items-center gap-2 text-slate-300">
-              <FileText size={16} className="text-cyan-500" />
+            <div className="flex items-center gap-2 text-text-secondary">
+              <FileText size={16} className="text-blue-text" />
               <span>Format Ringkasan PDF (.PDF)</span>
             </div>
             <span className="text-[10px] text-brand-text font-medium">Ready</span>

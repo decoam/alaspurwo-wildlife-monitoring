@@ -52,7 +52,7 @@ export function PetugasTableDesktop({
                     </button>
                     <button
                       onClick={() => openDeleteModal(user)}
-                      className="rounded-xl border border-red-900/60 bg-red-950/20 p-2 text-red-400 transition hover:bg-red-950/40"
+                      className="rounded-xl border border-error-bg bg-error-bg p-2 text-error-text transition hover:bg-error-bg/80"
                       title="Hapus Petugas"
                     >
                       <Trash2 className="h-4 w-4" />

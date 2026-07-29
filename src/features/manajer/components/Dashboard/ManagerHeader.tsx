@@ -34,7 +34,7 @@ export function ManagerHeader({
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         {/* Widget Info Login User */}
         {/* Perbaikan: Menggunakan 'p-1 sm:py-1.5 sm:pl-1.5 sm:pr-3' agar simetris di mobile */}
-        <div className="flex items-center gap-2 md:gap-3 rounded-2xl border border-emerald-900/60 bg-input-bg p-1 sm:py-1.5 sm:pl-1.5 sm:pr-3 md:py-2">
+        <div className="flex items-center gap-2 md:gap-3 rounded-2xl border border-border-subtle bg-input-bg p-1 sm:py-1.5 sm:pl-1.5 sm:pr-3 md:py-2">
           {/* Avatar Bulat (Selalu Muncul & Pas di Tengah saat Mobile) */}
           <div className="flex h-8 w-8 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-brand-hover to-lime-600 text-xs md:text-sm font-semibold text-text-heading shadow-md">
             {user.avatarInitials}

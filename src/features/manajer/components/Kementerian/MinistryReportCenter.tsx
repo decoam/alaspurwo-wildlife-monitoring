@@ -121,7 +121,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
       {/* Ringkasan Analitik */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-4 rounded-2xl bg-card-bg border border-brand-primary/40 flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-amber-950/50 border border-amber-500/20 text-amber-400">
+          <div className="p-3 rounded-xl bg-amber-bg border-amber-bg text-amber-text">
             <ShieldAlert size={24} />
           </div>
           <div>
@@ -153,13 +153,13 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
         </div>
 
         <div className="p-4 rounded-2xl bg-card-bg border border-brand-primary/40 flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-blue-950/50 border border-blue-500/20 text-blue-400">
+          <div className="p-3 rounded-xl bg-blue-bg border-blue-bg text-blue-text">
             <Clock size={24} />
           </div>
           <div>
             <p className="text-xs text-text-muted">Status Sinkronisasi Berkas</p>
             <span className={`inline-block text-xs font-semibold mt-1 px-2.5 py-0.5 rounded-full ${
-              submitStatus === "sent" ? "bg-blue-950 text-blue-400 border border-blue-800" : "bg-amber-950 text-amber-400 border border-amber-800"
+              submitStatus === "sent" ? "bg-blue-bg text-blue-text border border-blue-bg" : "bg-amber-bg text-amber-text border border-amber-bg"
             }`}>
               {submitStatus === "sent" ? "Terverifikasi Pusat" : "Menunggu Pengiriman"}
             </span>
@@ -215,7 +215,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
             <button
               onClick={handleSendToMinistry}
               disabled={isSubmitting || submitStatus === "sent" || isLoadingSpecies}
-              className="flex items-center justify-center gap-1.5 px-5 py-2.5 text-xs font-semibold text-text-heading bg-emerald-600 disabled:bg-brand-primary/40 disabled:text-text-muted rounded-xl hover:bg-brand-hover transition-all w-full sm:w-auto shadow-lg"
+              className="flex items-center justify-center gap-1.5 px-5 py-2.5 text-xs font-semibold text-text-heading bg-brand-primary disabled:bg-brand-primary/40 disabled:text-text-muted rounded-xl hover:bg-brand-hover transition-all w-full sm:w-auto shadow-lg"
             >
               <Send size={14} /> {isSubmitting ? "Mengirim..." : submitStatus === "sent" ? "Sudah Terkirim" : "Kirim Dokumen Resmi"}
             </button>

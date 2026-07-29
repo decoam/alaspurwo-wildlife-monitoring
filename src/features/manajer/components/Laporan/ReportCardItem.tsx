@@ -45,7 +45,7 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
             {isSelected ? (
               <CheckSquare size={20} className="text-brand-hover transition-transform scale-110" />
             ) : (
-              <Square size={20} className="text-slate-500 hover:text-text-muted transition-colors" />
+              <Square size={20} className="text-text-muted hover:text-text-secondary transition-colors" />
             )}
           </div>
         )}
@@ -101,7 +101,7 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
             {report.aktivitasSatwa || report.catatan ? (
               <span className="line-clamp-2">"{report.aktivitasSatwa || report.catatan}"</span>
             ) : (
-              <span className="text-slate-600">-</span>
+              <span className="text-text-muted">-</span>
             )}
           </div>
 

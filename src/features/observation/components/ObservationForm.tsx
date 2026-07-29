@@ -152,7 +152,7 @@ export function ObservationForm({
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-5">
       {statusMessage ? (
-        <div className="rounded-2xl border border-amber-900/60 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
+        <div className="rounded-2xl border border-amber-bg bg-amber-bg px-4 py-3 text-sm text-amber-text">
           {statusMessage}
         </div>
       ) : null}

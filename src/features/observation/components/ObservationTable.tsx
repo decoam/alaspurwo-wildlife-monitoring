@@ -50,7 +50,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
               const isOwner = item.createdBy === currentUserId;
 
               return (
-                <tr key={item._id} className="transition hover:bg-emerald-950/30">
+                <tr key={item._id} className="transition hover:bg-brand-primary/15">
                   <td className="px-4 py-3">
                     <Image
                       src={failedImages[item._id] ?? !item.foto ? "/placeholder.svg" : item.foto}
@@ -72,7 +72,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                   </td>
                   <td className="px-4 py-3">{item.namaPetugas}</td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${item.foto ? "bg-brand-primary/60 text-brand-text-light" : "bg-slate-800 text-text-muted"}`}>
+                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${item.foto ? "bg-brand-primary/60 text-brand-text-light" : "bg-surface-card text-text-muted"}`}>
                       {item.foto ? "Tersedia" : "Belum"}
                     </span>
                   </td>
@@ -107,7 +107,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                                   e.preventDefault();
                                 }
                               }}
-                              className="rounded-full border border-rose-900/60 p-2 text-rose-200 transition hover:bg-rose-900/50"
+                              className="rounded-full border border-error-bg/60 p-2 text-error-dark transition hover:bg-error-bg/50"
                               title="Hapus"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -117,7 +117,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                       ) : (
                         /* Tampilkan ikon kunci untuk data milik orang lain */
                         <div
-                          className="rounded-full border border-slate-800 p-2 text-slate-600 cursor-not-allowed"
+                          className="rounded-full border border-border-input p-2 text-text-muted cursor-not-allowed"
                           title="Hanya pemilik yang dapat mengedit atau menghapus"
                         >
                           <Lock className="h-4 w-4" />

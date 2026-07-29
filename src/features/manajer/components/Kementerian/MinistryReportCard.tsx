@@ -30,13 +30,13 @@ export const MinistryReportCard: React.FC<MinistryReportCardProps> = ({
         {/* Status Sinkronisasi Real-Time dari MongoDB */}
         <div className="p-3 rounded-xl bg-black/20 border border-brand-primary/20 flex items-center justify-between text-xs mb-4">
           <div className="flex items-center gap-2">
-            <CloudSync size={18} className={isSynced ? "text-brand-text" : "text-amber-400"} />
+            <CloudSync size={18} className={isSynced ? "text-brand-text" : "text-amber-text"} />
             <span className="text-text-secondary">Status Data Pusat</span>
           </div>
           <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${
             isSynced 
               ? "bg-brand-hover/10 text-brand-text border border-brand-hover/20" 
-              : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+              : "bg-amber-bg text-amber-text border border-amber-bg"
           }`}>
             {isSynced ? "Terintegrasi" : "Butuh Sync"}
           </span>
@@ -45,10 +45,10 @@ export const MinistryReportCard: React.FC<MinistryReportCardProps> = ({
 
       {/* Bagian Bawah: Indikator Validasi Data Tertunda */}
       <div className="text-[11px] text-text-muted bg-surface-dark p-3 rounded-xl border border-brand-primary/30 flex items-center gap-2">
-        <ShieldAlert size={14} className={pendingSyncCount > 0 ? "text-amber-500" : "text-text-muted"} />
+        <ShieldAlert size={14} className={pendingSyncCount > 0 ? "text-amber-text" : "text-text-muted"} />
         <span className="truncate">
           {pendingSyncCount > 0 ? (
-            <>Ada <strong className="text-amber-400">{pendingSyncCount} data baru</strong> belum dilaporkan ke pusat.</>
+            <>Ada <strong className="text-amber-text">{pendingSyncCount} data baru</strong> belum dilaporkan ke pusat.</>
           ) : (
             <>Sinkronisasi terakhir pada: <strong className="text-text-body">{lastSyncDate || "-"}</strong></>
           )}

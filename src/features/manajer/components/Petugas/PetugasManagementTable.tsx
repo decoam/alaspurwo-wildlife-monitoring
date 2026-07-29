@@ -244,7 +244,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
                   </button>
                   <button
                     onClick={() => openDeleteModal(user)}
-                    className="flex items-center justify-center p-2 rounded-xl border border-red-900/60 bg-red-950/20 text-red-400 transition hover:bg-red-950/40"
+                    className="flex items-center justify-center p-2 rounded-xl border border-error-bg bg-error-bg text-error-text transition hover:bg-error-bg/80"
                     title="Hapus"
                   >
                     <Trash2 className="h-3.5 w-3.5" />

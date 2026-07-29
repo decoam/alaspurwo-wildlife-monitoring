@@ -93,7 +93,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         <div className="p-4 border-t border-brand-primary/80 bg-surface-dark flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold text-text-muted hover:text-text-heading rounded-xl border border-slate-800 hover:bg-slate-900 transition-all"
+            className="px-4 py-2 text-xs font-semibold text-text-muted hover:text-text-heading rounded-xl border border-border-input hover:bg-card-bg transition-all"
           >
             Tutup
           </button>

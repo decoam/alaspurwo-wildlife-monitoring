@@ -53,8 +53,8 @@ export function RecentObservationTable({ observations }: RecentObservationTableP
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-semibold ${
                         item.shift === "Pagi"
-                          ? "bg-amber-900/50 text-amber-200 border border-amber-700/50"
-                          : "bg-indigo-900/50 text-indigo-200 border border-indigo-700/50"
+                          ? "bg-amber-bg text-amber-text border border-amber-bg"
+                          : "bg-blue-bg text-blue-text border border-blue-bg"
                       }`}
                     >
                       {item.shift || "-"}

@@ -63,7 +63,7 @@ export const ReportTables: React.FC<ReportTablesProps> = ({
                     <td className="p-3 text-center sm:text-left">
                       
                       {/* BADGE BERSUSUN RAPI (Flex-col dengan satu kotak border yang utuh) */}
-                      <div className="inline-flex flex-col items-center justify-center px-2.5 py-1 rounded-lg bg-red-950/50 border border-red-800/60 text-red-400 shadow-sm leading-tight text-center">
+                      <div className="inline-flex flex-col items-center justify-center px-2.5 py-1 rounded-lg bg-error-bg border-error-bg text-error-text shadow-sm leading-tight text-center">
                         <span className="font-semibold text-[10px] tracking-wide">Dilindungi</span>
                         <span className="text-[9px] opacity-80 font-normal">(Prioritas)</span>
                       </div>
