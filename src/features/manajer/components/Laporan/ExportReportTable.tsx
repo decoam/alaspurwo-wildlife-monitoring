@@ -10,7 +10,7 @@ interface ExportReportTableProps {
 export const ExportReportTable: React.FC<ExportReportTableProps> = ({ data }) => {
   return (
     <div className="hidden print:block w-full">
-      <table className="w-full border-collapse border border-slate-400 text-[11px] text-black">
+      <table className="w-full border-collapse border border-slate-400 text-xs text-black">
         <thead>
           <tr className="bg-slate-100">
             <th className="border border-slate-400 px-3 py-2 text-center font-bold w-12">No</th>

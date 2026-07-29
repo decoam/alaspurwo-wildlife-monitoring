@@ -102,7 +102,7 @@ export function PetugasModal({
 
             <div className="space-y-1">
               <label className="text-xs font-semibold text-brand-text uppercase tracking-wider">
-                Password {modalType === "edit" && <span className="text-[10px] text-text-muted lowercase">(kosongkan jika tidak diubah)</span>}
+                Password {modalType === "edit" && <span className="text-xs text-text-muted lowercase">(kosongkan jika tidak diubah)</span>}
               </label>
               
               <div className="relative flex items-center">

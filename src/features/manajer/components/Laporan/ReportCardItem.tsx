@@ -68,7 +68,7 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
               </div>
               <div className="min-w-0">
                 <h3 className="text-sm font-semibold text-text-heading italic truncate">{report.namaSatwa}</h3>
-                <div className="text-[11px] text-text-muted mt-0.5 flex items-center gap-1.5 truncate">
+                <div className="text-xs text-text-muted mt-0.5 flex items-center gap-1.5 truncate">
                   <User size={11} className="text-accent-text shrink-0" />
                   <span>Petugas: <strong className="text-text-body font-normal">{report.namaPetugas}</strong></span>
                 </div>
@@ -76,14 +76,14 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
             </div>
 
             <div className="shrink-0 pl-2">
-              <span className="inline-block px-2 py-0.5 rounded-md bg-brand-primary/80 border border-brand-hover/20 text-brand-text font-semibold text-[10px]">
+              <span className="inline-block px-2 py-0.5 rounded-md bg-brand-primary/80 border border-brand-hover/20 text-brand-text font-semibold text-xs">
                 {report.jumlah} Ekor
               </span>
             </div>
           </div>
 
           {/* Kolom Penempatan Lokasi & Tanggal */}
-          <div className="md:col-span-4 space-y-1.5 md:border-l md:border-brand-primary/60 md:pl-5 text-[11px] text-text-secondary border-t md:border-t-0 border-brand-primary/30 pt-3 md:pt-0">
+          <div className="md:col-span-4 space-y-1.5 md:border-l md:border-brand-primary/60 md:pl-5 text-xs text-text-secondary border-t md:border-t-0 border-brand-primary/30 pt-3 md:pt-0">
             <div className="flex items-start gap-1.5">
               <MapPin size={12} className="text-amber-text shrink-0 mt-0.5" />
               <div className="leading-tight">
@@ -97,7 +97,7 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
           </div>
 
           {/* Kolom Catatan / Aktivitas */}
-          <div className="md:col-span-3 text-[11px] text-text-muted italic md:text-right border-t md:border-t-0 border-brand-primary/40 pt-2.5 md:pt-0">
+          <div className="md:col-span-3 text-xs text-text-muted italic md:text-right border-t md:border-t-0 border-brand-primary/40 pt-2.5 md:pt-0">
             {report.aktivitasSatwa || report.catatan ? (
               <span className="line-clamp-2">"{report.aktivitasSatwa || report.catatan}"</span>
             ) : (

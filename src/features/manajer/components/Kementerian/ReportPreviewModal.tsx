@@ -72,7 +72,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           <div className="border-b border-dashed border-brand-primary/60 pb-3 text-center space-y-1">
             <p className="font-bold text-text-heading text-sm">KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</p>
             <p className="text-text-muted">BALAI TAMAN NASIONAL ALAS PURWO</p>
-            <p className="text-[10px] text-brand-hover">Nomor: {currentPayload.nomorSurat}</p>
+            <p className="text-xs text-brand-hover">Nomor: {currentPayload.nomorSurat}</p>
           </div>
 
           <div className="space-y-1 text-text-secondary font-sans">
@@ -82,8 +82,8 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           </div>
 
           <div className="pt-2">
-            <p className="text-text-muted mb-2 font-sans font-semibold text-[11px]">Daftar Data Terlampir:</p>
-            <pre className="bg-surface-dark p-3 rounded-xl border border-brand-primary/80 text-[11px] overflow-x-auto text-brand-text-light">
+            <p className="text-text-muted mb-2 font-sans font-semibold text-xs">Daftar Data Terlampir:</p>
+            <pre className="bg-surface-dark p-3 rounded-xl border border-brand-primary/80 text-xs overflow-x-auto text-brand-text-light">
               {formattedJsonData}
             </pre>
           </div>

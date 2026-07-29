@@ -22,7 +22,7 @@ export function ManagerHeader({
     <header className="flex flex-row items-center justify-between gap-4 rounded-3xl md:rounded-[28px] border border-brand-primary/60 bg-surface-subtle/85 p-4 md:px-5 md:py-4 shadow-card">
       {/* Kiri: Judul Halaman Dinamis */}
       <div className="min-w-0 flex-1 sm:flex-initial">
-        <p className="text-[10px] md:text-sm font-semibold uppercase tracking-[0.25em] text-brand-text">
+        <p className="text-xs md:text-sm font-semibold uppercase tracking-[0.25em] text-brand-text">
           {subtitle}
         </p>
         <h1 className="mt-0.5 text-base md:text-2xl font-semibold text-text-heading truncate max-w-45 xs:max-w-[240px] sm:max-w-md">
@@ -45,7 +45,7 @@ export function ManagerHeader({
             <p className="text-xs md:text-sm font-semibold text-text-heading truncate">
               {user.fullName}
             </p>
-            <p className="text-[10px] md:text-xs text-text-muted truncate">
+            <p className="text-xs md:text-xs text-text-muted truncate">
               {user.role}
             </p>
           </div>
