@@ -28,7 +28,7 @@ export default async function ObservationDetailPage({ params }: DetailObservatio
   const observation = result.observation as SerializedObservation;
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,64,38,0.5),_transparent_35%),linear-gradient(135deg,_#07110c_0%,_#0c1914_45%,_#13261d_100%)] px-4 py-6 text-text-light sm:px-6 lg:px-8">
+    <main className="obs-main-layout">
       <div className="mx-auto max-w-6xl rounded-[28px] border border-brand-primary/60 bg-surface-bg/80 p-4 shadow-card md:p-6">
         <Link href="/dashboard/observations" className="mb-6 inline-flex items-center gap-2 text-sm text-brand-text-light transition hover:text-text-heading">
           <ArrowLeft className="h-4 w-4" />

@@ -60,12 +60,17 @@
   --color-surface-bg-80: rgba(7, 17, 12, 0.8);
   --color-surface-subtle-85: rgba(12, 25, 20, 0.85);
   --color-surface-subtle-90: rgba(12, 25, 20, 0.9);
+  --color-surface-gradient-end: #13261d;
 
   /* ── Accent (Lime/Green) ── */
   --color-accent-primary: #a3e635;
   --color-accent-hover: #bef264;
   --color-accent-text: #bef264;
   --color-accent-subtle: #dcfce7;
+  --color-accent-gradient: #84cc16;
+
+  /* ── Input dark background ── */
+  --color-input-dark: #020617;
 
   /* ── Chart Colors ── */
   --color-chart-1: #34d399;
@@ -113,7 +118,7 @@ body {
   padding-bottom: 1.5rem;
   color: var(--color-text-light);
   background: radial-gradient(circle at top left, rgba(16,64,38,0.5), transparent 35%),
-              linear-gradient(135deg, var(--color-surface-bg) 0%, var(--color-surface-subtle) 45%, #13261d 100%);
+              linear-gradient(135deg, var(--color-surface-bg) 0%, var(--color-surface-subtle) 45%, var(--color-surface-gradient-end) 100%);
   
   @media (min-width: 640px) { padding-left: 1.5rem; padding-right: 1.5rem; }
   @media (min-width: 1024px) { padding-left: 2rem; padding-right: 2rem; }
@@ -561,7 +566,7 @@ body {
   justify-content: center;
   border-radius: 9999px;
   border: 1px solid var(--color-border-default);
-  background: linear-gradient(to bottom right, #10b981, #84cc16);
+  background: linear-gradient(to bottom right, var(--color-brand-hover), var(--color-accent-gradient));
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-text-heading);
@@ -599,7 +604,7 @@ body {
 
 @utility prof-stat-icon-wrapper {
   border-radius: 1rem;
-  background: linear-gradient(to bottom right, #10b981, #84cc16);
+  background: linear-gradient(to bottom right, var(--color-brand-hover), var(--color-accent-gradient));
   padding: 0.5rem;
   color: var(--color-text-heading);
   box-shadow: var(--shadow-elevated);
@@ -653,7 +658,7 @@ body {
   width: 100%;
   border-radius: 1rem;
   border: 1px solid var(--color-border-input);
-  background-color: #020617; /* bg-slate-950 */
+  background-color: var(--color-input-dark);
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: 0.75rem;
@@ -696,7 +701,7 @@ body {
   padding-bottom: 0.75rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #020617; /* bg-slate-950 */
+  color: var(--color-input-dark);
   transition: all 0.2s;
 
   &:hover:not(:disabled) {

@@ -84,7 +84,7 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
                   <th className="px-6 py-4 font-medium w-3/12">Tanggal & Shift</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-brand-primary/50 bg-[#0f2218] text-text-body">
+              <tbody className="divide-y divide-brand-primary/50 bg-surface-table text-text-body">
                 {records.map((record) => (
                   <tr key={record._id} className="transition hover:bg-brand-primary/40">
                     <td className="px-6 py-4">

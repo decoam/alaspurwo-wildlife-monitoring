@@ -186,7 +186,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
 
           {/* DROPDOWN KALENDER SAMPING KANAN & LEBIH RINGKAS */}
           {exportScope === "date" && (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-xl bg-[#040906] border border-brand-primary/60 animate-in fade-in slide-in-from-top-1 duration-200">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-xl bg-surface-dark border border-brand-primary/60 animate-in fade-in slide-in-from-top-1 duration-200">
               <label className="text-xs text-text-muted flex items-center gap-1.5 shrink-0 select-none">
                 Saring Tanggal Observasi:
               </label>
@@ -210,7 +210,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
                       value={filterDate}
                       className="cally text-brand-text text-xs"
                       style={{
-                        "--cally-color-accent": "#10b981",
+                        "--cally-color-accent": "var(--color-brand-hover)",
                         "fontSize": "0.75rem"
                       } as React.CSSProperties}
                     >
