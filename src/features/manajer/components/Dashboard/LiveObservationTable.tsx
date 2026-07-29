@@ -61,11 +61,11 @@ export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ reco
                 <div className="flex flex-col items-end gap-1 text-[11px] text-text-secondary text-right max-w-40 shrink-0">
                   <div className="flex items-center gap-1.5 min-w-0 justify-end">
                     <span className="truncate font-medium text-text-heading">{record.location}</span>
-                    <MapPin size={11} className="text-brand-hover shrink-0" />
+                    <MapPin size={11} className="text-amber-text shrink-0" />
                   </div>
                   <div className="flex items-center gap-1.5 text-[10px] text-text-muted justify-end">
                     <span>{record.observedAt}</span>
-                    <Calendar size={11} className="text-brand-hover shrink-0" />
+                    <Calendar size={11} className="text-blue-text shrink-0" />
                   </div>
                 </div>
 

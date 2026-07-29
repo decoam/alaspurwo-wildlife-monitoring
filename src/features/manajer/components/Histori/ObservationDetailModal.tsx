@@ -48,11 +48,11 @@ export const ObservationDetailModal: React.FC<ObservationDetailModalProps> = ({
           {/* Blok Petugas & Lokasi */}
           <div className="rounded-xl border border-brand-primary/80 bg-panel-bg/60 p-4 space-y-2 text-sm text-text-secondary">
             <div className="flex items-center gap-3">
-              <User size={16} className="text-brand-hover shrink-0" /> 
+              <User size={16} className="text-accent-text shrink-0" /> 
               <span>Petugas: <strong className="text-text-heading">{item.namaPetugas}</strong></span>
             </div>
             <div className="flex items-center gap-3">
-              <Calendar size={16} className="text-brand-hover shrink-0" /> 
+              <Calendar size={16} className="text-blue-text shrink-0" /> 
               <span>Tanggal: <strong className="text-text-heading">{new Date(item.tanggalPengamatan).toLocaleDateString("id-ID")}</strong></span>
             </div>
           </div>

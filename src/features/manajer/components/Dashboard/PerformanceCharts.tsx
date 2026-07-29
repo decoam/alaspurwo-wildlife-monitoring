@@ -63,7 +63,7 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
         <div className="h-64 flex items-center justify-center">
           {isWeeklyTrendsEmpty ? (
             <div className="flex flex-col items-center justify-center text-center text-text-muted space-y-2">
-              <BarChart2 className="w-10 h-10 stroke-[1.5] text-brand-primary/60" />
+              <BarChart2 className="w-10 h-10 stroke-[1.5] text-chart-2/80" />
               <p className="text-xs">Belum ada data aktivitas minggu ini</p>
             </div>
           ) : (
@@ -102,7 +102,7 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
         <div className="h-64 flex items-center justify-center">
           {isCategoryBreakdownEmpty ? (
             <div className="flex flex-col items-center justify-center text-center text-text-muted space-y-2">
-              <PieChartIcon className="w-10 h-10 stroke-[1.5] text-brand-primary/60" />
+              <PieChartIcon className="w-10 h-10 stroke-[1.5] text-chart-4/80" />
               <p className="text-xs">Belum ada data kategori satwa</p>
             </div>
           ) : (

@@ -68,7 +68,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         </div>
 
         {/* Isi Preview Surat */}
-        <div className="p-6 overflow-y-auto space-y-4 text-xs font-mono text-text-secondary bg-app-bg">
+        <div className="p-6 overflow-y-auto space-y-4 text-xs font-mono text-text-secondary bg-surface-bg">
           <div className="border-b border-dashed border-brand-primary/60 pb-3 text-center space-y-1">
             <p className="font-bold text-text-heading text-sm">KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</p>
             <p className="text-text-muted">BALAI TAMAN NASIONAL ALAS PURWO</p>

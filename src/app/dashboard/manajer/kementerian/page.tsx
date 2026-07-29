@@ -65,7 +65,7 @@ export default async function ManajerLaporanKementerianPage() {
   };
 
   return (
-    <div className="min-h-screen bg-app-bg text-text-light antialiased relative print:bg-white print:text-black">
+    <div className="min-h-screen bg-surface-bg text-text-light antialiased relative print:bg-white print:text-black">
       
       {/* Sidebar Aktif sesuai path kementerian */}
       <div className="print:hidden">

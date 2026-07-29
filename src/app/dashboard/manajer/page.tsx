@@ -171,7 +171,7 @@ export default async function ManagerDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-app-bg text-text-light antialiased relative">
+    <div className="min-h-screen bg-surface-bg text-text-light antialiased relative">
       <ManagerSidebar currentPath="/dashboard/manajer" user={managerProfile} />
 
       <div className="px-4 py-4 xl:pl-76 xl:pr-6 xl:py-6 transition-all duration-300">

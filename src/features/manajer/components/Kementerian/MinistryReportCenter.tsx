@@ -116,7 +116,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
   };
 
   return (
-    <div className="p-4 md:p-6 bg-app-bg text-text-body space-y-6 relative">
+    <div className="p-4 md:p-6 bg-surface-bg text-text-body space-y-6 relative">
       
       {/* Ringkasan Analitik */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

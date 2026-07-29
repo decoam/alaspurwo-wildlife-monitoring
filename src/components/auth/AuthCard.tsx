@@ -103,7 +103,7 @@ export function AuthCard({
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="flex flex-1 items-center justify-center bg-app-bg/70 p-10">
+          <div className="flex flex-1 items-center justify-center bg-surface-bg/70 p-10">
 
             <div className="w-full max-w-md">
 

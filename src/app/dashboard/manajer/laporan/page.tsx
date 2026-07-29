@@ -65,7 +65,7 @@ export default async function ManajerKelolaLaporanPage() {
   };
 
   return (
-    <div className="min-h-screen bg-app-bg text-text-light antialiased relative print:bg-white print:text-black">
+    <div className="min-h-screen bg-surface-bg text-text-light antialiased relative print:bg-white print:text-black">
       
       {/* 1. Sembunyikan Sidebar saat print */}
       <div className="print:hidden">

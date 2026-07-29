@@ -69,7 +69,7 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
               <div className="min-w-0">
                 <h3 className="text-sm font-semibold text-text-heading italic truncate">{report.namaSatwa}</h3>
                 <div className="text-[11px] text-text-muted mt-0.5 flex items-center gap-1.5 truncate">
-                  <User size={11} className="text-brand-hover/80 shrink-0" />
+                  <User size={11} className="text-accent-text shrink-0" />
                   <span>Petugas: <strong className="text-text-body font-normal">{report.namaPetugas}</strong></span>
                 </div>
               </div>
@@ -85,13 +85,13 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
           {/* Kolom Penempatan Lokasi & Tanggal */}
           <div className="md:col-span-4 space-y-1.5 md:border-l md:border-brand-primary/60 md:pl-5 text-[11px] text-text-secondary border-t md:border-t-0 border-brand-primary/30 pt-3 md:pt-0">
             <div className="flex items-start gap-1.5">
-              <MapPin size={12} className="text-brand-hover shrink-0 mt-0.5" />
+              <MapPin size={12} className="text-amber-text shrink-0 mt-0.5" />
               <div className="leading-tight">
                 <span className="font-semibold text-text-light">{report.posPengamatan || report.lokasi}</span>
               </div>
             </div>
             <div className="flex items-center gap-1.5">
-              <Calendar size={12} className="text-brand-hover shrink-0" />
+              <Calendar size={12} className="text-blue-text shrink-0" />
               <span>{formatDate(report.tanggalPengamatan)} | Shift {report.shift}</span>
             </div>
           </div>

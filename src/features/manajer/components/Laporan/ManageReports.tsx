@@ -125,7 +125,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
   }, [groupedReports]);
 
   return (
-    <div className="space-y-6 p-4 md:p-6 bg-app-bg text-text-body print:bg-white print:text-black print:p-0 print:m-0">
+    <div className="space-y-6 p-4 md:p-6 bg-surface-bg text-text-body print:bg-white print:text-black print:p-0 print:m-0">
       
       {/* HEADER & CONTROLS */}
       <div className="print:hidden space-y-6">
@@ -141,7 +141,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
         {/* Panel Filter */}
         <div className="p-5 rounded-2xl border border-brand-primary/40 bg-panel-bg space-y-4">
           <div className="flex items-center gap-2">
-            <Info size={16} className="text-brand-hover" />
+            <Info size={16} className="text-blue-text" />
             <span className="text-xs font-semibold text-text-heading">Tentukan Cakupan Data Yang Akan Diekspor:</span>
           </div>
 
@@ -271,7 +271,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
               className="text-text-muted hover:text-text-heading flex items-center gap-1.5 text-xs font-medium transition"
             >
               {selectedIds.length === reports.length ? (
-                <CheckSquare size={16} className="text-brand-hover" />
+                <CheckSquare size={16} className="text-accent-text" />
               ) : (
                 <Square size={16} />
               )}

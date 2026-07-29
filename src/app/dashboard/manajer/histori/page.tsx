@@ -63,7 +63,7 @@ export default async function ManajerHistoriPage() {
   };
 
   return (
-    <div className="min-h-screen bg-app-bg text-text-light antialiased relative">
+    <div className="min-h-screen bg-surface-bg text-text-light antialiased relative">
       {/* Sidebar Dinamis Tetap */}
       <ManagerSidebar currentPath="/dashboard/manajer/histori" user={managerProfile} />
 
