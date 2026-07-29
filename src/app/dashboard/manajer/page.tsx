@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { connectDB } from "@/lib/mongodb";
 import { Observation } from "@/models/Observation";
 import { User } from "@/models/User";
+import { LogLaporanKementerian } from "@/models/LogLaporanKementerian";
 import { redirect } from "next/navigation";
 import { Eye, Camera } from "lucide-react";
 import React from "react";
@@ -17,6 +18,30 @@ import { MinistryReportCard } from "@/features/manajer/components/Kementerian/Mi
 
 export const runtime = "nodejs";
 
+interface ManagerUserSession {
+  id?: string;
+  name?: string;
+  fullName?: string;
+  email?: string;
+  username?: string;
+  role?: string;
+}
+
+interface ObservationDoc {
+  _id: unknown;
+  namaPetugas?: string;
+  namaSatwa?: string;
+  lokasi?: string;
+  foto?: string;
+  tanggalPengamatan?: Date;
+  shift?: string;
+  status?: string;
+}
+
+interface LogDoc {
+  createdAt: Date;
+}
+
 const getInitials = (name: string) => {
   if (!name) return "M";
   const parts = name.trim().split(/\s+/);
@@ -31,7 +56,7 @@ const DAY_NAMES = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu
 export default async function ManagerDashboardPage() {
   // Proteksi Sesi dan Hak Akses Manajer
   const session = await auth();
-  const sessionUser = session?.user as any;
+  const sessionUser = session?.user as ManagerUserSession | undefined;
 
   if (!session || sessionUser?.role?.toLowerCase() !== "manajer") {
     redirect("/login");
@@ -42,21 +67,23 @@ export default async function ManagerDashboardPage() {
 
   // Ambil Data Utama untuk Ringkasan Card
   const totalPetugas = await User.countDocuments({ role: { $regex: /petugas/i } });
-  
-  // Menghitung total Pos wilayah unik berdasarkan data lokasi di koleksi Observasi
-  const uniqueLocations = await Observation.distinct("lokasi");
+
+  // Menghitung total Pos wilayah unik berdasarkan data lokasi (eksplisit abaikan soft-deleted)
+  const uniqueLocations = await Observation.distinct("lokasi", { deletedAt: null });
   const totalPos = uniqueLocations.length;
-  
-  // Mengambil entri observasi terbaru berdasarkan tanggal pengamatan lapangan
-  const latestObs = await Observation.findOne().sort({ tanggalPengamatan: -1 }).lean() as any;
+
+  // Mengambil entri observasi terbaru (eksplisit abaikan soft-deleted)
+  const latestObs = await Observation.findOne({ deletedAt: null })
+    .sort({ tanggalPengamatan: -1 })
+    .lean<ObservationDoc>();
   const lastActivePetugas = latestObs ? latestObs.namaPetugas || "Petugas Lapangan" : "";
 
-  // Hitung Total Observasi Keseluruhan
-  const totalObservations = await Observation.countDocuments();
-  
-  // PERBAIKAN: Hitung Observasi Khusus Hari Ini dengan Rentang Dua Sisi (startOfToday s/d endOfToday WIB)
+  // Hitung Total Observasi Keseluruhan (eksplisit abaikan soft-deleted)
+  const totalObservations = await Observation.countDocuments({ deletedAt: null });
+
+  // Hitung Observasi Khusus Hari Ini dengan Rentang Dua Sisi (startOfToday s/d endOfToday WIB)
   const nowWIB = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
-  
+
   const startOfToday = new Date(nowWIB);
   startOfToday.setHours(0, 0, 0, 0);
 
@@ -64,49 +91,63 @@ export default async function ManagerDashboardPage() {
   endOfToday.setHours(23, 59, 59, 999);
 
   const observationsToday = await Observation.countDocuments({
-    tanggalPengamatan: { 
+    deletedAt: null,
+    tanggalPengamatan: {
       $gte: startOfToday,
-      $lte: endOfToday 
-    }
+      $lte: endOfToday,
+    },
   });
-  
-  // Menghitung status sinkronisasi berdasarkan data lokal
-  const pendingValidation = await Observation.countDocuments({
-    $or: [
-      { isSynced: false },
-      { isSynced: { $exists: false } },
-      { status: "Pending" },
-      { status: { $exists: false } }
-    ]
-  }); 
-  
-  const today = new Date();
-  const lastGeneratedDate = today.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 
-  // Grafik Bergulir Secara Real - Time
+  // =========================================================================
+  // LOGIKA PENDING VALIDATION & SINKRONISASI KEMENTERIAN (KHUSUS DOKUMEN BULANAN)
+  // =========================================================================
+  const lastBulananLog = await LogLaporanKementerian.findOne({ tipeDokumen: "BULANAN" })
+    .sort({ createdAt: -1 })
+    .lean<LogDoc>();
+
+  // Jika pernah kirim Laporan Bulanan, hitung observasi baru yang dibuat SETELAH pengiriman tersebut
+  // Jika belum pernah kirim sama sekali, anggap seluruh observasi aktif belum di-sync
+  const pendingValidation = lastBulananLog
+    ? await Observation.countDocuments({
+        deletedAt: null,
+        createdAt: { $gt: lastBulananLog.createdAt },
+      })
+    : totalObservations;
+
+  const today = new Date();
+  const lastGeneratedDate = lastBulananLog
+    ? new Date(lastBulananLog.createdAt).toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+    : today.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+
+  // Grafik Bergulir Secara Real-Time
   const rollingDays: { name: string; dayIndex: number }[] = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date(nowWIB);
     d.setDate(nowWIB.getDate() - i);
     rollingDays.push({
       name: DAY_NAMES[d.getDay()],
-      dayIndex: d.getDay() + 1
+      dayIndex: d.getDay() + 1,
     });
   }
 
-  // Ambil data 7 hari terakhir dari database
+  // Ambil data 7 hari terakhir dari database (eksplisit abaikan soft-deleted di $match aggregate)
   const sevenDaysAgo = new Date(nowWIB);
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
   sevenDaysAgo.setHours(0, 0, 0, 0);
 
   const weeklyRaw = await Observation.aggregate([
-    { 
-      $match: { 
-        tanggalPengamatan: { 
+    {
+      $match: {
+        deletedAt: null,
+        tanggalPengamatan: {
           $gte: sevenDaysAgo,
-          $lte: endOfToday 
-        } 
-      } 
+          $lte: endOfToday,
+        },
+      },
     },
     {
       $group: {
@@ -116,8 +157,8 @@ export default async function ManagerDashboardPage() {
     },
   ]);
 
-  const mongoDataMap = new Map();
-  weeklyRaw.forEach(item => {
+  const mongoDataMap = new Map<number, number>();
+  weeklyRaw.forEach((item) => {
     mongoDataMap.set(item._id, item.count);
   });
 
@@ -126,11 +167,13 @@ export default async function ManagerDashboardPage() {
     const realCount = mongoDataMap.get(dayObj.dayIndex) || 0;
     return {
       day: dayObj.name,
-      count: realCount
+      count: realCount,
     };
   });
 
+  // Agregasi kategori (eksplisit abaikan soft-deleted)
   const categoryRaw = await Observation.aggregate([
+    { $match: { deletedAt: null } },
     { $group: { _id: "$kategori", count: { $sum: 1 } } },
   ]);
 
@@ -139,27 +182,27 @@ export default async function ManagerDashboardPage() {
     value: item.count,
   }));
 
-  const rawRecentRecords = await Observation.find()
+  const rawRecentRecords = await Observation.find({ deletedAt: null })
     .sort({ tanggalPengamatan: -1 })
     .limit(5)
-    .lean();
+    .lean<ObservationDoc[]>();
 
-  const recentRecords = rawRecentRecords.map((rec: any) => ({
-    _id: rec._id.toString(),
+  const recentRecords = rawRecentRecords.map((rec) => ({
+    _id: String(rec._id),
     observerName: rec.namaPetugas || "Petugas Lapangan",
     speciesName: rec.namaSatwa || "Tidak Teridentifikasi",
     location: rec.lokasi || "Area TNAP",
     foto: rec.foto || "",
-    observedAt: rec.tanggalPengamatan 
+    observedAt: rec.tanggalPengamatan
       ? new Date(rec.tanggalPengamatan).toLocaleDateString("id-ID") + " | " + (rec.shift || "Pagi")
       : "-",
-    status: (rec.status as "Pending" | "Validated" | "Rejected") || "Pending", 
+    status: (rec.status as "Pending" | "Validated" | "Rejected") || "Pending",
   }));
 
   const realFullName = sessionUser?.fullName || sessionUser?.name || "Manajer Konservasi";
   const realEmail = sessionUser?.email || sessionUser?.username || "manager@alaspurwo.go.id";
   const initials = getInitials(realFullName);
-  
+
   const rawRole = sessionUser?.role || "manajer";
   const formattedRole = rawRole.charAt(0).toUpperCase() + rawRole.slice(1).toLowerCase() + " Konservasi";
 
@@ -176,43 +219,48 @@ export default async function ManagerDashboardPage() {
 
       <div className="px-4 py-4 xl:pl-76 xl:pr-6 xl:py-6 transition-all duration-300">
         <main className="mx-auto max-w-7xl space-y-6">
-          
           {/* Header Dashboard */}
           <ManagerHeader user={managerProfile} />
 
           {/* SUMMARY CARDS */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <SummaryCard 
-              title="Total Pengamatan" 
-              value={totalObservations} 
-              detail="Semua data observasi tersimpan" 
-              icon={Eye} 
-              accent="from-brand-hover to-lime-500" 
+            <SummaryCard
+              title="Total Pengamatan"
+              value={totalObservations}
+              detail="Semua data observasi tersimpan"
+              icon={Eye}
+              accent="from-emerald-500 to-lime-500"
             />
-            <SummaryCard 
-              title="Pengamatan Hari Ini" 
-              value={observationsToday} 
-              detail="Aktivitas tercatat hari ini" 
-              icon={Camera} 
-              accent="from-amber-500 to-orange-500" 
+            <SummaryCard
+              title="Pengamatan Hari Ini"
+              value={observationsToday}
+              detail="Aktivitas tercatat hari ini"
+              icon={Camera}
+              accent="from-amber-500 to-orange-500"
             />
           </div>
 
           {/* Grafis responsif */}
-          <PerformanceCharts 
-            weeklyTrends={weeklyTrends} 
-            categoryBreakdown={categoryBreakdown.length > 0 ? categoryBreakdown : [{ name: "Tidak Ada Data", value: 100 }]} 
+          <PerformanceCharts
+            weeklyTrends={weeklyTrends}
+            categoryBreakdown={
+              categoryBreakdown.length > 0 ? categoryBreakdown : [{ name: "Tidak Ada Data", value: 100 }]
+            }
           />
 
           {/* Grid Cards responsif */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <AccessControlCard 
-              totalPetugas={totalPetugas} 
-              totalPos={totalPos} 
-              lastActivePetugas={lastActivePetugas} 
+            <AccessControlCard
+              totalPetugas={totalPetugas}
+              totalPos={totalPos}
+              lastActivePetugas={lastActivePetugas}
             />
             <ExportReportCard totalReportReady={totalObservations} lastGeneratedDate={lastGeneratedDate} />
-            <MinistryReportCard isSynced={pendingValidation === 0} pendingSyncCount={pendingValidation} lastSyncDate={lastGeneratedDate} />
+            <MinistryReportCard
+              isSynced={pendingValidation === 0}
+              pendingSyncCount={pendingValidation}
+              lastSyncDate={lastGeneratedDate}
+            />
           </div>
 
           {/* Tabel data observasi real-time */}
