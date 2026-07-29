@@ -140,14 +140,14 @@ export default async function ProfilePage() {
   });
 
   return (
-    <main className="prof-main-layout">
-      <div className="prof-container">
+    <main className="obs-main-layout">
+      <div className="obs-container">
         <div className="prof-sr-only">{username}</div>
         
         {/* Header Section */}
         <div className="prof-header-flex">
-          <Link href="/dashboard" className="prof-btn-secondary">
-            <ArrowLeft className="prof-icon" />
+          <Link href="/dashboard" className="obs-btn-secondary self-start">
+            <ArrowLeft className="obs-icon" />
             Kembali ke Dashboard
           </Link>
 
@@ -194,12 +194,12 @@ export default async function ProfilePage() {
 
             {/* Quick Action Buttons */}
             <div className="prof-actions-grid">
-              <Link href="/dashboard/observations/create" className="prof-btn-primary">
-                <PlusCircle className="prof-icon" />
+              <Link href="/dashboard/observations/create" className="obs-btn-primary">
+                <PlusCircle className="obs-icon" />
                 Tambah Pengamatan
               </Link>
               <Link href="/dashboard/observations" className="prof-btn-outline">
-                <Camera className="prof-icon" />
+                <Camera className="obs-icon" />
                 Lihat Semua Pengamatan
               </Link>
             </div>
@@ -231,8 +231,8 @@ export default async function ProfilePage() {
                 <p className="prof-section-title">Belum ada pengamatan Anda</p>
                 <p className="prof-desc">Mulai dengan menambahkan pengamatan pertama Anda.</p>
                 <div className="prof-empty-btn">
-                  <Link href="/dashboard/observations/create" className="prof-btn-primary">
-                    <PlusCircle className="prof-icon" />
+                  <Link href="/dashboard/observations/create" className="obs-btn-primary">
+                    <PlusCircle className="obs-icon" />
                     Tambah Pengamatan
                   </Link>
                 </div>
