@@ -39,7 +39,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
     { label: "Detail Observasi", href: "/dashboard/manajer/histori", icon: Camera },
     { label: "Kelola Laporan", href: "/dashboard/manajer/laporan", icon: FileSpreadsheet },
     { label: "Kontrol Akses Petugas", href: "/dashboard/manajer/petugas", icon: Users },
-    { label: "Laporan Kementerian", href: "/dashboard/manajer/kementerian", icon: Building2 },
+    { label: "Laporan Kementerian", href: "/dashboard/manajer/kementerian", icon: Building2, iconClass: "opacity-60" },
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);
@@ -108,7 +108,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
                       : "text-text-secondary hover:bg-brand-primary/50 hover:text-text-heading"
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className={`h-4 w-4 ${item.iconClass || ""}`} />
                   {item.label}
                 </Link>
               );

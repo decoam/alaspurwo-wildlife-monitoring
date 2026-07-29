@@ -207,7 +207,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
             <button
               type="button"
               onClick={() => setIsPreviewOpen(true)}
-              className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-brand-text bg-brand-primary/60 border border-brand-primary/80 rounded-xl hover:bg-brand-primary/60 transition-all w-full sm:w-auto"
+              className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-brand-text bg-transparent border border-brand-primary/60 rounded-xl hover:bg-brand-primary/20 transition-all w-full sm:w-auto"
             >
               <Eye size={14} /> Preview Dokumen
             </button>

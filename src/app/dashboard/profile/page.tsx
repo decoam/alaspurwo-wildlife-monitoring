@@ -145,16 +145,18 @@ export default async function ProfilePage() {
         <div className="prof-sr-only">{username}</div>
         
         {/* Header Section */}
-        <div className="prof-header-flex">
-          <Link href="/dashboard" className="obs-btn-secondary self-start">
+        <div className="mb-4">
+          <Link href="/dashboard" className="obs-btn-secondary">
             <ArrowLeft className="obs-icon" />
             Kembali ke Dashboard
           </Link>
+        </div>
 
+        <div className="flex flex-col gap-4 border-b border-brand-primary/60 pb-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="prof-meta-title">Profil</p>
-            <h1 className="prof-main-title">Data Pengguna</h1>
-            <p className="prof-desc">Kelola informasi akun dan pantau aktivitas pengamatan Anda.</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-brand-text">Profil</p>
+            <h1 className="mt-2 text-2xl font-semibold text-text-heading">Data Pengguna</h1>
+            <p className="mt-2 text-sm text-text-muted">Kelola informasi akun dan pantau aktivitas pengamatan Anda.</p>
           </div>
         </div>
 

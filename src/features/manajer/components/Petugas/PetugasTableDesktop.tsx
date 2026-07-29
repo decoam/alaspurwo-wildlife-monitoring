@@ -45,14 +45,14 @@ export function PetugasTableDesktop({
                   <div className="flex justify-end gap-3">
                     <button
                       onClick={() => openEditModal(user)}
-                      className="rounded-xl border border-brand-primary/60 bg-input-bg p-2 text-brand-text transition hover:bg-brand-primary/60"
+                      className="rounded-xl border border-brand-primary/60 bg-input-bg p-2 text-brand-text transition hover:bg-brand-primary/60 hover:text-text-heading"
                       title="Edit Petugas"
                     >
                       <Edit2 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => openDeleteModal(user)}
-                      className="rounded-xl border border-error-bg bg-error-bg p-2 text-error-text transition hover:bg-error-bg/80"
+                      className="rounded-xl border border-error-bg bg-rose/25 p-2 text-error-text transition hover:bg-rose/35 hover:text-text-heading"
                       title="Hapus Petugas"
                     >
                       <Trash2 className="h-4 w-4" />

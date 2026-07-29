@@ -93,7 +93,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                         <>
                           <Link
                             href={`/dashboard/observations/edit/${item._id}`}
-                            className="rounded-full border border-brand-primary/60 p-2 text-sky-200 transition hover:bg-brand-primary/60"
+                            className="rounded-full border border-brand-primary/60 p-2 text-brand-text transition hover:bg-brand-primary/60 hover:text-text-heading"
                             title="Edit"
                           >
                             <PencilLine className="h-4 w-4" />
@@ -107,7 +107,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                                   e.preventDefault();
                                 }
                               }}
-                              className="rounded-full border border-error-bg/60 p-2 text-error-dark transition hover:bg-error-bg/50"
+                              className="rounded-full border border-error-bg/60 bg-rose/20 p-2 text-error-dark transition hover:bg-rose/30 hover:text-text-heading"
                               title="Hapus"
                             >
                               <Trash2 className="h-4 w-4" />

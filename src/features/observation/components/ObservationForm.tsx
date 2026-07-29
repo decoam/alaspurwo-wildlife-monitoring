@@ -391,7 +391,7 @@ export function ObservationForm({
                 <button
                   type="button"
                   onClick={removePhoto}
-                  className="absolute right-3 top-3 flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-3 py-2 text-sm text-text-heading backdrop-blur"
+                  className="absolute right-3 top-3 flex items-center gap-2 rounded-full border border-error-bg/60 bg-rose/25 px-3 py-2 text-sm text-error-text backdrop-blur transition hover:bg-rose/35 hover:text-text-heading"
                   disabled={!isNamaSatwaSelected}
                 >
                   <Trash2 className="h-4 w-4" />

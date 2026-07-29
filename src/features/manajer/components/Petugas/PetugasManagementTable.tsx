@@ -237,14 +237,14 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
                 <div className="flex gap-2">
                   <button
                     onClick={() => openEditModal(user)}
-                    className="flex items-center justify-center p-2 rounded-xl border border-brand-primary/60 bg-input-bg text-brand-text transition hover:bg-brand-primary/60"
+                    className="flex items-center justify-center p-2 rounded-xl border border-brand-primary/60 bg-input-bg text-brand-text transition hover:bg-brand-primary/60 hover:text-text-heading"
                     title="Edit"
                   >
                     <Edit2 className="h-3.5 w-3.5" />
                   </button>
                   <button
                     onClick={() => openDeleteModal(user)}
-                    className="flex items-center justify-center p-2 rounded-xl border border-error-bg bg-error-bg text-error-text transition hover:bg-error-bg/80"
+                    className="flex items-center justify-center p-2 rounded-xl border border-error-bg bg-rose/25 text-error-text transition hover:bg-rose/35 hover:text-text-heading"
                     title="Hapus"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
