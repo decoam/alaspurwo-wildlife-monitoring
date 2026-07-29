@@ -1,15 +1,83 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+@theme {
+  /* ── Surface & Backgrounds ── */
+  --color-app-bg: #060d0a;
+  --color-card-bg: #091710;
+  --color-input-bg: #10241a;
+  --color-panel-bg: #07130d;
+  --color-hover-bg: #0d1d14;
+  --color-surface-bg: #07110c;
+  --color-surface-card: #08140e;
+  --color-surface-table: #0f2218;
+  --color-surface-subtle: #0c1914;
+  --color-surface-dark: #040a07;
+  --color-surface-empty: #0c1712;
+
+  /* ── Brand / Emerald Theme ── */
+  --color-brand-primary: #059669;
+  --color-brand-hover: #10b981;
+  --color-brand-border: #10b981;
+  --color-brand-text: #34d399;
+  --color-brand-text-light: #a7f3d0;
+  --color-brand-text-lighter: #d1fae5;
+
+  /* ── Typography & Text ── */
+  --color-text-heading: #ffffff;
+  --color-text-main: #f8fafc;
+  --color-text-body: #e2e8f0;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-light: #f1f5f9;
+
+  /* ── Status Colours ── */
+  --color-rose: #fb7185;
+  --color-success-bg: rgba(2, 43, 29, 0.4);
+  --color-success-text: #d1fae5;
+  --color-error-bg: rgba(244, 63, 94, 0.1);
+  --color-error-text: #fda4af;
+  --color-error-dark: #fecdd3;
+  --color-amber-bg: rgba(251, 191, 36, 0.1);
+  --color-amber-text: #fbbf24;
+  --color-blue-bg: rgba(56, 189, 248, 0.1);
+  --color-blue-text: #7dd3fc;
+
+  /* ── Border Colors (baked opacity) ── */
+  --color-border-default: rgba(16, 185, 129, 0.2);
+  --color-border-strong: rgba(16, 185, 129, 0.4);
+  --color-border-subtle: rgba(6, 78, 59, 0.6);
+  --color-border-faint: rgba(6, 78, 59, 0.4);
+  --color-border-input: #334155;
+
+  /* ── Surface overrides (baked opacity) ── */
+  --color-surface-bg-80: rgba(7, 17, 12, 0.8);
+  --color-surface-subtle-85: rgba(12, 25, 20, 0.85);
+  --color-surface-subtle-90: rgba(12, 25, 20, 0.9);
+
+  /* ── Accent (Lime/Green) ── */
+  --color-accent-primary: #a3e635;
+  --color-accent-hover: #bef264;
+  --color-accent-text: #bef264;
+  --color-accent-subtle: #dcfce7;
+
+  /* ── Chart Colors ── */
+  --color-chart-1: #34d399;
+  --color-chart-2: #f59e0b;
+  --color-chart-3: #38bdf8;
+  --color-chart-4: #a78bfa;
+  --color-chart-5: #fb7185;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -942,70 +1010,3 @@ body {
   }
 }
 
-@theme {
-  /* ── Surface & Backgrounds ── */
-  --color-app-bg: #060d0a;
-  --color-card-bg: #091710;
-  --color-input-bg: #10241a;
-  --color-panel-bg: #07130d;
-  --color-hover-bg: #0d1d14;
-  --color-surface-bg: #07110c;
-  --color-surface-card: #08140e;
-  --color-surface-table: #0f2218;
-  --color-surface-subtle: #0c1914;
-  --color-surface-dark: #040a07;
-  --color-surface-empty: #0c1712;
-
-  /* ── Brand / Emerald Theme ── */
-  --color-brand-primary: #059669;
-  --color-brand-hover: #10b981;
-  --color-brand-border: #10b981;
-  --color-brand-text: #34d399;
-  --color-brand-text-light: #a7f3d0;
-  --color-brand-text-lighter: #d1fae5;
-
-  /* ── Typography & Text ── */
-  --color-text-heading: #ffffff;
-  --color-text-main: #f8fafc;
-  --color-text-body: #e2e8f0;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #94a3b8;
-  --color-text-light: #f1f5f9;
-
-  /* ── Status Colours ── */
-  --color-rose: #fb7185;
-  --color-success-bg: rgba(2, 43, 29, 0.4);
-  --color-success-text: #d1fae5;
-  --color-error-bg: rgba(244, 63, 94, 0.1);
-  --color-error-text: #fda4af;
-  --color-error-dark: #fecdd3;
-  --color-amber-bg: rgba(251, 191, 36, 0.1);
-  --color-amber-text: #fbbf24;
-  --color-blue-bg: rgba(56, 189, 248, 0.1);
-  --color-blue-text: #7dd3fc;
-
-  /* ── Accent (Lime/Green) ── */
-  --color-accent-primary: #a3e635;
-  --color-accent-hover: #bef264;
-  --color-accent-text: #bef264;
-  --color-accent-subtle: #dcfce7;
-
-  /* ── Border Colors (baked opacity) ── */
-  --color-border-default: rgba(16, 185, 129, 0.2);
-  --color-border-strong: rgba(16, 185, 129, 0.4);
-  --color-border-subtle: rgba(6, 78, 59, 0.6);
-  --color-border-faint: rgba(6, 78, 59, 0.4);
-  --color-border-input: #334155;
-
-  /* ── Surface overrides (baked opacity) ── */
-  --color-surface-bg-80: rgba(7, 17, 12, 0.8);
-  --color-surface-subtle-85: rgba(12, 25, 20, 0.85);
-  --color-surface-subtle-90: rgba(12, 25, 20, 0.9);
-
-  /* ── Chart Colors ── */
-  --color-chart-1: #34d399;
-  --color-chart-2: #f59e0b;
-  --color-chart-3: #38bdf8;
-  --color-chart-4: #a78bfa;
-  --color-chart-5: #fb7185;
-}

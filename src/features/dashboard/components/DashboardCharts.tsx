@@ -28,7 +28,7 @@ type DashboardChartsProps = {
   categoryBreakdown: CategoryPoint[];
 };
 
-const COLORS = ["var(--color-chart-1)", "var(--color-chart-2)", "var(--color-chart-3)", "var(--color-chart-4)", "var(--color-chart-5)"];
+const COLORS = ["#34d399", "#f59e0b", "#38bdf8", "#a78bfa", "#fb7185"];
 
 export function DashboardCharts({ activity, categoryBreakdown }: DashboardChartsProps) {
   return (
@@ -42,10 +42,10 @@ export function DashboardCharts({ activity, categoryBreakdown }: DashboardCharts
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={activity}>
               <CartesianGrid stroke="#1f3b2d" strokeDasharray="3 3" />
-              <XAxis dataKey="day" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
-              <YAxis tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
+              <XAxis dataKey="day" tick={{ fill: "#cbd5e1", fontSize: 12 }} />
+              <YAxis tick={{ fill: "#cbd5e1", fontSize: 12 }} />
               <Tooltip />
-              <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="var(--color-chart-1)" />
+              <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="#34d399" />
             </BarChart>
           </ResponsiveContainer>
         </div>
