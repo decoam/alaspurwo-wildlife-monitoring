@@ -30,7 +30,7 @@ interface PerformanceChartsProps {
   categoryBreakdown?: CategoryDataPoint[];
 }
 
-const COLORS = ["#34d399", "#f59e0b", "#38bdf8", "#a78bfa", "#fb7185"];
+const COLORS = ["var(--color-chart-1)", "var(--color-chart-2)", "var(--color-chart-3)", "var(--color-chart-4)", "var(--color-chart-5)"];
 
 export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
   weeklyTrends = [],
@@ -53,16 +53,16 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
   return (
     <div className="grid gap-4 xl:grid-cols-[1.4fr_0.9fr]">
       {/* 1. Grafik Batang: Aktivitas Mingguan */}
-      <div className="flex flex-col justify-between rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+      <div className="flex flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
         <div className="mb-4">
-          <h2 className="text-lg font-semibold text-white">Aktivitas Mingguan</h2>
-          <p className="mt-1 text-sm text-slate-400">
+          <h2 className="text-lg font-semibold text-text-heading">Aktivitas Mingguan</h2>
+          <p className="mt-1 text-sm text-text-muted">
             Jumlah pengamatan yang tercatat dalam 7 hari terakhir.
           </p>
         </div>
         <div className="h-64 flex items-center justify-center">
           {isWeeklyTrendsEmpty ? (
-            <div className="flex flex-col items-center justify-center text-center text-slate-500 space-y-2">
+            <div className="flex flex-col items-center justify-center text-center text-text-muted space-y-2">
               <BarChart2 className="w-10 h-10 stroke-[1.5] text-emerald-900/80" />
               <p className="text-xs">Belum ada data aktivitas minggu ini</p>
             </div>
@@ -70,21 +70,21 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={weeklyTrends}>
                 <CartesianGrid stroke="#1f3b2d" strokeDasharray="3 3" />
-                <XAxis dataKey="day" tick={{ fill: "#cbd5e1", fontSize: 12 }} />
+                <XAxis dataKey="day" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
                 
                 {/* Supaya tampil bilangan bulat bukan desimal */}
                 <YAxis 
-                  tick={{ fill: "#cbd5e1", fontSize: 12 }} 
+                  tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} 
                   allowDecimals={false}
                   tickCount={calculatedTickCount}
                 />
                 
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "#040a07", borderColor: "#064e3b", borderRadius: "12px" }}
-                  labelStyle={{ color: "#34d399", fontWeight: "bold" }}
-                  itemStyle={{ color: "#f8fafc" }}
+                  contentStyle={{ backgroundColor: "var(--color-surface-dark)", borderColor: "var(--color-border-subtle)", borderRadius: "12px" }}
+                  labelStyle={{ color: "var(--color-chart-1)", fontWeight: "bold" }}
+                  itemStyle={{ color: "var(--color-text-main)" }}
                 />
-                <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="#34d399" />
+                <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="var(--color-chart-1)" />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -92,16 +92,16 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
       </div>
 
       {/* 2. Grafik Lingkaran: Kategori Satwa */}
-      <div className="flex flex-col justify-between rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+      <div className="flex flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
         <div className="mb-4">
-          <h2 className="text-lg font-semibold text-white">Kategori Satwa</h2>
-          <p className="mt-1 text-sm text-slate-400">
+          <h2 className="text-lg font-semibold text-text-heading">Kategori Satwa</h2>
+          <p className="mt-1 text-sm text-text-muted">
             Distribusi pengamatan berdasarkan kategori.
           </p>
         </div>
         <div className="h-64 flex items-center justify-center">
           {isCategoryBreakdownEmpty ? (
-            <div className="flex flex-col items-center justify-center text-center text-slate-500 space-y-2">
+            <div className="flex flex-col items-center justify-center text-center text-text-muted space-y-2">
               <PieChartIcon className="w-10 h-10 stroke-[1.5] text-emerald-900/80" />
               <p className="text-xs">Belum ada data kategori satwa</p>
             </div>
@@ -124,9 +124,9 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
                   ))}
                 </Pie>
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "#040a07", borderColor: "#064e3b", borderRadius: "12px" }}
-                  labelStyle={{ color: "#34d399", fontWeight: "bold" }}
-                  itemStyle={{ color: "#f8fafc" }}
+                  contentStyle={{ backgroundColor: "var(--color-surface-dark)", borderColor: "var(--color-border-subtle)", borderRadius: "12px" }}
+                  labelStyle={{ color: "var(--color-chart-1)", fontWeight: "bold" }}
+                  itemStyle={{ color: "var(--color-text-main)" }}
                 />
               </PieChart>
             </ResponsiveContainer>

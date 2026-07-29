@@ -32,10 +32,10 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
   return (
     <div className="space-y-4">
       {/* WRAPPER TABEL UTAMA */}
-      <div className="overflow-hidden rounded-2xl border border-emerald-900/60 bg-[#08140e]/90">
+      <div className="overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-card/90">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-emerald-900/60 text-sm text-slate-300">
-            <thead className="bg-emerald-950/50 text-left text-slate-200">
+          <table className="min-w-full divide-y divide-brand-primary/60 text-sm text-text-secondary">
+            <thead className="bg-brand-primary/50 text-left text-text-body">
               <tr>
                 <th className="px-4 py-3 w-17.5">Foto</th>
                 <th className="px-4 py-3">Nama Satwa</th>
@@ -49,12 +49,12 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
                 <th className="px-4 py-3 text-center w-15">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-emerald-900/60 bg-[#0d1d14]">
+            <tbody className="divide-y divide-brand-primary/60 bg-hover-bg">
               {items.map((item) => (
                 <tr 
                   key={item._id} 
                   onClick={() => setSelectedItem(item)}
-                  className="transition cursor-pointer hover:bg-emerald-900/30 active:bg-emerald-900/50"
+                  className="transition cursor-pointer hover:bg-brand-primary/30 active:bg-brand-primary/50"
                 >
                   <td className="px-4 py-3">
                     <div className="shrink-0">
@@ -63,13 +63,13 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
                         alt={item.namaSatwa}
                         width={44}
                         height={44}
-                        className="h-11 w-11 rounded-xl object-cover border border-emerald-500/20 shrink-0"
+                        className="h-11 w-11 rounded-xl object-cover border border-brand-hover/20 shrink-0"
                         unoptimized
                         onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
                       />
                     </div>
                   </td>
-                  <td className="px-4 py-3 font-medium text-white">{item.namaSatwa}</td>
+                  <td className="px-4 py-3 font-medium text-text-heading">{item.namaSatwa}</td>
                   <td className="px-4 py-3">{item.kategori}</td>
                   
                   <td className="px-4 py-3 hidden md:table-cell">{item.jumlah}</td>
@@ -82,13 +82,13 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
                   <td className="px-4 py-3">{item.namaPetugas}</td>
                   
                   <td className="px-4 py-3 hidden md:table-cell">
-                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${item.foto ? "bg-emerald-900/60 text-emerald-200" : "bg-slate-800 text-slate-400"}`}>
+                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${item.foto ? "bg-brand-primary/60 text-brand-text-light" : "bg-slate-800 text-text-muted"}`}>
                       {item.foto ? "Tersedia" : "Belum"}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <div 
-                      className="inline-flex rounded-full border border-emerald-900/60 p-2 text-emerald-200 transition hover:bg-emerald-900/60"
+                      className="inline-flex rounded-full border border-brand-primary/60 p-2 text-brand-text-light transition hover:bg-brand-primary/60"
                       title="Lihat Detail"
                     >
                       <Eye className="h-4 w-4" />

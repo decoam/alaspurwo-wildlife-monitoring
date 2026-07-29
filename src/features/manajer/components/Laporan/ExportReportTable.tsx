@@ -37,7 +37,7 @@ export const ExportReportTable: React.FC<ExportReportTableProps> = ({ data }) =>
               </td>
               <td className="border border-slate-400 px-3 py-2.5">
                 <strong>{report.posPengamatan || report.lokasi}</strong>
-                <div className="text-slate-500 font-normal">({report.lokasi})</div>
+                <div className="text-text-muted font-normal">({report.lokasi})</div>
               </td>
               <td className="border border-slate-400 px-3 py-2.5">
                 <div>
@@ -45,7 +45,7 @@ export const ExportReportTable: React.FC<ExportReportTableProps> = ({ data }) =>
                     ? new Date(report.tanggalPengamatan).toLocaleDateString("id-ID")
                     : "-"}
                 </div>
-                <div className="text-slate-500 font-normal">Shift {report.shift}</div>
+                <div className="text-text-muted font-normal">Shift {report.shift}</div>
               </td>
               <td className="border border-slate-400 px-3 py-2.5 capitalize">
                 {report.kondisiCuaca || "Cerah"}
@@ -53,7 +53,7 @@ export const ExportReportTable: React.FC<ExportReportTableProps> = ({ data }) =>
               <td className="border border-slate-400 px-3 py-2.5">
                 {report.namaPetugas}
               </td>
-              <td className="border border-slate-400 px-3 py-2.5 italic text-slate-800">
+              <td className="border border-slate-400 px-3 py-2.5 italic text-text-body">
                 {report.aktivitasSatwa || report.catatan
                   ? `"${report.aktivitasSatwa || report.catatan}"`
                   : "-"}

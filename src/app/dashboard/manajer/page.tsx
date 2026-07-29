@@ -171,7 +171,7 @@ export default async function ManagerDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030d08] text-slate-100 antialiased relative">
+    <div className="min-h-screen bg-app-bg text-text-light antialiased relative">
       <ManagerSidebar currentPath="/dashboard/manajer" user={managerProfile} />
 
       <div className="px-4 py-4 xl:pl-76 xl:pr-6 xl:py-6 transition-all duration-300">
@@ -187,7 +187,7 @@ export default async function ManagerDashboardPage() {
               value={totalObservations} 
               detail="Semua data observasi tersimpan" 
               icon={Eye} 
-              accent="from-emerald-500 to-lime-500" 
+              accent="from-brand-hover to-lime-500" 
             />
             <SummaryCard 
               title="Pengamatan Hari Ini" 

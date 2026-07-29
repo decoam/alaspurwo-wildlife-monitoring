@@ -54,7 +54,7 @@ export default async function KelolaPetugasPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030d08] text-slate-100 antialiased relative">
+    <div className="min-h-screen bg-app-bg text-text-light antialiased relative">
       {/* Sidebar Dinamis */}
       <ManagerSidebar currentPath="/dashboard/manajer/petugas" user={managerProfile} />
 

@@ -14,20 +14,20 @@ type RecentObservationTableProps = {
 
 export function RecentObservationTable({ observations }: RecentObservationTableProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-emerald-900/60 bg-[#0c1914]/90 shadow-[0_20px_60px_rgba(2,8,23,0.2)]">
-      <div className="border-b border-emerald-900/60 px-5 py-4">
-        <h2 className="text-lg font-semibold text-white">Recent Observation</h2>
-        <p className="mt-1 text-sm text-slate-400">Aktivitas satwa liar terbaru yang tercatat hari ini.</p>
+    <div className="overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-subtle/90 shadow-[0_20px_60px_rgba(2,8,23,0.2)]">
+      <div className="border-b border-brand-primary/60 px-5 py-4">
+        <h2 className="text-lg font-semibold text-text-heading">Recent Observation</h2>
+        <p className="mt-1 text-sm text-text-muted">Aktivitas satwa liar terbaru yang tercatat hari ini.</p>
       </div>
 
       <div className="overflow-x-auto">
         {observations.length === 0 ? (
-          <div className="px-5 py-10 text-center text-sm text-slate-400">
+          <div className="px-5 py-10 text-center text-sm text-text-muted">
             Belum ada pengamatan yang sesuai pencarian saat ini.
           </div>
         ) : (
-          <table className="min-w-full divide-y divide-emerald-900/60 text-sm">
-            <thead className="bg-emerald-950/50 text-left text-slate-300">
+          <table className="min-w-full divide-y divide-brand-primary/60 text-sm">
+            <thead className="bg-brand-primary/50 text-left text-text-secondary">
               <tr>
                 <th className="px-5 py-3 font-medium">Foto</th>
                 <th className="px-5 py-3 font-medium">Nama Satwa</th>
@@ -35,19 +35,19 @@ export function RecentObservationTable({ observations }: RecentObservationTableP
                 <th className="px-5 py-3 font-medium">Shift</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-emerald-900/50 bg-[#0f2218] text-slate-200">
+            <tbody className="divide-y divide-brand-primary/50 bg-surface-table text-text-body">
               {observations.map((item) => (
-                <tr key={item._id} className="transition hover:bg-emerald-950/40">
+                <tr key={item._id} className="transition hover:bg-brand-primary/40">
                   <td className="px-5 py-4">
                     {item.foto ? (
                       <img src={item.foto} alt={item.namaSatwa} className="h-10 w-10 rounded-full object-cover" />
                     ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-900/70 text-lg">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/70 text-lg">
                         🐾
                       </div>
                     )}
                   </td>
-                  <td className="px-5 py-4 font-medium text-white">{item.namaSatwa}</td>
+                  <td className="px-5 py-4 font-medium text-text-heading">{item.namaSatwa}</td>
                   <td className="px-5 py-4">{item.lokasi}</td>
                   <td className="px-5 py-4">
                     <span

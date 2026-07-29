@@ -49,7 +49,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
       {/* Tombol Hamburger aktif ketika versi layar dibawah ukuran XL */}
       <button
         onClick={toggleSidebar}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-emerald-500/30 bg-[#07110c]/90 text-emerald-400 shadow-[0_10px_30px_rgba(16,185,129,0.3)] backdrop-blur-md transition-all hover:scale-105 active:scale-95 xl:hidden"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-brand-hover/30 bg-surface-bg/90 text-brand-text shadow-[0_10px_30px_rgba(16,185,129,0.3)] backdrop-blur-md transition-all hover:scale-105 active:scale-95 xl:hidden"
         title="Menu Navigasi"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -65,7 +65,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
 
       {/* Sidebar Responsif */}
       <aside 
-        className={`fixed bottom-4 top-4 z-45 flex w-64 flex-col justify-between rounded-[28px] border border-emerald-900/60 bg-[#07110c]/95 p-5 shadow-2xl transition-all duration-300 ease-in-out
+        className={`fixed bottom-4 top-4 z-45 flex w-64 flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/95 p-5 shadow-2xl transition-all duration-300 ease-in-out
           /* Desktop Behavior */
           xl:left-4 xl:translate-x-0
           /* Mobile Behavior (Geser ke kiri layar jika ditutup, geser masuk jika dibuka) */
@@ -74,16 +74,16 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
       >
         <div>
           {/* Bagian Profil User */}
-          <div className="mb-8 flex items-center gap-3 border-b border-emerald-900/20 pb-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-white">
+          <div className="mb-8 flex items-center gap-3 border-b border-brand-primary/20 pb-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-text-heading">
               {user.avatarInitials || "MG"}
             </div>
 
             <div className="min-w-0 flex-1 leading-tight">
-              <p className="text-sm font-semibold text-white wrap-break-words">
+              <p className="text-sm font-semibold text-text-heading wrap-break-words">
                 {user.fullName || "Manajer TNAP"}
               </p>
-              <p className="text-xs text-emerald-200/70 mt-0.5 wrap-break-words">
+              <p className="text-xs text-brand-text-light/70 mt-0.5 wrap-break-words">
                 {user.role || "Manajer"}
               </p>
             </div>
@@ -104,8 +104,8 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-emerald-700/30 text-white shadow-inner"
-                      : "text-slate-300 hover:bg-emerald-900/50 hover:text-white"
+                      ? "bg-emerald-700/30 text-text-heading shadow-inner"
+                      : "text-text-secondary hover:bg-brand-primary/50 hover:text-text-heading"
                   }`}
                 >
                   <Icon className="h-4 w-4" />

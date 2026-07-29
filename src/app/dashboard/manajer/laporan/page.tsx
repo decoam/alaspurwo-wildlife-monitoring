@@ -65,7 +65,7 @@ export default async function ManajerKelolaLaporanPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030d08] text-slate-100 antialiased relative print:bg-white print:text-black">
+    <div className="min-h-screen bg-app-bg text-text-light antialiased relative print:bg-white print:text-black">
       
       {/* 1. Sembunyikan Sidebar saat print */}
       <div className="print:hidden">
@@ -86,7 +86,7 @@ export default async function ManajerKelolaLaporanPage() {
           </div>
 
           {/* 3. Area Tabel (Sembunyikan border, background gelap, & shadow bawaan pembungkus saat print) */}
-          <div className="rounded-3xl border border-emerald-900/40 bg-[#0c1914]/40 shadow-[0_20px_50px_rgba(2,8,23,0.4)] overflow-hidden print:border-none print:bg-transparent print:shadow-none print:rounded-none">
+          <div className="rounded-3xl border border-brand-primary/40 bg-surface-subtle/40 shadow-[0_20px_50px_rgba(2,8,23,0.4)] overflow-hidden print:border-none print:bg-transparent print:shadow-none print:rounded-none">
             <ManageReports initialReports={daftarObservasi} />
           </div>
 

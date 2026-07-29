@@ -32,15 +32,15 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
   };
 
   return (
-    <aside className="flex h-full w-full flex-col justify-between rounded-[28px] border border-emerald-900/60 bg-[#07110c]/90 p-5 shadow-2xl">
+    <aside className="flex h-full w-full flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/90 p-5 shadow-2xl">
       <div>
         <div className="mb-8 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-white">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-brand-hover to-lime-600 text-lg font-semibold text-text-heading">
             {user.avatarInitials}
           </div>
           <div>
-            <p className="text-sm font-semibold text-white">{user.fullName || "Alas Purwo"}</p>
-            <p className="text-xs text-emerald-200/70">{user.role || "Wildlife Monitoring"}</p>
+            <p className="text-sm font-semibold text-text-heading">{user.fullName || "Alas Purwo"}</p>
+            <p className="text-xs text-brand-text-light/70">{user.role || "Wildlife Monitoring"}</p>
           </div>
         </div>
 
@@ -53,8 +53,8 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                 href={item.href}
                 className={`flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-medium transition ${
                   item.active
-                    ? "bg-emerald-700/30 text-white shadow-inner"
-                    : "text-slate-300 hover:bg-emerald-900/50 hover:text-white"
+                    ? "bg-brand-primary/30 text-text-heading shadow-inner"
+                    : "text-text-secondary hover:bg-brand-primary/50 hover:text-text-heading"
                 }`}
               >
                 <Icon className="h-4 w-4" />
