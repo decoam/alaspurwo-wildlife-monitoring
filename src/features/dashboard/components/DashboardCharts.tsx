@@ -33,7 +33,7 @@ const COLORS = ["#34d399", "#f59e0b", "#38bdf8", "#a78bfa", "#fb7185"];
 export function DashboardCharts({ activity, categoryBreakdown }: DashboardChartsProps) {
   return (
     <div className="grid gap-4 xl:grid-cols-[1.4fr_0.9fr]">
-      <div className="rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+      <div className="rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-card md:p-6">
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-text-heading">Aktivitas Mingguan</h2>
           <p className="mt-1 text-sm text-text-muted">Jumlah pengamatan yang tercatat dalam 7 hari terakhir.</p>
@@ -51,7 +51,7 @@ export function DashboardCharts({ activity, categoryBreakdown }: DashboardCharts
         </div>
       </div>
 
-      <div className="rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+      <div className="rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-card md:p-6">
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-text-heading">Kategori Satwa</h2>
           <p className="mt-1 text-sm text-text-muted">Distribusi pengamatan berdasarkan kategori.</p>

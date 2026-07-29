@@ -10,7 +10,7 @@ type DashboardHeaderProps = {
 
 export function DashboardHeader({ searchValue, user }: DashboardHeaderProps) {
   return (
-    <header className="flex flex-col gap-4 rounded-3x1 border border-brand-primary/60 bg-surface-subtle/85 px-5 py-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:flex-row md:items-center md:justify-between">
+    <header className="flex flex-col gap-4 rounded-3x1 border border-brand-primary/60 bg-surface-subtle/85 px-5 py-4 shadow-card md:flex-row md:items-center md:justify-between">
       <div>
         <p className="text-sm font-semibold uppercase tracking-[0.25em] text-brand-text">
           Monitoring Center

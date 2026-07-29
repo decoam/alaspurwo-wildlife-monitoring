@@ -74,7 +74,7 @@ export default async function DashboardPage({
             ))}
           </div>
 
-          <div className="mt-2 rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+          <div className="mt-2 rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-card md:p-6">
             <RecentObservationTable observations={recentObservations} />
           </div>
         </section>

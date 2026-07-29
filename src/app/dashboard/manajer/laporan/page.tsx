@@ -86,7 +86,7 @@ export default async function ManajerKelolaLaporanPage() {
           </div>
 
           {/* 3. Area Tabel (Sembunyikan border, background gelap, & shadow bawaan pembungkus saat print) */}
-          <div className="rounded-3xl border border-brand-primary/40 bg-surface-subtle/40 shadow-[0_20px_50px_rgba(2,8,23,0.4)] overflow-hidden print:border-none print:bg-transparent print:shadow-none print:rounded-none">
+          <div className="rounded-3xl border border-brand-primary/40 bg-surface-subtle/40 shadow-card-strong overflow-hidden print:border-none print:bg-transparent print:shadow-none print:rounded-none">
             <ManageReports initialReports={daftarObservasi} />
           </div>
 

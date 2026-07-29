@@ -19,7 +19,7 @@ interface LiveObservationTableProps {
 export const LiveObservationTable: React.FC<LiveObservationTableProps> = ({ records }) => {
   
   return (
-    <div className="overflow-hidden rounded-3xl md:rounded-[28px] border border-brand-primary/60 bg-surface-subtle/90 shadow-[0_20px_60px_rgba(2,8,23,0.2)]">
+    <div className="overflow-hidden rounded-3xl md:rounded-[28px] border border-brand-primary/60 bg-surface-subtle/90 shadow-card">
       {/* Header Tabel */}
       <div className="border-b border-brand-primary/60 px-5 py-5">
         <h2 className="text-base md:text-lg font-semibold text-text-heading">Monitoring Laporan Terbaru</h2>

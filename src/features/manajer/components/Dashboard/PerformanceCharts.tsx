@@ -53,7 +53,7 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
   return (
     <div className="grid gap-4 xl:grid-cols-[1.4fr_0.9fr]">
       {/* 1. Grafik Batang: Aktivitas Mingguan */}
-      <div className="flex flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+      <div className="flex flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-card md:p-6">
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-text-heading">Aktivitas Mingguan</h2>
           <p className="mt-1 text-sm text-text-muted">
@@ -92,7 +92,7 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
       </div>
 
       {/* 2. Grafik Lingkaran: Kategori Satwa */}
-      <div className="flex flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+      <div className="flex flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-card md:p-6">
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-text-heading">Kategori Satwa</h2>
           <p className="mt-1 text-sm text-text-muted">

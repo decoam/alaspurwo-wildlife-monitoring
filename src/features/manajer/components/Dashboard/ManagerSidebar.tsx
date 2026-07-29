@@ -49,7 +49,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
       {/* Tombol Hamburger aktif ketika versi layar dibawah ukuran XL */}
       <button
         onClick={toggleSidebar}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-brand-hover/30 bg-surface-bg/90 text-brand-text shadow-[0_10px_30px_rgba(16,185,129,0.3)] backdrop-blur-md transition-all hover:scale-105 active:scale-95 xl:hidden"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-brand-hover/30 bg-surface-bg/90 text-brand-text shadow-glow backdrop-blur-md transition-all hover:scale-105 active:scale-95 xl:hidden"
         title="Menu Navigasi"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}

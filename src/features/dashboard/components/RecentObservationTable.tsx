@@ -14,7 +14,7 @@ type RecentObservationTableProps = {
 
 export function RecentObservationTable({ observations }: RecentObservationTableProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-subtle/90 shadow-[0_20px_60px_rgba(2,8,23,0.2)]">
+    <div className="overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-subtle/90 shadow-card">
       <div className="border-b border-brand-primary/60 px-5 py-4">
         <h2 className="text-lg font-semibold text-text-heading">Recent Observation</h2>
         <p className="mt-1 text-sm text-text-muted">Aktivitas satwa liar terbaru yang tercatat hari ini.</p>

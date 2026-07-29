@@ -10,7 +10,7 @@ type SummaryCardProps = {
 
 export function SummaryCard({ title, value, detail, icon: Icon, accent }: SummaryCardProps) {
   return (
-    <div className="rounded-2xl border border-brand-primary/60 bg-surface-subtle/90 p-5 shadow-[0_20px_60px_rgba(2,8,23,0.25)] backdrop-blur">
+    <div className="rounded-2xl border border-brand-primary/60 bg-surface-subtle/90 p-5 shadow-card-bright backdrop-blur">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-brand-text-light/80">{title}</p>

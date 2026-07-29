@@ -84,7 +84,7 @@ export default async function ManajerLaporanKementerianPage() {
           </div>
 
           {/* Pemisahan UI Komponen Utama */}
-          <div className="rounded-3xl border border-brand-primary/40 bg-surface-subtle/40 shadow-[0_20px_50px_rgba(2,8,23,0.4)] overflow-hidden print:border-none print:bg-transparent print:shadow-none print:rounded-none">
+          <div className="rounded-3xl border border-brand-primary/40 bg-surface-subtle/40 shadow-card-strong overflow-hidden print:border-none print:bg-transparent print:shadow-none print:rounded-none">
             <MinistryReportCenter initialReports={daftarObservasi} />
           </div>
 

@@ -19,7 +19,7 @@ export function ManagerHeader({
   user 
 }: ManagerHeaderProps) {
   return (
-    <header className="flex flex-row items-center justify-between gap-4 rounded-3xl md:rounded-[28px] border border-brand-primary/60 bg-surface-subtle/85 p-4 md:px-5 md:py-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)]">
+    <header className="flex flex-row items-center justify-between gap-4 rounded-3xl md:rounded-[28px] border border-brand-primary/60 bg-surface-subtle/85 p-4 md:px-5 md:py-4 shadow-card">
       {/* Kiri: Judul Halaman Dinamis */}
       <div className="min-w-0 flex-1 sm:flex-initial">
         <p className="text-[10px] md:text-sm font-semibold uppercase tracking-[0.25em] text-brand-text">
