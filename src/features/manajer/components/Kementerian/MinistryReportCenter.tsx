@@ -17,6 +17,20 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
   const [submitStatus, setSubmitStatus] = useState<"draft" | "sent">("draft");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
+  // Restore submission status from localStorage — stays "sent" until new data arrives
+  useEffect(() => {
+    const lastSync = localStorage.getItem("ministry-last-sync");
+    if (!lastSync) return;
+
+    const newestObsDate = reports.reduce<string | null>((latest, r) => {
+      return r.tanggalPengamatan > (latest ?? "") ? r.tanggalPengamatan : latest;
+    }, null);
+
+    if (newestObsDate && new Date(newestObsDate) <= new Date(lastSync)) {
+      setSubmitStatus("sent");
+    }
+  }, [reports]);
+
   // State Dinamis dari Database Master Satwa Universal
   const [protectedKeywords, setProtectedKeywords] = useState<string[]>([]);
   const [isLoadingSpecies, setIsLoadingSpecies] = useState(true);
@@ -111,6 +125,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
       setIsSubmitting(false);
       setSubmitStatus("sent");
       setIsPreviewOpen(false);
+      localStorage.setItem("ministry-last-sync", new Date().toISOString());
       alert(`Berhasil mengirimkan ${currentPayload.tipeDokumen} ke Server Pusat Kementerian LHK!`);
     }, 1500);
   };
