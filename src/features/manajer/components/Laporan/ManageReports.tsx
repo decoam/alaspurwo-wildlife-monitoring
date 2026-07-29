@@ -125,32 +125,32 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
   }, [groupedReports]);
 
   return (
-    <div className="space-y-6 p-4 md:p-6 bg-[#060d0a] text-slate-200 print:bg-white print:text-black print:p-0 print:m-0">
+    <div className="space-y-6 p-4 md:p-6 bg-surface-bg text-text-body print:bg-white print:text-black print:p-0 print:m-0">
       
       {/* HEADER & CONTROLS */}
       <div className="print:hidden space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-emerald-900/40 pb-5">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-brand-primary/40 pb-5">
           <div>
-            <h1 className="text-xl md:text-2xl font-bold text-white mt-1">Cetak & Export Laporan Lapangan</h1>
-            <p className="text-xs text-slate-400 mt-1">
+            <h1 className="text-xl md:text-2xl font-bold text-text-heading mt-1">Cetak & Export Laporan Lapangan</h1>
+            <p className="text-xs text-text-muted mt-1">
               Pilih cakupan baris data observasi satwa liar Taman Nasional Alas Purwo untuk disimpan ke Excel atau PDF.
             </p>
           </div>
         </div>
 
         {/* Panel Filter */}
-        <div className="p-5 rounded-2xl border border-emerald-900/40 bg-[#07130d] space-y-4">
+        <div className="p-5 rounded-2xl border border-brand-primary/40 bg-panel-bg space-y-4">
           <div className="flex items-center gap-2">
-            <Info size={16} className="text-emerald-500" />
-            <span className="text-xs font-semibold text-white">Tentukan Cakupan Data Yang Akan Diekspor:</span>
+            <Info size={16} className="text-blue-text" />
+            <span className="text-xs font-semibold text-text-heading">Tentukan Cakupan Data Yang Akan Diekspor:</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 p-1 bg-[#040906] rounded-xl border border-emerald-950">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 p-1 bg-surface-dark rounded-xl border border-brand-primary/80">
             <button
               type="button"
               onClick={() => setExportScope("all")}
               className={`py-2 px-4 rounded-lg text-xs font-medium transition-all ${
-                exportScope === "all" ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-white"
+                exportScope === "all" ? "bg-brand-primary text-text-heading" : "text-text-muted hover:text-text-heading"
               }`}
             >
               Semua Laporan ({reports.length})
@@ -159,7 +159,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
               type="button"
               onClick={() => setExportScope("today")}
               className={`py-2 px-4 rounded-lg text-xs font-medium transition-all ${
-                exportScope === "today" ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-white"
+                exportScope === "today" ? "bg-brand-primary text-text-heading" : "text-text-muted hover:text-text-heading"
               }`}
             >
               Hari Ini ({todayReports.length})
@@ -168,7 +168,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
               type="button"
               onClick={() => setExportScope("date")}
               className={`py-2 px-4 rounded-lg text-xs font-medium transition-all ${
-                exportScope === "date" ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-white"
+                exportScope === "date" ? "bg-brand-primary text-text-heading" : "text-text-muted hover:text-text-heading"
               }`}
             >
               Pilih Tanggal ({customDateReports.length})
@@ -177,7 +177,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
               type="button"
               onClick={() => setExportScope("selected")}
               className={`py-2 px-4 rounded-lg text-xs font-medium transition-all ${
-                exportScope === "selected" ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-white"
+                exportScope === "selected" ? "bg-brand-primary text-text-heading" : "text-text-muted hover:text-text-heading"
               }`}
             >
               Pilihan Saja ({selectedIds.length})
@@ -186,8 +186,8 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
 
           {/* DROPDOWN KALENDER SAMPING KANAN & LEBIH RINGKAS */}
           {exportScope === "date" && (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-xl bg-[#040906] border border-emerald-950/60 animate-in fade-in slide-in-from-top-1 duration-200">
-              <label className="text-xs text-slate-400 flex items-center gap-1.5 shrink-0 select-none">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-xl bg-surface-dark border border-brand-primary/60 animate-in fade-in slide-in-from-top-1 duration-200">
+              <label className="text-xs text-text-muted flex items-center gap-1.5 shrink-0 select-none">
                 Saring Tanggal Observasi:
               </label>
               
@@ -196,27 +196,27 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
                 <button
                   type="button"
                   onClick={() => setIsCalendarOpen((prev) => !prev)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-emerald-900/60 bg-[#07130d] text-xs text-slate-200 hover:border-emerald-500 transition-colors cursor-pointer"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-brand-primary/60 bg-panel-bg text-xs text-text-body hover:border-brand-hover transition-colors cursor-pointer"
                 >
-                  <CalendarIcon size={14} className="text-emerald-500" />
+                  <CalendarIcon size={14} className="text-brand-hover" />
                   <span>{filterDate || "Pilih Tanggal Pengamatan"}</span>
                 </button>
 
                 {/* Popover Kompak di Samping Kanan */}
                 {isCalendarOpen && (
-                  <div className="absolute left-full top-0 ml-3 z-[999] border border-emerald-900/80 bg-[#07130d] p-2 text-slate-100 shadow-2xl backdrop-blur-md rounded-xl origin-top-left scale-90 sm:scale-95 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute left-full top-0 ml-3 z-[999] border border-brand-primary/80 bg-panel-bg p-2 text-text-light shadow-2xl backdrop-blur-md rounded-xl origin-top-left scale-90 sm:scale-95 animate-in fade-in zoom-in-95 duration-150">
                     <calendar-date
                       ref={calendarRef}
                       value={filterDate}
-                      className="cally text-emerald-400 text-xs"
+                      className="cally text-brand-text text-xs"
                       style={{
-                        "--cally-color-accent": "#10b981",
+                        "--cally-color-accent": "var(--color-brand-hover)",
                         "fontSize": "0.75rem"
                       } as React.CSSProperties}
                     >
                       <svg
                         aria-label="Previous"
-                        className="fill-current size-3.5 text-emerald-400 hover:text-white cursor-pointer"
+                        className="fill-current size-3.5 text-brand-text hover:text-text-heading cursor-pointer"
                         slot="previous"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -225,7 +225,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
                       </svg>
                       <svg
                         aria-label="Next"
-                        className="fill-current size-3.5 text-emerald-400 hover:text-white cursor-pointer"
+                        className="fill-current size-3.5 text-brand-text hover:text-text-heading cursor-pointer"
                         slot="next"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -240,15 +240,15 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pt-2 border-t border-emerald-950 gap-4">
-            <div className="text-xs text-slate-400">
-              Menyiapkan <strong className="text-emerald-400">{dataToExport.length}</strong> data observasi untuk diexport.
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pt-2 border-t border-brand-primary/80 gap-4">
+            <div className="text-xs text-text-muted">
+              Menyiapkan <strong className="text-brand-text">{dataToExport.length}</strong> data observasi untuk diexport.
             </div>
             <div className="flex gap-2 w-full sm:w-auto">
               <button
                 onClick={() => exportToExcel(dataToExport, exportScope, setIsExporting)}
                 disabled={isExporting || dataToExport.length === 0}
-                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-900/60 rounded-xl hover:bg-emerald-900/30 transition-all flex-1 sm:flex-initial disabled:opacity-50"
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-brand-text bg-brand-primary/40 border border-brand-primary/60 rounded-xl hover:bg-brand-primary/30 transition-all flex-1 sm:flex-initial disabled:opacity-50"
               >
                 {isExporting ? <Loader2 size={14} className="animate-spin" /> : <FileSpreadsheet size={14} />}
                 Simpan Excel
@@ -256,7 +256,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
               <button
                 onClick={() => exportToPDF(dataToExport, exportScope)}
                 disabled={dataToExport.length === 0}
-                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white bg-emerald-600 rounded-xl hover:bg-emerald-500 transition-all flex-1 sm:flex-initial disabled:opacity-50"
+                className="flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-text-heading bg-brand-primary rounded-xl hover:bg-brand-hover transition-all flex-1 sm:flex-initial disabled:opacity-50"
               >
                 <FileText size={14} /> Cetak PDF
               </button>
@@ -268,10 +268,10 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
           <div className="flex items-center gap-2 px-2">
             <button
               onClick={handleSelectAll}
-              className="text-slate-400 hover:text-white flex items-center gap-1.5 text-xs font-medium transition"
+              className="text-text-muted hover:text-text-heading flex items-center gap-1.5 text-xs font-medium transition"
             >
               {selectedIds.length === reports.length ? (
-                <CheckSquare size={16} className="text-emerald-500" />
+                <CheckSquare size={16} className="text-accent-text" />
               ) : (
                 <Square size={16} />
               )}
@@ -284,7 +284,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
       {/* CARDS LIST */}
       <div className="space-y-6 print:hidden">
         {listToShow.length === 0 ? (
-          <div className="p-10 text-center text-slate-500 text-sm border border-dashed border-emerald-900/40 rounded-2xl">
+          <div className="p-10 text-center text-text-muted text-sm border border-dashed border-brand-primary/40 rounded-2xl">
             {exportScope === "date" && !filterDate 
               ? "Silakan pilih tanggal terlebih dahulu pada input di atas." 
               : "Tidak ada laporan."}
@@ -303,11 +303,11 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
             return (
               <div key={dateKey} className="space-y-3">
                 <div className="flex items-center gap-3 px-1 pt-2">
-                  <span className="text-xs font-bold tracking-wider text-emerald-400 uppercase">
+                  <span className="text-xs font-bold tracking-wider text-brand-text uppercase">
                     {formattedDate}
                   </span>
-                  <div className="h-px bg-emerald-950/60 flex-1" />
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950/40 text-emerald-500/80 border border-emerald-900/30">
+                  <div className="h-px bg-brand-primary/60 flex-1" />
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-brand-primary/40 text-brand-hover/80 border border-brand-primary/30">
                     {reportsInDate.length} Laporan
                   </span>
                 </div>
