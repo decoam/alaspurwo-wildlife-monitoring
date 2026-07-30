@@ -307,7 +307,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
                     {formattedDate}
                   </span>
                   <div className="h-px bg-brand-primary/60 flex-1" />
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand-primary/40 text-brand-hover/80 border border-brand-primary/30">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-brand-primary/40 text-brand-hover/80 border border-brand-primary/30">
                     {reportsInDate.length} Laporan
                   </span>
                 </div>

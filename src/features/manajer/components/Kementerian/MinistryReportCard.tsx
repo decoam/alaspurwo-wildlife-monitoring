@@ -33,7 +33,7 @@ export const MinistryReportCard: React.FC<MinistryReportCardProps> = ({
             <CloudSync size={18} className={isSynced ? "text-brand-text" : "text-amber-text"} />
             <span className="text-text-secondary">Status Data Pusat</span>
           </div>
-          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${
+          <span className={`text-xs font-semibold px-2 py-0.5 rounded-md ${
             isSynced 
               ? "bg-brand-hover/10 text-brand-text border border-brand-hover/20" 
               : "bg-amber-bg text-amber-text border border-amber-bg"
@@ -44,7 +44,7 @@ export const MinistryReportCard: React.FC<MinistryReportCardProps> = ({
       </div>
 
       {/* Bagian Bawah: Indikator Validasi Data Tertunda */}
-      <div className="text-[11px] text-text-muted bg-surface-dark p-3 rounded-xl border border-brand-primary/30 flex items-center gap-2">
+      <div className="text-xs text-text-muted bg-surface-dark p-3 rounded-xl border border-brand-primary/30 flex items-center gap-2">
         <ShieldAlert size={14} className={pendingSyncCount > 0 ? "text-amber-text" : "text-text-muted"} />
         <span className="truncate">
           {pendingSyncCount > 0 ? (

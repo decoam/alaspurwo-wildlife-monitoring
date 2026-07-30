@@ -32,7 +32,7 @@ export const ExportReportCard: React.FC<ExportReportCardProps> = ({
               <FileSpreadsheet size={16} className="text-brand-hover" />
               <span>Format Data Mentah (.CSV / .XLSX)</span>
             </div>
-            <span className="text-[10px] text-brand-text font-medium">Ready</span>
+            <span className="text-xs text-brand-text font-medium">Ready</span>
           </div>
 
           <div className="flex items-center justify-between p-2.5 rounded-xl bg-black/20 border border-brand-primary/20 text-xs">
@@ -40,17 +40,17 @@ export const ExportReportCard: React.FC<ExportReportCardProps> = ({
               <FileText size={16} className="text-blue-text" />
               <span>Format Ringkasan PDF (.PDF)</span>
             </div>
-            <span className="text-[10px] text-brand-text font-medium">Ready</span>
+            <span className="text-xs text-brand-text font-medium">Ready</span>
           </div>
         </div>
       </div>
 
       {/* Bagian Bawah: Informasi Sinkronisasi Terakhir */}
-      <div className="text-[11px] text-text-muted bg-surface-dark p-3 rounded-xl border border-brand-primary/30 flex items-center justify-between">
+      <div className="text-xs text-text-muted bg-surface-dark p-3 rounded-xl border border-brand-primary/30 flex items-center justify-between">
         <span className="truncate">
           Kompilasi terakhir: <strong className="text-text-body">{lastGeneratedDate || "-"}</strong>
         </span>
-        <span className="text-text-muted text-[10px]">({totalReportReady} Berkas)</span>
+        <span className="text-text-muted text-xs">({totalReportReady} Berkas)</span>
       </div>
     </div>
   );

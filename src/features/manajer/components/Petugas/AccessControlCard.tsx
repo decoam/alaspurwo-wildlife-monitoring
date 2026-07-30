@@ -30,18 +30,18 @@ export const AccessControlCard: React.FC<AccessControlCardProps> = ({
         {/* Indikator Data Riil dari MongoDB */}
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="bg-black/20 p-3 rounded-xl border border-brand-primary/20">
-            <p className="text-[10px] text-text-muted uppercase tracking-wider font-medium">Total Petugas</p>
+            <p className="text-xs text-text-muted uppercase tracking-wider font-medium">Total Petugas</p>
             <p className="text-lg font-bold text-brand-text">{totalPetugas} Aktif</p>
           </div>
           <div className="bg-black/20 p-3 rounded-xl border border-brand-primary/20">
-            <p className="text-[10px] text-text-muted uppercase tracking-wider font-medium">Pos Pantau</p>
+            <p className="text-xs text-text-muted uppercase tracking-wider font-medium">Pos Pantau</p>
             <p className="text-lg font-bold text-brand-text">{totalPos} Wilayah</p>
           </div>
         </div>
       </div>
 
       {/* Bagian Bawah: Log Aktivitas Singkat dari DB */}
-      <div className="text-[11px] text-text-muted bg-surface-dark p-3 rounded-xl border border-brand-primary/30 flex items-center gap-2">
+      <div className="text-xs text-text-muted bg-surface-dark p-3 rounded-xl border border-brand-primary/30 flex items-center gap-2">
         <UserCheck size={14} className="text-text-muted shrink-0" />
         <span className="truncate">
           {lastActivePetugas ? (
