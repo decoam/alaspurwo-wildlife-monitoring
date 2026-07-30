@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { ArrowLeft, PlusCircle, Search } from "lucide-react";
+import { ArrowLeft, PlusCircle } from "lucide-react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getObservations } from "@/features/observation/repository";
 import { deleteObservation } from "@/features/observation/service";
 import { ObservationTable } from "@/features/observation";
+import { ObservationFilter } from "@/features/observation/components/ObservationFilter";
 
 export const runtime = "nodejs";
 
@@ -30,7 +31,7 @@ export default async function ObservationsPage({
   if (!session?.user?.id) {
     redirect("/login");
   }
-
+  
   const params = await searchParams;
   const page = Number(params.page ?? 1);
   const limit = Number(params.limit ?? 10);
@@ -64,7 +65,6 @@ export default async function ObservationsPage({
     <main className="obs-main-layout">
       <div className="obs-container">
         
-        {/* Top Navigation */}
         <div className="mb-4">
           <Link href="/dashboard" className="obs-btn-secondary">
             <ArrowLeft className="obs-icon" />
@@ -85,42 +85,10 @@ export default async function ObservationsPage({
           </Link>
         </div>
 
-        {/* Filter Form */}
-        <form className="mt-6 grid gap-3 lg:grid-cols-[1.5fr_0.8fr_0.8fr_0.8fr_0.8fr]" action="/dashboard/observations">
-          <label className="obs-input-field">
-            <Search className="obs-icon" />
-            <input name="search" defaultValue={search} placeholder="Cari nama satwa, lokasi, petugas" className="obs-input-element" />
-          </label>
-          
-          <select name="shift" defaultValue={shift} className="obs-select-field">
-            <option value="">Semua Shift</option>
-            <option value="Pagi">Pagi</option>
-            <option value="Sore">Sore</option>
-          </select>
-          
-          <select name="category" defaultValue={category} className="obs-select-field">
-            <option value="">Semua Kategori</option>
-            <option value="Mamalia">Mamalia</option>
-            <option value="Burung">Burung</option>
-            <option value="Reptil">Reptil</option>
-            <option value="Amfibi">Amfibi</option>
-          </select>
-          
-          <input type="date" name="date" defaultValue={date} className="obs-select-field" />
-          
-          <select name="sort" defaultValue={sort} className="obs-select-field">
-            <option value="desc">Tanggal terbaru</option>
-            <option value="asc">Tanggal terlama</option>
-          </select>
-          
-          <div className="lg:col-span-5 flex justify-end">
-            <button type="submit" className="obs-btn-filter">
-              Terapkan Filter
-            </button>
-          </div>
-        </form>
+        <ObservationFilter 
+          initialValues={{ search, shift, category, date, sort }}
+        />
 
-        {/* Success Status Notifications */}
         {typeof params.success === "string" && ["create", "edit", "delete"].includes(params.success) && (
           <div className="obs-alert-success">
             {params.success === "create"
@@ -131,35 +99,32 @@ export default async function ObservationsPage({
           </div>
         )}
 
-        {/* Error Notification */}
         {!result.success && result.message && (
           <div className="obs-alert-error">
             {result.message}
           </div>
         )}
 
-        {/* Main Content Table & Pagination */}
         {result.success && result.observations.length > 0 ? (
           <div className="mt-6 space-y-4">
             <ObservationTable
-  items={result.observations.map((item: any) => ({
-    ...item,
-    _id: String(item._id),
-    foto: item.foto || "",
-    tanggalPengamatan: item.tanggalPengamatan ? new Date(item.tanggalPengamatan).toISOString() : "",
-    createdBy: String(item.createdBy ?? ""),
-  }))}
-  currentUserId={session.user.id}
-  deleteAction={async (formData: FormData) => {
-    "use server";
-    const id = formData.get("id")?.toString();
-    if (id) {
-      await deleteObservation(id);
-    }
-  }}
-/>
+              items={result.observations.map((item) => ({
+                ...item,
+                _id: String(item._id),
+                foto: item.foto || "",
+                tanggalPengamatan: item.tanggalPengamatan ? new Date(item.tanggalPengamatan).toISOString() : "",
+                createdBy: String(item.createdBy ?? ""),
+              }))}
+              currentUserId={session.user.id}
+              deleteAction={async (formData: FormData) => {
+                "use server";
+                const id = formData.get("id")?.toString();
+                if (id) {
+                  await deleteObservation(id);
+                }
+              }}
+            />
 
-            {/* Pagination Panel */}
             <div className="obs-pagination-bar">
               <p>Menampilkan {result.observations.length} dari {result.total} data</p>
               <div className="flex items-center gap-2">
@@ -181,7 +146,6 @@ export default async function ObservationsPage({
             </div>
           </div>
         ) : (
-          /* Empty State */
           <div className="obs-empty-state">
             <p className="text-xl font-semibold text-text-heading">Belum ada data pengamatan satwa</p>
             <p className="mt-2 text-sm text-text-muted">Mulai catat pengamatan satwa liar Anda hari ini.</p>
