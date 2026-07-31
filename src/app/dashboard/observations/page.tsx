@@ -73,11 +73,11 @@ export default async function ObservationsPage({
         </div>
 
         {/* Header Section */}
-        <div className="flex flex-col gap-4 border-b border-emerald-900/60 pb-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 border-b border-brand-primary/60 pb-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-emerald-400">Data Pengamatan</p>
-            <h1 className="mt-2 text-2xl font-semibold text-white">Pengamatan Satwa</h1>
-            <p className="mt-2 text-sm text-slate-400">Pantau, cari, dan kelola data satwa liar secara terorganisir.</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-brand-text">Data Pengamatan</p>
+            <h1 className="mt-2 text-2xl font-semibold text-text-heading">Pengamatan Satwa</h1>
+            <p className="mt-2 text-sm text-text-muted">Pantau, cari, dan kelola data satwa liar secara terorganisir.</p>
           </div>
           <Link href="/dashboard/observations/create" className="obs-btn-primary">
             <PlusCircle className="obs-icon" />
@@ -183,8 +183,8 @@ export default async function ObservationsPage({
         ) : (
           /* Empty State */
           <div className="obs-empty-state">
-            <p className="text-xl font-semibold text-white">Belum ada data pengamatan satwa</p>
-            <p className="mt-2 text-sm text-slate-400">Mulai catat pengamatan satwa liar Anda hari ini.</p>
+            <p className="text-xl font-semibold text-text-heading">Belum ada data pengamatan satwa</p>
+            <p className="mt-2 text-sm text-text-muted">Mulai catat pengamatan satwa liar Anda hari ini.</p>
             <Link href="/dashboard/observations/create" className="obs-btn-primary mt-6">
               <PlusCircle className="obs-icon" />
               Tambah Pengamatan

@@ -33,7 +33,7 @@ export default async function DashboardPage({
       value: stats.totalObservations,
       detail: "Semua data observasi tersimpan",
       icon: Eye,
-      accent: "from-emerald-500 to-lime-500",
+      accent: "from-brand-hover to-lime-500",
     },
     {
       title: "Pengamatan Hari Ini",
@@ -59,7 +59,7 @@ export default async function DashboardPage({
   ];
 
   return (
-    <main className="min-h-screen bg-[#07110c] px-4 py-4 text-slate-100 sm:px-6 lg:px-8 lg:py-6">
+    <main className="min-h-screen bg-surface-bg px-4 py-4 text-text-light sm:px-6 lg:px-8 lg:py-6">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row">
         <div className="w-full lg:w-72">
           <DashboardSidebar user={user} />
@@ -74,7 +74,7 @@ export default async function DashboardPage({
             ))}
           </div>
 
-          <div className="mt-2 rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+          <div className="mt-2 rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-card md:p-6">
             <RecentObservationTable observations={recentObservations} />
           </div>
         </section>

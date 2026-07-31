@@ -53,17 +53,17 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
   return (
     <div className="grid gap-4 xl:grid-cols-[1.4fr_0.9fr]">
       {/* 1. Grafik Batang: Aktivitas Mingguan */}
-      <div className="flex flex-col justify-between rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+      <div className="flex flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-card md:p-6">
         <div className="mb-4">
-          <h2 className="text-lg font-semibold text-white">Aktivitas Mingguan</h2>
-          <p className="mt-1 text-sm text-slate-400">
+          <h2 className="text-lg font-semibold text-text-heading">Aktivitas Mingguan</h2>
+          <p className="mt-1 text-sm text-text-muted">
             Jumlah pengamatan yang tercatat dalam 7 hari terakhir.
           </p>
         </div>
         <div className="h-64 flex items-center justify-center">
           {isWeeklyTrendsEmpty ? (
-            <div className="flex flex-col items-center justify-center text-center text-slate-500 space-y-2">
-              <BarChart2 className="w-10 h-10 stroke-[1.5] text-emerald-900/80" />
+            <div className="flex flex-col items-center justify-center text-center text-text-muted space-y-2">
+              <BarChart2 className="w-10 h-10 stroke-[1.5] text-chart-2/80" />
               <p className="text-xs">Belum ada data aktivitas minggu ini</p>
             </div>
           ) : (
@@ -80,7 +80,7 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
                 />
                 
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "#040a07", borderColor: "#064e3b", borderRadius: "12px" }}
+                  contentStyle={{ backgroundColor: "#040a07", borderColor: "rgba(6,78,59,0.6)", borderRadius: "12px" }}
                   labelStyle={{ color: "#34d399", fontWeight: "bold" }}
                   itemStyle={{ color: "#f8fafc" }}
                 />
@@ -92,17 +92,17 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
       </div>
 
       {/* 2. Grafik Lingkaran: Kategori Satwa */}
-      <div className="flex flex-col justify-between rounded-[28px] border border-emerald-900/60 bg-[#07110c]/70 p-4 shadow-[0_20px_60px_rgba(2,8,23,0.2)] md:p-6">
+      <div className="flex flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/70 p-4 shadow-card md:p-6">
         <div className="mb-4">
-          <h2 className="text-lg font-semibold text-white">Kategori Satwa</h2>
-          <p className="mt-1 text-sm text-slate-400">
+          <h2 className="text-lg font-semibold text-text-heading">Kategori Satwa</h2>
+          <p className="mt-1 text-sm text-text-muted">
             Distribusi pengamatan berdasarkan kategori.
           </p>
         </div>
         <div className="h-64 flex items-center justify-center">
           {isCategoryBreakdownEmpty ? (
-            <div className="flex flex-col items-center justify-center text-center text-slate-500 space-y-2">
-              <PieChartIcon className="w-10 h-10 stroke-[1.5] text-emerald-900/80" />
+            <div className="flex flex-col items-center justify-center text-center text-text-muted space-y-2">
+              <PieChartIcon className="w-10 h-10 stroke-[1.5] text-chart-4/80" />
               <p className="text-xs">Belum ada data kategori satwa</p>
             </div>
           ) : (
@@ -124,7 +124,7 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
                   ))}
                 </Pie>
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "#040a07", borderColor: "#064e3b", borderRadius: "12px" }}
+                  contentStyle={{ backgroundColor: "#040a07", borderColor: "rgba(6,78,59,0.6)", borderRadius: "12px" }}
                   labelStyle={{ color: "#34d399", fontWeight: "bold" }}
                   itemStyle={{ color: "#f8fafc" }}
                 />

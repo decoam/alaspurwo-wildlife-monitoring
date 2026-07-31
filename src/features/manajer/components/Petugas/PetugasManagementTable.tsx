@@ -170,16 +170,16 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
   };
 
   return (
-    <div className="rounded-[28px] border border-emerald-900/60 bg-[#0c1914]/85 p-4 sm:p-6 shadow-xl space-y-6">
+    <div className="rounded-[28px] border border-brand-primary/60 bg-surface-subtle/85 p-4 sm:p-6 shadow-xl space-y-6">
       
       {/* HEADER SECTION */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-text">
             DATA PERSONEL
           </p>
-          <h2 className="text-xl font-semibold text-white mt-0.5">Daftar Akun Petugas Lapangan</h2>
-          <p className="text-sm text-slate-400 mt-1">
+          <h2 className="text-xl font-semibold text-text-heading mt-0.5">Daftar Akun Petugas Lapangan</h2>
+          <p className="text-sm text-text-muted mt-1">
             Manajemen kredensial, dan pendaftaran personel baru, petugas observasi lapangan Taman Nasional Alas Purwo.
           </p>
         </div>
@@ -187,7 +187,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         <div className="shrink-0">
           <button
             onClick={openAddModal}
-            className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-600 to-lime-600 px-5 py-3 text-sm font-semibold text-white transition hover:from-emerald-500 hover:to-lime-500 shadow-md"
+            className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-600 to-lime-600 px-5 py-3 text-sm font-semibold text-text-heading transition hover:from-emerald-500 hover:to-lime-500 shadow-md"
           >
             <UserPlus className="h-4 w-4" />
             Tambah Petugas
@@ -195,16 +195,16 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         </div>
       </div>
 
-      <hr className="border-emerald-900/40" />
+      <hr className="border-brand-primary/40" />
 
       {/* SEARCH BAR */}
-      <div className="flex items-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#10241a] px-4 py-2.5 text-sm text-slate-400 max-w-md w-full">
+      <div className="flex items-center gap-2 rounded-2xl border border-brand-primary/60 bg-input-bg px-4 py-2.5 text-sm text-text-muted max-w-md w-full">
         <Search className="h-4 w-4 shrink-0" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-transparent outline-none placeholder:text-slate-500 text-white"
+          className="w-full bg-transparent outline-none placeholder:text-text-muted text-text-heading"
           placeholder="Cari nama atau username..."
         />
       </div>
@@ -212,7 +212,7 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
       {/* MOBILE LIST CARD */}
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {filteredUsers.length === 0 ? (
-          <div className="text-center py-8 text-slate-500 text-sm">
+          <div className="text-center py-8 text-text-muted text-sm">
             {initialUsers.length === 0
               ? "Belum ada data petugas lapangan terdaftar."
               : "Tidak ada hasil pencarian yang sesuai."}
@@ -221,30 +221,30 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
           filteredUsers.map((user) => (
             <div 
               key={user._id} 
-              className="rounded-2xl border border-emerald-900/50 bg-[#0f2218]/60 p-4 space-y-4 shadow-sm"
+              className="rounded-2xl border border-brand-primary/50 bg-surface-table/60 p-4 space-y-4 shadow-sm"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-emerald-950/80 border border-emerald-900/50 text-emerald-400">
+                  <div className="p-2 rounded-xl bg-brand-primary/80 border border-brand-primary/50 text-brand-text">
                     <User className="h-4 w-4" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-sm text-white">{user.fullName}</h4>
-                    <p className="text-xs text-slate-400">@{user.username}</p>
+                    <h4 className="font-semibold text-sm text-text-heading">{user.fullName}</h4>
+                    <p className="text-xs text-text-muted">@{user.username}</p>
                   </div>
                 </div>
 
                 <div className="flex gap-2">
                   <button
                     onClick={() => openEditModal(user)}
-                    className="flex items-center justify-center p-2 rounded-xl border border-emerald-900/60 bg-[#10241a] text-emerald-400 transition hover:bg-emerald-900/60"
+                    className="flex items-center justify-center p-2 rounded-xl border border-brand-primary/60 bg-input-bg text-brand-text transition hover:bg-brand-primary/60 hover:text-text-heading"
                     title="Edit"
                   >
                     <Edit2 className="h-3.5 w-3.5" />
                   </button>
                   <button
                     onClick={() => openDeleteModal(user)}
-                    className="flex items-center justify-center p-2 rounded-xl border border-red-900/60 bg-red-950/20 text-red-400 transition hover:bg-red-950/40"
+                    className="flex items-center justify-center p-2 rounded-xl border border-error-bg bg-rose/25 text-error-text transition hover:bg-rose/35 hover:text-text-heading"
                     title="Hapus"
                   >
                     <Trash2 className="h-3.5 w-3.5" />

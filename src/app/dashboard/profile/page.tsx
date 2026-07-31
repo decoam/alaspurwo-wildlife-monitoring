@@ -140,21 +140,23 @@ export default async function ProfilePage() {
   });
 
   return (
-    <main className="prof-main-layout">
-      <div className="prof-container">
+    <main className="obs-main-layout">
+      <div className="obs-container">
         <div className="prof-sr-only">{username}</div>
         
         {/* Header Section */}
-        <div className="prof-header-flex">
-          <Link href="/dashboard" className="prof-btn-secondary">
-            <ArrowLeft className="prof-icon" />
+        <div className="mb-4">
+          <Link href="/dashboard" className="obs-btn-secondary">
+            <ArrowLeft className="obs-icon" />
             Kembali ke Dashboard
           </Link>
+        </div>
 
+        <div className="flex flex-col gap-4 border-b border-brand-primary/60 pb-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="prof-meta-title">Profil</p>
-            <h1 className="prof-main-title">Data Pengguna</h1>
-            <p className="prof-desc">Kelola informasi akun dan pantau aktivitas pengamatan Anda.</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-brand-text">Profil</p>
+            <h1 className="mt-2 text-2xl font-semibold text-text-heading">Data Pengguna</h1>
+            <p className="mt-2 text-sm text-text-muted">Kelola informasi akun dan pantau aktivitas pengamatan Anda.</p>
           </div>
         </div>
 
@@ -194,12 +196,12 @@ export default async function ProfilePage() {
 
             {/* Quick Action Buttons */}
             <div className="prof-actions-grid">
-              <Link href="/dashboard/observations/create" className="prof-btn-primary">
-                <PlusCircle className="prof-icon" />
+              <Link href="/dashboard/observations/create" className="obs-btn-primary">
+                <PlusCircle className="obs-icon" />
                 Tambah Pengamatan
               </Link>
               <Link href="/dashboard/observations" className="prof-btn-outline">
-                <Camera className="prof-icon" />
+                <Camera className="obs-icon" />
                 Lihat Semua Pengamatan
               </Link>
             </div>
@@ -231,8 +233,8 @@ export default async function ProfilePage() {
                 <p className="prof-section-title">Belum ada pengamatan Anda</p>
                 <p className="prof-desc">Mulai dengan menambahkan pengamatan pertama Anda.</p>
                 <div className="prof-empty-btn">
-                  <Link href="/dashboard/observations/create" className="prof-btn-primary">
-                    <PlusCircle className="prof-icon" />
+                  <Link href="/dashboard/observations/create" className="obs-btn-primary">
+                    <PlusCircle className="obs-icon" />
                     Tambah Pengamatan
                   </Link>
                 </div>

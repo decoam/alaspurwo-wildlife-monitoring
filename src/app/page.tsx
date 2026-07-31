@@ -28,7 +28,7 @@ export default function HomePage() {
           {/* LEFT SECTION */}
           <div>
             <div className="landing-tag">
-              <Leaf size={16} className="text-lime-300" />
+              <Leaf size={16} className="text-accent-text" />
               Taman Nasional Alas Purwo
             </div>
 
@@ -79,7 +79,7 @@ export default function HomePage() {
             <div className="landing-feature-card">
               <div className="landing-feature-flex">
                 <div className="landing-feature-icon-wrapper">
-                  <Binoculars className="text-lime-300" />
+                  <Binoculars className="text-accent-text" />
                 </div>
                 <div>
                   <h3 className="landing-feature-title">Monitoring Satwa</h3>
@@ -93,7 +93,7 @@ export default function HomePage() {
             <div className="landing-feature-card">
               <div className="landing-feature-flex">
                 <div className="landing-feature-icon-wrapper">
-                  <Trees className="text-lime-300" />
+                  <Trees className="text-accent-text" />
                 </div>
                 <div>
                   <h3 className="landing-feature-title">Konservasi Alam</h3>
@@ -107,7 +107,7 @@ export default function HomePage() {
             <div className="landing-feature-card">
               <div className="landing-feature-flex">
                 <div className="landing-feature-icon-wrapper">
-                  <ShieldCheck className="text-lime-300" />
+                  <ShieldCheck className="text-accent-text" />
                 </div>
                 <div>
                   <h3 className="landing-feature-title">Akses Aman</h3>
@@ -120,7 +120,7 @@ export default function HomePage() {
 
             <div className="landing-quote-card">
               <div className="landing-quote-flex">
-                <PawPrint className="text-lime-300" />
+                <PawPrint className="text-accent-text" />
                 <p className="landing-quote-text">
                   "Menjaga satwa liar hari ini adalah menjaga keseimbangan alam untuk generasi mendatang."
                 </p>

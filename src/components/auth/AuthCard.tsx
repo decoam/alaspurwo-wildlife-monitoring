@@ -29,7 +29,7 @@ export function AuthCard({
       <div className="absolute inset-0 bg-black/45" />
 
       {/* Blur Effect */}
-      <div className="absolute -top-40 left-1/2 h-125 w-125 -translate-x-1/2 rounded-full bg-emerald-500/20 blur-3xl" />
+      <div className="absolute -top-40 left-1/2 h-125 w-125 -translate-x-1/2 rounded-full bg-brand-hover/20 blur-3xl" />
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-6 py-10">
 
@@ -41,25 +41,25 @@ export function AuthCard({
             <div>
 
               <div className="flex items-center gap-3">
-                <PawPrint className="h-10 w-10 text-lime-200" />
+                <PawPrint className="h-10 w-10 text-accent-text" />
                 <div>
-                  <h1 className="text-3xl font-bold text-white">
+                  <h1 className="text-3xl font-bold text-text-heading">
                     Alas Purwo
                   </h1>
 
-                  <p className="text-lime-100">
+                  <p className="text-accent-subtle">
                     Wildlife Monitoring System
                   </p>
                 </div>
               </div>
 
-              <h2 className="mt-12 text-4xl font-bold leading-tight text-white">
+              <h2 className="mt-12 text-4xl font-bold leading-tight text-text-heading">
                 Protect Wildlife,
                 <br />
                 Preserve Nature.
               </h2>
 
-              <p className="mt-6 max-w-md leading-8 text-green-50/90">
+              <p className="mt-6 max-w-md leading-8 text-accent-subtle/90">
                 Sistem digital untuk membantu petugas konservasi mencatat
                 aktivitas pengamatan satwa liar secara cepat, akurat,
                 dan terintegrasi.
@@ -70,30 +70,30 @@ export function AuthCard({
             <div className="space-y-5">
 
               <div className="flex items-center gap-4 rounded-xl bg-white/10 p-4 backdrop-blur">
-                <Trees className="text-lime-300" />
+                <Trees className="text-accent-text" />
                 <div>
-                  <p className="font-semibold text-white">
+                  <p className="font-semibold text-text-heading">
                     Monitoring Lapangan
                   </p>
-                  <p className="text-sm text-green-100">
+                  <p className="text-sm text-accent-subtle">
                     Pencatatan observasi pagi & sore.
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-4 rounded-xl bg-white/10 p-4 backdrop-blur">
-                <ShieldCheck className="text-lime-300" />
+                <ShieldCheck className="text-accent-text" />
                 <div>
-                  <p className="font-semibold text-white">
+                  <p className="font-semibold text-text-heading">
                     Data Aman
                   </p>
-                  <p className="text-sm text-green-100">
+                  <p className="text-sm text-accent-subtle">
                     Autentikasi petugas dan penyimpanan cloud.
                   </p>
                 </div>
               </div>
 
-              <blockquote className="rounded-xl border border-lime-400/30 bg-black/20 p-5 italic text-lime-100">
+              <blockquote className="rounded-xl border border-accent-primary/30 bg-black/20 p-5 italic text-accent-subtle">
                 "Melindungi satwa liar hari ini adalah menjaga keseimbangan
                 alam untuk generasi mendatang."
               </blockquote>
@@ -103,15 +103,15 @@ export function AuthCard({
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="flex flex-1 items-center justify-center bg-slate-950/70 p-10">
+          <div className="flex flex-1 items-center justify-center bg-surface-bg/70 p-10">
 
             <div className="w-full max-w-md">
 
-              <h2 className="text-3xl font-bold text-white">
+              <h2 className="text-3xl font-bold text-text-heading">
                 {title}
               </h2>
 
-              <p className="mt-2 text-slate-300">
+              <p className="mt-2 text-text-secondary">
                 {description}
               </p>
 
@@ -119,11 +119,11 @@ export function AuthCard({
                 {children}
               </div>
 
-              <p className="mt-8 text-sm text-slate-400">
+              <p className="mt-8 text-sm text-text-muted">
                 {footerText}{" "}
                 <Link
                   href={footerHref}
-                  className="font-semibold text-lime-400 hover:text-lime-300"
+                  className="font-semibold text-accent-primary hover:text-accent-hover"
                 >
                   {footerLabel}
                 </Link>
