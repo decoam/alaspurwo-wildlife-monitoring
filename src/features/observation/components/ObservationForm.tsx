@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AlertCircle, Camera, CheckCircle2, Image as ImageIcon, Loader2, Trash2, UploadCloud } from "lucide-react";
 import { CldUploadWidget } from "next-cloudinary";
 import { Button } from "@/components/ui/Button";
+import { DatePicker } from "@/components/ui/DatePicker";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 
@@ -89,6 +90,7 @@ export function ObservationForm({
   });
 
   const selectedNamaSatwa = watch("namaSatwa");
+  const selectedDate = watch("tanggalPengamatan");
   const isNamaSatwaSelected = Boolean(selectedNamaSatwa);
   const derivedKategori = useMemo(() => getKategoriFromNamaSatwa(selectedNamaSatwa), [selectedNamaSatwa]);
 
@@ -180,7 +182,20 @@ export function ObservationForm({
         </div>
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Tanggal Pengamatan</label>
-          <Input type="date" {...register("tanggalPengamatan")} disabled={!isNamaSatwaSelected} />
+          <DatePicker
+            value={selectedDate ? new Date(`${selectedDate}T00:00:00`) : undefined}
+            onChange={(date) => {
+              if (!date) {
+                setValue("tanggalPengamatan", "", { shouldValidate: true, shouldDirty: true });
+                return;
+              }
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, "0");
+              const day = String(date.getDate()).padStart(2, "0");
+              setValue("tanggalPengamatan", `${year}-${month}-${day}`, { shouldValidate: true, shouldDirty: true });
+            }}
+            disabled={!isNamaSatwaSelected}
+          />
           {errors.tanggalPengamatan && <p className="mt-1 text-sm text-error-text">{errors.tanggalPengamatan.message}</p>}
         </div>
         <div>

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PencilLine, Trash2, Lock, Eye } from "lucide-react";
 import { Table } from "@/components/ui/Table";
+import { Button } from "@/components/ui/Button";
 
 export type ObservationListItem = {
   _id: string;
@@ -119,8 +120,9 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                 </Link>
                 <form action={deleteAction} onClick={(e) => e.stopPropagation()}>
                   <input type="hidden" name="id" value={item._id} />
-                  <button
+                  <Button
                     type="submit"
+                    variant="danger"
                     onClick={(e) => {
                       if (!window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
                         e.preventDefault();
@@ -130,7 +132,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                     title="Hapus"
                   >
                     <Trash2 className="h-4 w-4" />
-                  </button>
+                  </Button>
                 </form>
               </>
             ) : (
@@ -212,8 +214,9 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                     </Link>
                     <form action={deleteAction} className="flex-1 flex" onClick={(e) => e.stopPropagation()}>
                       <input type="hidden" name="id" value={item._id} />
-                      <button
+                      <Button
                         type="submit"
+                        variant="danger"
                         onClick={(e) => {
                           if (!window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
                             e.preventDefault();
@@ -222,7 +225,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                         className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-error-bg bg-rose/25 py-2.5 text-xs font-semibold text-error-text transition hover:bg-rose/35"
                       >
                         <Trash2 className="h-3.5 w-3.5" /> Hapus
-                      </button>
+                      </Button>
                     </form>
                   </>
                 ) : (

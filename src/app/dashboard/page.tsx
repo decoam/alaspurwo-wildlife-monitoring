@@ -61,11 +61,11 @@ export default async function DashboardPage({
   return (
     <main className="min-h-screen bg-surface-bg px-4 py-4 text-text-light sm:px-6 lg:px-8 lg:py-6">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row">
-        <div className="w-full lg:w-72">
+        <div className="hidden w-72 shrink-0 md:block">
           <DashboardSidebar user={user} />
         </div>
 
-        <section className="flex-1 space-y-4">
+        <section className="min-w-0 flex-1 space-y-4">
           <DashboardHeader searchValue={search} user={user} />
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { LayoutDashboard, Camera, PlusCircle, UserCircle2, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -24,6 +25,14 @@ const menuItems = [
 
 export function DashboardSidebar({ user }: DashboardSidebarProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const toggleSidebar = () => setIsOpen((open) => !open);
+    window.addEventListener("dashboard-sidebar-toggle", toggleSidebar);
+    return () => window.removeEventListener("dashboard-sidebar-toggle", toggleSidebar);
+  }, []);
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
@@ -32,7 +41,9 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
   };
 
   return (
-    <aside className="flex h-full w-full flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/90 p-5 shadow-2xl">
+    <>
+      {isOpen && <button type="button" aria-label="Tutup navigasi dashboard" className="fixed inset-0 z-40 bg-surface-bg/70 md:hidden" onClick={() => setIsOpen(false)} />}
+      <aside className={`fixed inset-y-4 left-4 z-50 flex w-[calc(100%-2rem)] max-w-72 flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/95 p-5 shadow-2xl transition-transform duration-200 md:inset-y-6 md:left-8 md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-[calc(100%+1rem)] md:translate-x-0"}`}>
       <div>
         <div className="mb-8 flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-brand-hover to-lime-600 text-lg font-semibold text-text-heading">
@@ -52,7 +63,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                 key={item.label}
                 href={item.href}
                 className={`flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-medium transition ${
-                  item.active
+                  pathname === item.href
                     ? "bg-brand-primary/30 text-text-heading shadow-inner"
                     : "text-text-secondary hover:bg-brand-primary/50 hover:text-text-heading"
                 }`}
@@ -73,6 +84,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
         <LogOut className="h-4 w-4" />
         Logout
       </button>
-    </aside>
+      </aside>
+    </>
   );
 }

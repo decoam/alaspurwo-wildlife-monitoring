@@ -3,6 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { DatePicker } from "@/components/ui/DatePicker";
+import { Button } from "@/components/ui/Button";
 import { useEffect, useState, useTransition } from "react";
 
 interface ObservationFilterProps {
@@ -108,9 +109,9 @@ export function ObservationFilter({ initialValues }: ObservationFilterProps) {
       </select>
 
       <div className="lg:col-span-5 flex justify-end">
-        <button type="submit" className="obs-btn-filter" disabled={isPending}>
+        <Button type="submit" variant="filter" disabled={isPending}>
           {isPending ? "Menerapkan..." : "Terapkan Filter"}
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -5,11 +5,16 @@ const formatDateWithOptions = (
   options: Intl.DateTimeFormatOptions,
   locale: Locale | string = "id-ID"
 ): string => {
-  if (!dateInput) return "-";
-  const date = new Date(dateInput);
-  if (isNaN(date.getTime())) return "-";
+  if (dateInput === null || dateInput === undefined) return "-";
 
-  return new Intl.DateTimeFormat(locale as string, options).format(date);
+  const date = new Date(dateInput);
+  if (!Number.isFinite(date.getTime())) return "-";
+
+  try {
+    return new Intl.DateTimeFormat(locale as string, options).format(date);
+  } catch {
+    return "-";
+  }
 };
 
 export function formatDate(

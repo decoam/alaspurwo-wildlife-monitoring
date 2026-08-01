@@ -1,3 +1,7 @@
+"use client";
+
+import { Menu } from "lucide-react";
+
 type DashboardHeaderProps = {
   searchValue: string;
   user: {
@@ -12,6 +16,14 @@ export function DashboardHeader({ searchValue, user }: DashboardHeaderProps) {
   return (
     <header className="flex flex-col gap-4 rounded-3x1 border border-brand-primary/60 bg-surface-subtle/85 px-5 py-4 shadow-card md:flex-row md:items-center md:justify-between">
       <div>
+        <button
+          type="button"
+          aria-label="Buka navigasi dashboard"
+          className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-brand-primary/60 bg-input-bg text-text-heading md:hidden"
+          onClick={() => window.dispatchEvent(new Event("dashboard-sidebar-toggle"))}
+        >
+          <Menu className="h-5 w-5" />
+        </button>
         <p className="text-sm font-semibold uppercase tracking-[0.25em] text-brand-text">
           Monitoring Center
         </p>
