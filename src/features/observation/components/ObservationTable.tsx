@@ -37,15 +37,17 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
       key: "foto",
       header: "Foto",
       cell: (item: ObservationListItem) => (
-        <Image
-          src={failedImages[item._id] ?? !item.foto ? "/placeholder.svg" : item.foto}
-          alt={item.namaSatwa}
-          width={96}
-          height={64}
-          className="h-16 w-24 rounded-xl object-cover"
-          unoptimized
-          onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
-        />
+        <div className="aspect-video w-32 overflow-hidden rounded-xl bg-surface-card">
+          <Image
+            src={failedImages[item._id] ?? !item.foto ? "/placeholder.svg" : item.foto}
+            alt={item.namaSatwa}
+            width={160}
+            height={90}
+            className="h-full w-full object-cover"
+            unoptimized
+            onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
+          />
+        </div>
       ),
     },
     {
@@ -96,6 +98,8 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
     {
       key: "aksi",
       header: "Aksi",
+      headerClassName: "whitespace-nowrap",
+      cellClassName: "whitespace-nowrap",
       cell: (item: ObservationListItem) => {
         const isOwner = item.createdBy === currentUserId;
         return (
@@ -160,15 +164,17 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
           return (
             <div key={item._id} className="rounded-2xl border border-brand-primary/50 bg-surface-table/60 p-4 space-y-4 shadow-sm" onClick={() => router.push(`/dashboard/observations/${item._id}`)}>
               <div className="flex gap-4">
-                <Image
-                  src={failedImages[item._id] ?? !item.foto ? "/placeholder.svg" : item.foto}
-                  alt={item.namaSatwa}
-                  width={96}
-                  height={64}
-                  className="h-16 w-24 rounded-xl object-cover shrink-0"
-                  unoptimized
-                  onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
-                />
+                <div className="aspect-video w-24 overflow-hidden rounded-xl bg-surface-card shrink-0">
+                  <Image
+                    src={failedImages[item._id] ?? !item.foto ? "/placeholder.svg" : item.foto}
+                    alt={item.namaSatwa}
+                    width={160}
+                    height={90}
+                    className="h-full w-full object-cover"
+                    unoptimized
+                    onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
+                  />
+                </div>
                 <div className="flex-1 space-y-1">
                   <div className="flex justify-between items-start">
                     <Link href={`/dashboard/observations/${item._id}`} className="hover:underline">
@@ -249,8 +255,8 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
         columns={desktopColumns}
         rowKey={(item) => item._id}
         onRowClick={(item) => router.push(`/dashboard/observations/${item._id}`)}
-        wrapperClassName="hidden md:block overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-card/90"
-        tableClassName="min-w-full divide-y divide-brand-primary/60 text-sm text-text-secondary"
+        wrapperClassName="hidden md:block w-full overflow-x-auto rounded-2xl border border-brand-primary/60 bg-surface-card/90"
+        tableClassName="min-w-[850px] divide-y divide-brand-primary/60 text-sm text-text-secondary"
         theadClassName="bg-brand-primary/50 text-left text-text-body"
         tbodyClassName="divide-y divide-brand-primary/60 bg-hover-bg"
         trClassName={() => "transition hover:bg-brand-primary/15 cursor-pointer"}

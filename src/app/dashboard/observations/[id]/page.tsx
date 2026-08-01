@@ -53,9 +53,15 @@ export default async function ObservationDetailPage({ params }: DetailObservatio
                 <span>Petugas: {observation.namaPetugas}</span>
               </div>
               <div className="flex items-center gap-3">
-                <CalendarDays className="h-5 w-5 text-emerald-300" />
-                <span>Tanggal: {new Date(observation.tanggalPengamatan).toLocaleString("id-ID")}</span>
-              </div>
+    <CalendarDays className="h-5 w-5 text-emerald-300" />
+        <span>
+          Tanggal: {new Date(observation.tanggalPengamatan).toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })}
+      </span>
+    </div>
               <div className="flex items-center gap-3">
                 <MapPin className="h-5 w-5 text-emerald-300" />
                 <span>Lokasi: {observation.lokasi}</span>

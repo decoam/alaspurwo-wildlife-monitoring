@@ -65,14 +65,7 @@ export default async function ObservationsPage({
     <main className="obs-main-layout">
       <div className="obs-container">
         
-        <div className="mb-4">
-          <Link href="/dashboard" className="obs-btn-secondary">
-            <ArrowLeft className="obs-icon" />
-            Kembali ke Dashboard
-          </Link>
-        </div>
-
-        {/* Header Section */}
+          {/* Header Section */}
         <div className="flex flex-col gap-4 border-b border-brand-primary/60 pb-6 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-brand-text">Data Pengamatan</p>

@@ -3,7 +3,6 @@
 import { Menu } from "lucide-react";
 
 type DashboardHeaderProps = {
-  searchValue: string;
   user: {
     fullName: string;
     role: string;
@@ -12,7 +11,7 @@ type DashboardHeaderProps = {
   };
 };
 
-export function DashboardHeader({ searchValue, user }: DashboardHeaderProps) {
+export function DashboardHeader({ user }: DashboardHeaderProps) {
   return (
     <header className="flex flex-col gap-4 rounded-3x1 border border-brand-primary/60 bg-surface-subtle/85 px-5 py-4 shadow-card md:flex-row md:items-center md:justify-between">
       <div>

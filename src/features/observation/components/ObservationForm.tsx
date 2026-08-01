@@ -220,14 +220,28 @@ export function ObservationForm({
           </Select>
           {errors.kondisiCuaca && <p className="mt-1 text-sm text-error-text">{errors.kondisiCuaca.message}</p>}
         </div>
+        
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-medium text-text-secondary">Aktivitas Satwa</label>
-          <textarea {...register("aktivitasSatwa")} disabled={!isNamaSatwaSelected} rows={3} className="obs-textarea-field" />
+          <textarea
+            {...register("aktivitasSatwa")}
+            disabled={!isNamaSatwaSelected}
+            rows={3}
+            placeholder="Deskripsikan aktivitas satwa yang diamati, misalnya makan atau bergerak."
+            className="w-full rounded-2xl border border-brand-primary/40 bg-surface-card p-3 text-text-light placeholder:text-text-muted/50 focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
+          />
           {errors.aktivitasSatwa && <p className="mt-1 text-sm text-error-text">{errors.aktivitasSatwa.message}</p>}
         </div>
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-medium text-text-secondary">Catatan</label>
-          <textarea {...register("catatan")} disabled={!isNamaSatwaSelected} rows={3} className="obs-textarea-field" />
+          <textarea
+            {...register("catatan")}
+            disabled={!isNamaSatwaSelected}
+            rows={3}
+            placeholder="Tambahkan catatan lokasi, cuaca, atau kondisi khusus lain."
+            className="w-full rounded-2xl border border-brand-primary/40 bg-surface-card p-3 text-text-light placeholder:text-text-muted/50 focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
+          />
+          {errors.catatan && <p className="mt-1 text-sm text-error-text">{errors.catatan.message}</p>}
         </div>
       </div>
 
@@ -289,14 +303,19 @@ export function ObservationForm({
           </div>
           <div className="overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-card">
             {photoUrl ? (
-              <div className="relative">
-                <img src={photoUrl} alt="Preview foto" className="h-56 w-full object-cover" />
+              <div className="relative aspect-video w-full overflow-hidden rounded-2xl">
+                <img src={photoUrl} alt="Preview foto" className="h-full w-full object-cover" />
                 <Button type="button" variant="danger" onClick={removePhoto} className="absolute right-3 top-3 !py-2 !px-3" disabled={!isNamaSatwaSelected}>
                   <Trash2 className="h-4 w-4" /> Hapus
                 </Button>
               </div>
             ) : (
-              <div className="flex h-56 items-center justify-center text-text-muted"><div className="text-center"><ImageIcon className="mx-auto h-8 w-8" /><p className="mt-2 text-sm">Preview gambar akan tampil di sini.</p></div></div>
+              <div className="flex aspect-video items-center justify-center text-text-muted">
+                <div className="text-center">
+                  <ImageIcon className="mx-auto h-8 w-8" />
+                  <p className="mt-2 text-sm">Preview gambar akan tampil di sini.</p>
+                </div>
+              </div>
             )}
           </div>
         </div>
