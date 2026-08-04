@@ -86,7 +86,7 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
                   />
                   
                   <Tooltip 
-                    contentStyle={{ backgroundColor: "var(--color-surface-bg)", borderColor: "var(--color-brand-primary)", borderRadius: "12px" }}
+                    contentStyle={{ backgroundColor: "var(--color-surface-dark)", borderColor: "var(--color-border-subtle)", borderRadius: "12px" }}
                     labelStyle={{ color: "var(--color-chart-1)", fontWeight: "bold" }}
                     itemStyle={{ color: "var(--color-text-heading)" }}
                   />
