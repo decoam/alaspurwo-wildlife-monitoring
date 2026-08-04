@@ -299,7 +299,7 @@ export function ObservationForm({
               Widget mendukung drag & drop. Upload akan otomatis dimulai.
             </div>
             {uploadState === "success" && <div className="flex items-center gap-2 rounded-2xl border border-brand-primary/70 bg-brand-primary/40 px-3 py-2 text-sm text-brand-text-light"><CheckCircle2 className="h-4 w-4" />Foto siap disimpan.</div>}
-            {uploadState === "error" && <div className="flex items-center gap-2 rounded-2xl border border-rose-900/70 bg-rose-950/40 px-3 py-2 text-sm text-error-text"><AlertCircle className="h-4 w-4" />{uploadMessage}</div>}
+            {uploadState === "error" && <div className="flex items-center gap-2 rounded-2xl border border-error-bg bg-error-bg px-3 py-2 text-sm text-error-text"><AlertCircle className="h-4 w-4" />{uploadMessage}</div>}
           </div>
           <div className="overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-card">
             {photoUrl ? (

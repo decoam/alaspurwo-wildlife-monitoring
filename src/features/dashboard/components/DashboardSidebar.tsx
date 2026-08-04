@@ -79,7 +79,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
       <button
         type="button"
         onClick={handleLogout}
-        className="flex items-center gap-3 rounded-2xl border border-amber-bg bg-amber-bg px-3 py-3 text-sm font-medium text-amber-text transition hover:bg-amber-bg/80"
+        className="flex items-center gap-3 rounded-2xl border border-amber-bg bg-amber-bg px-3 py-3 text-sm font-medium text-amber-text transition hover:bg-hover-bg"
       >
         <LogOut className="h-4 w-4" />
         Logout

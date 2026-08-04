@@ -132,7 +132,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                         e.preventDefault();
                       }
                     }}
-                    className="rounded-full border border-error-bg/60 bg-rose/20 p-2 text-error-dark transition hover:bg-rose/30 hover:text-text-heading"
+                    className="rounded-full border border-error-bg/60 bg-error-bg p-2 text-error-text transition hover:bg-hover-bg hover:text-text-heading"
                     title="Hapus"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -228,7 +228,7 @@ export function ObservationTable({ items, currentUserId, deleteAction }: Observa
                             e.preventDefault();
                           }
                         }}
-                        className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-error-bg bg-rose/25 py-2.5 text-xs font-semibold text-error-text transition hover:bg-rose/35"
+                        className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-error-bg bg-error-bg py-2.5 text-xs font-semibold text-error-text transition hover:bg-hover-bg"
                       >
                         <Trash2 className="h-3.5 w-3.5" /> Hapus
                       </Button>

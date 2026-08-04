@@ -54,7 +54,7 @@ export function RecentObservationTable({ observations }: RecentObservationTableP
           className={`rounded-full px-3 py-1 text-xs font-semibold ${
             item.shift === "Pagi"
               ? "bg-amber-bg text-amber-text border border-amber-bg"
-              : "bg-blue-bg text-blue-text border border-blue-bg"
+              : "bg-blue-bg text-blue-text border border-brand-border/40"
           }`}
         >
           {item.shift || "-"}

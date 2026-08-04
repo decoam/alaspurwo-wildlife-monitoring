@@ -80,13 +80,13 @@ export const ReportCardItem: React.FC<ReportCardItemProps> = ({
           {/* Kolom Penempatan Lokasi & Tanggal */}
           <div className="md:col-span-4 space-y-1.5 md:border-l md:border-brand-primary/60 md:pl-5 text-xs text-text-secondary border-t md:border-t-0 border-brand-primary/30 pt-3 md:pt-0">
             <div className="flex items-start gap-1.5">
-              <MapPin size={12} className="text-amber-text shrink-0 mt-0.5" />
+              <MapPin size={12} className="text-brand-text-light shrink-0 mt-0.5" />
               <div className="leading-tight">
                 <span className="font-semibold text-text-light">{report.posPengamatan || report.lokasi}</span>
               </div>
             </div>
             <div className="flex items-center gap-1.5">
-              <Calendar size={12} className="text-blue-text shrink-0" />
+              <Calendar size={12} className="text-brand-text shrink-0" />
               <span>{formatDate(report.tanggalPengamatan)} | Shift {report.shift}</span>
             </div>
           </div>

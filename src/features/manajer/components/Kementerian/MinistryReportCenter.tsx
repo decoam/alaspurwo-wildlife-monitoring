@@ -73,8 +73,8 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
             <p className="text-xs text-text-muted">Status Sinkronisasi Berkas</p>
             <span className={`inline-block text-xs font-semibold mt-1 px-2.5 py-0.5 rounded-full ${
               submitStatus === "sent" 
-                ? "bg-blue-950 text-blue-400 border border-blue-800" 
-                : "bg-amber-950 text-amber-400 border border-amber-800"
+                ? "bg-blue-bg text-blue-text border border-brand-border/40" 
+                : "bg-amber-bg text-amber-text border border-brand-border/40"
             }`}>
               {submitStatus === "sent" 
                 ? "Terverifikasi Pusat" 
@@ -87,7 +87,7 @@ export const MinistryReportCenter: React.FC<MinistryReportCenterProps> = ({ init
       </div>
 
       {/* 2. Kontrol Generator Dokumen Naskah Dinas */}
-      <div className="p-5 rounded-2xl border border-emerald-900/40 bg-panel-bg space-y-4">
+      <div className="p-5 rounded-2xl border border-brand-border/40 bg-panel-bg space-y-4">
         <div className="flex items-center gap-2">
           <Info size={16} className="text-brand-hover" />
           <span className="text-xs font-semibold text-text-heading">Pilih Format Standar Tata Naskah Dinas Kementerian LHK:</span>

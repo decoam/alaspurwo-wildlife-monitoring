@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo } from "react";
 import { 
   FileSpreadsheet, 
   FileText, 
@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { ExportReportTable } from "./ExportReportTable";
 import { ReportCardItem } from "./ReportCardItem";
+import { DatePicker } from "@/components/ui/DatePicker";
 import { formatDate, formatDateFull } from "@/lib/date";
 import { FieldReport, getLocalDateString } from "@/features/manajer/ReportUtils";
 import { exportToExcel, exportToPDF } from "@/features/manajer/ExportServices";
@@ -25,51 +26,8 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [exportScope, setExportScope] = useState<"all" | "today" | "selected" | "date">("all");
   const [filterDate, setFilterDate] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [isExporting, setIsExporting] = useState(false);
-
-  // State Kontrol Toggle Dropdown
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
-  const calendarRef = useRef<HTMLElement | null>(null);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-
-  // Dynamic import 'cally' di sisi browser
-  useEffect(() => {
-    import("cally");
-  }, []);
-
-  // Event handler untuk milih tanggal & nutup dropdown
-  useEffect(() => {
-    const calendarEl = calendarRef.current;
-    if (!calendarEl) return;
-
-    const handleChange = (e: Event) => {
-      const target = e.target as HTMLInputElement;
-      if (target && target.value) {
-        setFilterDate(target.value);
-        setIsCalendarOpen(false); // Otomatis tutup setelah pilih tanggal
-      }
-    };
-
-    calendarEl.addEventListener("change", handleChange);
-    return () => calendarEl.removeEventListener("change", handleChange);
-  }, [exportScope, isCalendarOpen]);
-
-  // Close dropdown kalau user klik di luar area calendar
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsCalendarOpen(false);
-      }
-    };
-
-    if (isCalendarOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isCalendarOpen]);
 
   const todayReports = useMemo(() => {
     const todayStr = getLocalDateString(new Date());
@@ -108,6 +66,11 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
     }
   };
 
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    setFilterDate(date ? getLocalDateString(date) : "");
+  };
+
   const groupedReports = useMemo(() => {
     const groups: { [key: string]: FieldReport[] } = {};
     listToShow.forEach((report) => {
@@ -142,7 +105,7 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
         {/* Panel Filter */}
         <div className="p-5 rounded-2xl border border-brand-primary/40 bg-panel-bg space-y-4">
           <div className="flex items-center gap-2">
-            <Info size={16} className="text-blue-text" />
+            <Info size={16} className="text-brand-text" />
             <span className="text-xs font-semibold text-text-heading">Tentukan Cakupan Data Yang Akan Diekspor:</span>
           </div>
 
@@ -192,51 +155,12 @@ export const ManageReports: React.FC<ManageReportsProps> = ({ initialReports }) 
                 Saring Tanggal Observasi:
               </label>
               
-              {/* Relative Container */}
-              <div className="relative inline-block" ref={dropdownRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsCalendarOpen((prev) => !prev)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-brand-primary/60 bg-panel-bg text-xs text-text-body hover:border-brand-hover transition-colors cursor-pointer"
-                >
-                  <CalendarIcon size={14} className="text-brand-hover" />
-                  <span>{filterDate || "Pilih Tanggal Pengamatan"}</span>
-                </button>
-
-                {/* Popover Kompak di Samping Kanan */}
-                {isCalendarOpen && (
-                  <div className="absolute left-full top-0 ml-3 z-[999] border border-brand-primary/80 bg-panel-bg p-2 text-text-light shadow-2xl backdrop-blur-md rounded-xl origin-top-left scale-90 sm:scale-95 animate-in fade-in zoom-in-95 duration-150">
-                    <calendar-date
-                      ref={calendarRef}
-                      value={filterDate}
-                      className="cally text-brand-text text-xs"
-                      style={{
-                        "--cally-color-accent": "var(--color-brand-hover)",
-                        "fontSize": "0.75rem"
-                      } as React.CSSProperties}
-                    >
-                      <svg
-                        aria-label="Previous"
-                        className="fill-current size-3.5 text-brand-text hover:text-text-heading cursor-pointer"
-                        slot="previous"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M15.75 19.5 8.25 12l7.5-7.5" />
-                      </svg>
-                      <svg
-                        aria-label="Next"
-                        className="fill-current size-3.5 text-brand-text hover:text-text-heading cursor-pointer"
-                        slot="next"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                      </svg>
-                      <calendar-month></calendar-month>
-                    </calendar-date>
-                  </div>
-                )}
+              <div className="w-full sm:max-w-xs">
+                <DatePicker
+                  value={selectedDate}
+                  onChange={handleDateSelect}
+                  className="w-full"
+                />
               </div>
             </div>
           )}

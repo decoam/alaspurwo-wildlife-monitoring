@@ -12,7 +12,6 @@
     "@hookform/resolvers": "^5.4.0",
     "autoprefixer": "^10.5.4",
     "bcryptjs": "^3.0.3",
-    "cally": "^0.9.2",
     "cloudinary": "^2.10.0",
     "date-fns": "^4.4.0",
     "dotenv": "^17.4.2",

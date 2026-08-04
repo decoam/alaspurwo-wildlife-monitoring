@@ -86,8 +86,8 @@ export const ExportReportTable: React.FC<ExportReportTableProps> = ({ data }) =>
         data={data}
         columns={columns}
         rowKey={(report) => report._id}
-        tableClassName="w-full border-collapse border border-border-input text-xs text-black"
-        theadClassName="bg-slate-100 border border-border-input"
+        tableClassName="w-full border-collapse border border-border-input text-xs text-text-heading"
+        theadClassName="bg-surface-card border border-border-input"
         tbodyClassName=""
         trClassName={() => "align-middle border border-border-input"}
       />
