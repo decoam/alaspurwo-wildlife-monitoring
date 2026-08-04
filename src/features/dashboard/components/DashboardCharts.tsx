@@ -28,7 +28,13 @@ type DashboardChartsProps = {
   categoryBreakdown: CategoryPoint[];
 };
 
-const COLORS = ["#34d399", "#f59e0b", "#38bdf8", "#a78bfa", "#fb7185"];
+const COLORS = [
+  "var(--color-chart-1)",
+  "var(--color-chart-2)",
+  "var(--color-chart-3)",
+  "var(--color-chart-4)",
+  "var(--color-chart-5)",
+];
 
 export function DashboardCharts({ activity, categoryBreakdown }: DashboardChartsProps) {
   return (
@@ -41,11 +47,11 @@ export function DashboardCharts({ activity, categoryBreakdown }: DashboardCharts
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={activity}>
-              <CartesianGrid stroke="#1f3b2d" strokeDasharray="3 3" />
-              <XAxis dataKey="day" tick={{ fill: "#cbd5e1", fontSize: 12 }} />
-              <YAxis tick={{ fill: "#cbd5e1", fontSize: 12 }} />
+              <CartesianGrid stroke="var(--color-surface-border)" strokeDasharray="3 3" />
+              <XAxis dataKey="day" tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} />
+              <YAxis tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} />
               <Tooltip />
-              <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="#34d399" />
+              <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="var(--color-chart-1)" />
             </BarChart>
           </ResponsiveContainer>
         </div>

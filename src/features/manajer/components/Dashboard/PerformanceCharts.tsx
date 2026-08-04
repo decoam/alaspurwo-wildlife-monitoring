@@ -30,7 +30,13 @@ interface PerformanceChartsProps {
   categoryBreakdown?: CategoryDataPoint[];
 }
 
-const COLORS = ["#34d399", "#f59e0b", "#38bdf8", "#a78bfa", "#fb7185"];
+const COLORS = [
+  "var(--color-chart-1)",
+  "var(--color-chart-2)",
+  "var(--color-chart-3)",
+  "var(--color-chart-4)",
+  "var(--color-chart-5)",
+];
 
 export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
   weeklyTrends = [],
@@ -68,24 +74,24 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={weeklyTrends}>
-                <CartesianGrid stroke="#1f3b2d" strokeDasharray="3 3" />
-                <XAxis dataKey="day" tick={{ fill: "#cbd5e1", fontSize: 12 }} />
-                
-                {/* Supaya tampil bilangan bulat bukan desimal */}
-                <YAxis 
-                  tick={{ fill: "#cbd5e1", fontSize: 12 }} 
-                  allowDecimals={false}
-                  tickCount={calculatedTickCount}
-                />
-                
-                <Tooltip 
-                  contentStyle={{ backgroundColor: "#040a07", borderColor: "rgba(6,78,59,0.6)", borderRadius: "12px" }}
-                  labelStyle={{ color: "#34d399", fontWeight: "bold" }}
-                  itemStyle={{ color: "#f8fafc" }}
-                />
-                <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="#34d399" />
-              </BarChart>
+                <BarChart data={weeklyTrends}>
+                  <CartesianGrid stroke="var(--color-surface-border)" strokeDasharray="3 3" />
+                  <XAxis dataKey="day" tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} />
+                  
+                  {/* Supaya tampil bilangan bulat bukan desimal */}
+                  <YAxis 
+                    tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} 
+                    allowDecimals={false}
+                    tickCount={calculatedTickCount}
+                  />
+                  
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: "var(--color-surface-dark)", borderColor: "var(--color-border-subtle)", borderRadius: "12px" }}
+                    labelStyle={{ color: "var(--color-chart-1)", fontWeight: "bold" }}
+                    itemStyle={{ color: "var(--color-text-heading)" }}
+                  />
+                  <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="var(--color-chart-1)" />
+                </BarChart>
             </ResponsiveContainer>
           )}
         </div>
@@ -124,9 +130,9 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
                   ))}
                 </Pie>
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "#040a07", borderColor: "rgba(6,78,59,0.6)", borderRadius: "12px" }}
-                  labelStyle={{ color: "#34d399", fontWeight: "bold" }}
-                  itemStyle={{ color: "#f8fafc" }}
+                  contentStyle={{ backgroundColor: "var(--color-surface-bg)", borderColor: "var(--color-brand-primary)", borderRadius: "12px" }}
+                  labelStyle={{ color: "var(--color-chart-1)", fontWeight: "bold" }}
+                  itemStyle={{ color: "var(--color-text-heading)" }}
                 />
               </PieChart>
             </ResponsiveContainer>
