@@ -28,9 +28,9 @@ export function Table<T>({
   emptyMessage = "Tidak ada data.",
   onRowClick,
   wrapperClassName = "overflow-x-auto",
-  tableClassName = "min-w-full divide-y divide-emerald-900/60 text-sm text-slate-300",
-  theadClassName = "bg-emerald-950/50 text-left text-slate-200",
-  tbodyClassName = "divide-y divide-emerald-900/60",
+  tableClassName = "min-w-full divide-y divide-border-default text-sm text-text-body",
+  theadClassName = "bg-surface-subtle text-left text-text-secondary",
+  tbodyClassName = "divide-y divide-border-default",
   trClassName,
 }: TableProps<T>) {
   return (
@@ -48,7 +48,7 @@ export function Table<T>({
         <tbody className={tbodyClassName}>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="px-4 py-8 text-center text-slate-500">
+              <td colSpan={columns.length} className="px-4 py-8 text-center text-text-muted">
                 {emptyMessage}
               </td>
             </tr>
@@ -56,7 +56,7 @@ export function Table<T>({
             data.map((item, index) => (
               <tr
                 key={rowKey(item, index)}
-                className={`transition hover:bg-emerald-950/30 ${onRowClick ? "cursor-pointer" : ""} ${trClassName ? trClassName(item, index) : ""}`}
+                className={`transition hover:bg-hover-bg ${onRowClick ? "cursor-pointer" : ""} ${trClassName ? trClassName(item, index) : ""}`}
                 onClick={onRowClick ? () => onRowClick(item) : undefined}
               >
                 {columns.map((col) => (

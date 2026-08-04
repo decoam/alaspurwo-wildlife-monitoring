@@ -10,10 +10,10 @@ export function Button({ variant = "primary", className = "", children, ...props
   if (variant === "filter") variantClass = "obs-btn-filter";
   
   if (variant === "outline") {
-    variantClass = "rounded-2xl border border-emerald-900/60 bg-transparent px-4 py-2 text-sm font-semibold text-emerald-400 hover:bg-emerald-900/40";
+    variantClass = "rounded-2xl border border-brand-border/60 bg-transparent px-4 py-2 text-sm font-semibold text-brand-text-light hover:bg-hover-bg";
   }
   if (variant === "danger") {
-    variantClass = "flex items-center justify-center gap-2 rounded-xl border border-rose-900/60 bg-rose-950/20 py-2.5 text-xs font-semibold text-rose-400 transition hover:bg-rose-950/40";
+    variantClass = "flex items-center justify-center gap-2 rounded-xl border border-error-bg bg-error-bg py-2.5 text-xs font-semibold text-error-text transition hover:bg-error-bg";
   }
 
   return (
