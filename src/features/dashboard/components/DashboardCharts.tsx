@@ -48,8 +48,8 @@ export function DashboardCharts({ activity, categoryBreakdown }: DashboardCharts
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={activity}>
               <CartesianGrid stroke="var(--color-surface-border)" strokeDasharray="3 3" />
-              <XAxis dataKey="day" tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} />
-              <YAxis tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} />
+              <XAxis dataKey="day" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
+              <YAxis tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
               <Tooltip />
               <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="var(--color-chart-1)" />
             </BarChart>

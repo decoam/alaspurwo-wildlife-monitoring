@@ -76,11 +76,11 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={weeklyTrends}>
                   <CartesianGrid stroke="var(--color-surface-border)" strokeDasharray="3 3" />
-                  <XAxis dataKey="day" tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} />
+                  <XAxis dataKey="day" tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} />
                   
                   {/* Supaya tampil bilangan bulat bukan desimal */}
                   <YAxis 
-                    tick={{ fill: "var(--color-text-muted)", fontSize: 12 }} 
+                    tick={{ fill: "var(--color-text-secondary)", fontSize: 12 }} 
                     allowDecimals={false}
                     tickCount={calculatedTickCount}
                   />
@@ -88,7 +88,7 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
                   <Tooltip 
                     contentStyle={{ backgroundColor: "var(--color-surface-dark)", borderColor: "var(--color-border-subtle)", borderRadius: "12px" }}
                     labelStyle={{ color: "var(--color-chart-1)", fontWeight: "bold" }}
-                    itemStyle={{ color: "var(--color-text-heading)" }}
+                    itemStyle={{ color: "var(--color-text-main)" }}
                   />
                   <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="var(--color-chart-1)" />
                 </BarChart>
@@ -130,9 +130,9 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
                   ))}
                 </Pie>
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "var(--color-surface-bg)", borderColor: "var(--color-brand-primary)", borderRadius: "12px" }}
+                  contentStyle={{ backgroundColor: "var(--color-surface-dark)", borderColor: "var(--color-border-subtle)", borderRadius: "12px" }}
                   labelStyle={{ color: "var(--color-chart-1)", fontWeight: "bold" }}
-                  itemStyle={{ color: "var(--color-text-heading)" }}
+                  itemStyle={{ color: "var(--color-text-main)" }}
                 />
               </PieChart>
             </ResponsiveContainer>
