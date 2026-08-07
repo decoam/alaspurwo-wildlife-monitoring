@@ -1,6 +1,6 @@
 import React from "react";
 
-interface ColumnDef<T> {
+export interface ColumnDef<T> {
   key: string;
   header: React.ReactNode;
   cell: (item: T, index: number) => React.ReactNode;

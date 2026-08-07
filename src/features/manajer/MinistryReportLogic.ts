@@ -1,6 +1,8 @@
+
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { formatDateFull } from "@/lib/date";
 import { FieldReport } from "@/features/manajer/ReportUtils";
+import { ReportPayload, MonthlySummaryReport } from "@/types/ministry";
 
 export function useMinistryReportLogic(initialReports: FieldReport[]) {
   const [reports] = useState<FieldReport[]>(initialReports);
@@ -71,7 +73,7 @@ export function useMinistryReportLogic(initialReports: FieldReport[]) {
   }, [protectedAnimalReports]);
 
   // Akumulasi Data Bulanan
-  const monthlySummary = useMemo(() => {
+  const monthlySummary: MonthlySummaryReport[] = useMemo(() => {
     const summaryMap: { [key: string]: { namaSatwa: string; totalJumlah: number; lokasiList: string[] } } = {};
 
     protectedAnimalReports.forEach((item) => {
@@ -95,14 +97,13 @@ export function useMinistryReportLogic(initialReports: FieldReport[]) {
   }, [protectedAnimalReports]);
 
   // Current Payload
-  const currentPayload = useMemo(() => ({
+  const currentPayload: ReportPayload = useMemo(() => ({
     nomorSurat: `KLHK/TN-AP/${documentType}/${new Date().getFullYear()}/001`,
-    tipeDokumen: documentType === "BULANAN" ? "Laporan Rekapitulasi Populasi Bulanan" : "Berita Acara Perjumpaan",
-    satker: "Balai Taman Nasional Alas Purwo",
+    tipeDokumen: documentType,
+    tanggalDibuat: formatDateFull(new Date()),
     totalKasus: protectedAnimalReports.length,
     totalIndividu: totalProtectedEkor,
     data: documentType === "BULANAN" ? monthlySummary : protectedAnimalReports,
-    tanggalDibuat: formatDateFull(new Date()),
   }), [documentType, protectedAnimalReports, totalProtectedEkor, monthlySummary]);
 
   // Handle Kirim

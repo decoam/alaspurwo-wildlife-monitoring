@@ -1,21 +1,16 @@
+
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { FileText, Send, X } from "lucide-react";
 import { formatDate } from "@/lib/date";
-import { Table } from "@/components/ui/Table";
+import { Table, ColumnDef } from "@/components/ui/Table";
+import { ReportPayload, MinistryReportData, BAPFieldReport, MonthlySummaryReport } from "@/types/ministry";
 
 interface ReportPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  currentPayload: {
-    nomorSurat: string;
-    tipeDokumen: string;
-    tanggalDibuat: string;
-    totalIndividu: number;
-    totalKasus: number;
-    data: any[];
-  };
+  currentPayload: ReportPayload;
   onSend: () => void;
   isSubmitting: boolean;
   submitStatus: "draft" | "sent";
@@ -39,15 +34,27 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  const columns = [
-      { header: "No", key: "no", cell: (_:any, idx:number) => idx + 1 },
-      { header: "Nama Satwa", key: "namaSatwa", cell: (item:any) => item.namaSatwa || item.namaSpesies || "-" },
-      { header: "Kategori", key: "kategori", cell: (item:any) => item.kategori || "-" },
-      { header: "Jumlah", key: "jumlah", cell: (item:any) => item.jumlah || item.totalJumlah || "-" },
-      { header: "Lokasi", key: "lokasi", cell: (item:any) => item.lokasi || (item.lokasiList ? item.lokasiList.join(", ") : "-") },
-      { header: "Shift", key: "shift", cell: (item:any) => item.shift || "-" },
-      { header: "Tanggal", key: "tanggal", cell: (item:any) => item.tanggalPengamatan ? formatDate(item.tanggalPengamatan) : "-" },
-  ];
+  const isBAP = (report: MinistryReportData): report is BAPFieldReport => {
+    return currentPayload.tipeDokumen === "BAP";
+  };
+  
+  const columns: ColumnDef<MinistryReportData>[] =
+    currentPayload.tipeDokumen === "BAP"
+      ? [
+          { header: "No", key: "no", cell: (_, idx) => idx + 1 },
+          { header: "Nama Satwa", key: "namaSatwa", cell: (item) => (isBAP(item) ? item.namaSatwa : "") },
+          { header: "Kategori", key: "kategori", cell: (item) => (isBAP(item) ? item.kategori : "") },
+          { header: "Jumlah", key: "jumlah", cell: (item) => (isBAP(item) ? item.jumlah : "") },
+          { header: "Lokasi", key: "lokasi", cell: (item) => (isBAP(item) ? item.lokasi : "") },
+          { header: "Shift", key: "shift", cell: (item) => (isBAP(item) ? item.shift : "") },
+          { header: "Tanggal", key: "tanggal", cell: (item) => (isBAP(item) ? formatDate(item.tanggalPengamatan) : "") },
+        ]
+      : [
+          { header: "No", key: "no", cell: (_, idx) => idx + 1 },
+          { header: "Nama Satwa", key: "namaSatwa", cell: (item) => (!isBAP(item) ? item.namaSatwa : "") },
+          { header: "Total Jumlah", key: "totalJumlah", cell: (item) => (!isBAP(item) ? item.totalJumlah : "") },
+          { header: "Lokasi", key: "lokasi", cell: (item) => (!isBAP(item) ? item.lokasiList.join(", ") : "") },
+        ];
 
   if (!isOpen) return null;
 
@@ -76,7 +83,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           </div>
 
           <div className="space-y-1 text-text-secondary font-sans">
-            <p><strong>Perihal:</strong> {currentPayload.tipeDokumen}</p>
+            <p><strong>Perihal:</strong> {currentPayload.tipeDokumen === "BULANAN" ? "Laporan Rekapitulasi Populasi Bulanan" : "Berita Acara Perjumpaan"}</p>
             <p><strong>Tanggal:</strong> {currentPayload.tanggalDibuat}</p>
             <p><strong>Total Satwa Terdaftar:</strong> {currentPayload.totalIndividu} Ekor ({currentPayload.totalKasus} Kasus)</p>
           </div>
@@ -84,9 +91,9 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           <div className="pt-2">
             <p className="text-text-muted mb-2 font-sans font-semibold text-xs">Daftar Data Terlampir:</p>
             <Table
-                data={Array.isArray(currentPayload.data) ? currentPayload.data : []}
+                data={currentPayload.data}
                 columns={columns}
-                rowKey={(item: any, idx: number) => item._id || idx}
+                rowKey={(item, idx) => (isBAP(item) ? item._id : idx.toString())}
                 emptyMessage="Tidak ada data pengamatan terlampir."
                 wrapperClassName="overflow-x-auto rounded-xl border border-brand-primary/80"
                 tableClassName="w-full text-left text-xs"
