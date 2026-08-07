@@ -1,9 +1,7 @@
-import { type Locale } from "date-fns/locale";
-
 const formatDateWithOptions = (
   dateInput: string | Date | number | undefined | null,
   options: Intl.DateTimeFormatOptions,
-  locale: Locale | string = "id-ID"
+  locale: string = "id-ID"
 ): string => {
   if (dateInput === null || dateInput === undefined) return "-";
 
@@ -11,7 +9,7 @@ const formatDateWithOptions = (
   if (!Number.isFinite(date.getTime())) return "-";
 
   try {
-    return new Intl.DateTimeFormat(locale as string, options).format(date);
+    return new Intl.DateTimeFormat(locale, options).format(date);
   } catch {
     return "-";
   }

@@ -15,7 +15,7 @@ import { LiveObservationTable } from "@/features/manajer/components/Dashboard/Li
 import { AccessControlCard } from "@/features/manajer/components/Petugas/AccessControlCard";
 import { ExportReportCard } from "@/features/manajer/components/Laporan/ExportReportCard";
 import { MinistryReportCard } from "@/features/manajer/components/Kementerian/MinistryReportCard";
-import { formatDate, formatDateShort, formatDateLong } from "@/lib/date";
+import { formatDate, formatDateFull, formatDateShort } from "@/lib/date";
 
 export const runtime = "nodejs";
 

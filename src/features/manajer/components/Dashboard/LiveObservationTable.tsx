@@ -3,7 +3,7 @@
 import React from "react";
 import { MapPin, Calendar } from "lucide-react";
 import { Table } from "@/components/ui/Table";
-import { formatDate } from "@/lib/date";
+
 
 interface ObservationRecord {
   _id: string;

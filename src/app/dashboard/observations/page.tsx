@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, PlusCircle } from "lucide-react";
+import { Edit, Plus, Trash2, PlusCircle } from "lucide-react";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getObservations } from "@/features/observation/repository";

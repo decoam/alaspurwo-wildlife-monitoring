@@ -4,16 +4,16 @@ import React, { useState, useMemo } from "react";
 import { 
   FileSpreadsheet, 
   FileText, 
-  CheckSquare, 
-  Square,
-  Info,
-  Loader2,
-  Calendar as CalendarIcon
-} from "lucide-react";
+  import { 
+    FileSpreadsheet, 
+    File, 
+    Loader2
+  } from "lucide-react";
 import { ExportReportTable } from "./ExportReportTable";
 import { ReportCardItem } from "./ReportCardItem";
 import { DatePicker } from "@/components/ui/DatePicker";
-import { formatDate, formatDateFull } from "@/lib/date";
+import { formatDateFull } from "@/lib/date";
+
 import { FieldReport, getLocalDateString } from "@/features/manajer/ReportUtils";
 import { exportToExcel, exportToPDF } from "@/features/manajer/ExportServices";
 
