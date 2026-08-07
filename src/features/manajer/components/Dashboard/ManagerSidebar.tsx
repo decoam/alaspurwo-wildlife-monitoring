@@ -120,7 +120,7 @@ export const ManagerSidebar: React.FC<ManagerSidebarProps> = ({ currentPath, use
         <button
           type="button"
           onClick={handleLogout}
-          className="flex items-center gap-3 rounded-2xl border border-amber-bg bg-amber-bg px-3 py-3 text-sm font-medium text-amber-text transition hover:bg-amber-bg/80 w-full"
+          className="flex items-center gap-3 rounded-2xl border border-amber-bg bg-amber-bg px-3 py-3 text-sm font-medium text-amber-text transition hover:bg-hover-bg w-full"
         >
           <LogOut className="h-4 w-4" />
           Logout

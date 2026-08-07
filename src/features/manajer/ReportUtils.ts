@@ -14,9 +14,11 @@ export type FieldReport = {
   aktivitasSatwa?: string;
 };
 
-export const getLocalDateString = (dateInput?: string | Date): string => {
-  const d = dateInput ? new Date(dateInput) : new Date();
-  if (isNaN(d.getTime())) return "";
+export const getLocalDateString = (dateInput?: string | Date | null): string => {
+  if (dateInput === null || dateInput === undefined) return "";
+
+  const d = new Date(dateInput);
+  if (!Number.isFinite(d.getTime())) return "";
   
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, "0");

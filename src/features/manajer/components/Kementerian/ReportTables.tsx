@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
+import { formatDate } from "@/lib/date";
 import { FieldReport } from "@/features/manajer/ReportUtils";
+import { Table } from "@/components/ui/Table";
 
 interface MonthlySummaryItem {
   namaSatwa: string;
@@ -20,13 +22,66 @@ export const ReportTables: React.FC<ReportTablesProps> = ({
   monthlySummary,
   protectedAnimalReports,
 }) => {
-  // Helper validasi tanggal aman
-  const formatDate = (dateStr?: string) => {
-    if (!dateStr) return "-";
-    const parsedDate = new Date(dateStr);
-    if (isNaN(parsedDate.getTime())) return "-";
-    return parsedDate.toLocaleDateString("id-ID");
-  };
+  const bulananColumns = [
+    {
+      key: "namaSatwa",
+      header: "Spesies Prioritas",
+      cell: (item: MonthlySummaryItem) => <span className="font-medium text-text-heading italic">{item.namaSatwa}</span>,
+    },
+    {
+      key: "totalJumlah",
+      header: "Akumulasi Populasi",
+      cellClassName: "text-brand-text font-bold",
+      cell: (item: MonthlySummaryItem) => `${item.totalJumlah} Ekor`,
+    },
+    {
+      key: "lokasiList",
+      header: "Pos Pengamatan",
+      cell: (item: MonthlySummaryItem) => item.lokasiList.join(", "),
+    },
+    {
+      key: "status",
+      header: "Status Perlindungan",
+      headerClassName: "text-center sm:text-left",
+      cellClassName: "text-center sm:text-left",
+      cell: () => (
+        <div className="inline-flex flex-col items-center justify-center px-2.5 py-1 rounded-lg bg-error-bg border-error-bg text-error-text shadow-sm leading-tight text-center">
+          <span className="font-semibold text-xs tracking-wide">Dilindungi</span>
+          <span className="text-xs opacity-80 font-normal">(Prioritas)</span>
+        </div>
+      ),
+    },
+  ];
+
+  const bapColumns = [
+    {
+      key: "namaSatwa",
+      header: "Spesies",
+      cell: (rep: FieldReport) => <span className="font-medium text-text-heading italic">{rep.namaSatwa}</span>,
+    },
+    {
+      key: "jumlah",
+      header: "Jumlah",
+      cellClassName: "text-brand-text font-bold",
+      cell: (rep: FieldReport) => `${rep.jumlah} Ekor`,
+    },
+    {
+      key: "posPengamatan",
+      header: "Pos Pengamatan",
+      cell: (rep: FieldReport) => rep.posPengamatan || rep.lokasi,
+    },
+    {
+      key: "namaPetugas",
+      header: "Petugas Pelapor",
+      cellClassName: "text-text-body",
+      cell: (rep: FieldReport) => rep.namaPetugas,
+    },
+    {
+      key: "waktuKejadian",
+      header: "Waktu Kejadian",
+      cell: (rep: FieldReport) => formatDate(rep.tanggalPengamatan),
+    },
+  ];
 
   return (
     <div className="space-y-3">
@@ -38,75 +93,27 @@ export const ReportTables: React.FC<ReportTablesProps> = ({
 
       <div className="overflow-x-auto rounded-xl border border-brand-primary/80 bg-surface-dark">
         {documentType === "BULANAN" ? (
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-brand-primary/80 bg-panel-bg text-text-secondary">
-                <th className="p-3 font-semibold">Spesies Prioritas</th>
-                <th className="p-3 font-semibold">Akumulasi Populasi</th>
-                <th className="p-3 font-semibold">Pos Pengamatan</th>
-                <th className="p-3 font-semibold text-center sm:text-left">Status Perlindungan</th>
-              </tr>
-            </thead>
-            <tbody>
-              {monthlySummary.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="p-6 text-center text-text-muted">
-                    Tidak ada data laporan akumulasi bulanan.
-                  </td>
-                </tr>
-              ) : (
-                monthlySummary.map((item, idx) => (
-                  <tr key={idx} className="border-b border-brand-primary/40 hover:bg-brand-primary/10 text-text-secondary">
-                    <td className="p-3 font-medium text-text-heading italic">{item.namaSatwa}</td>
-                    <td className="p-3 text-brand-text font-bold">{item.totalJumlah} Ekor</td>
-                    <td className="p-3">{item.lokasiList.join(", ")}</td>
-                    <td className="p-3 text-center sm:text-left">
-                      
-                      {/* BADGE BERSUSUN RAPI (Flex-col dengan satu kotak border yang utuh) */}
-                      <div className="inline-flex flex-col items-center justify-center px-2.5 py-1 rounded-lg bg-error-bg border-error-bg text-error-text shadow-sm leading-tight text-center">
-                        <span className="font-semibold text-xs tracking-wide">Dilindungi</span>
-                        <span className="text-xs opacity-80 font-normal">(Prioritas)</span>
-                      </div>
-
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+          <Table
+            data={monthlySummary}
+            columns={bulananColumns}
+            rowKey={(_, idx) => String(idx)}
+            emptyMessage="Tidak ada data laporan akumulasi bulanan."
+            tableClassName="w-full text-left border-collapse text-xs"
+            theadClassName="border-b border-brand-primary/80 bg-panel-bg text-text-secondary"
+            tbodyClassName="text-text-secondary"
+            trClassName={() => "border-b border-brand-primary/40 hover:bg-brand-primary/10"}
+          />
         ) : (
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-brand-primary/80 bg-panel-bg text-text-secondary">
-                <th className="p-3 font-semibold">Spesies</th>
-                <th className="p-3 font-semibold">Jumlah</th>
-                <th className="p-3 font-semibold">Pos Pengamatan</th>
-                <th className="p-3 font-semibold">Petugas Pelapor</th>
-                <th className="p-3 font-semibold">Waktu Kejadian</th>
-              </tr>
-            </thead>
-            <tbody>
-              {protectedAnimalReports.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="p-6 text-center text-text-muted">
-                    Tidak ada data laporan perjumpaan lapangan (BAP).
-                  </td>
-                </tr>
-              ) : (
-                protectedAnimalReports.map((rep) => (
-                  <tr key={rep._id} className="border-b border-brand-primary/40 hover:bg-brand-primary/10 text-text-secondary">
-                    <td className="p-3 font-medium text-text-heading italic">{rep.namaSatwa}</td>
-                    <td className="p-3 text-brand-text font-bold">{rep.jumlah} Ekor</td>
-                    <td className="p-3">{rep.posPengamatan || rep.lokasi}</td>
-                    <td className="p-3 text-text-body">{rep.namaPetugas}</td>
-                    <td className="p-3">
-                      {formatDate(rep.tanggalPengamatan)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+          <Table
+            data={protectedAnimalReports}
+            columns={bapColumns}
+            rowKey={(rep) => rep._id}
+            emptyMessage="Tidak ada data laporan perjumpaan lapangan (BAP)."
+            tableClassName="w-full text-left border-collapse text-xs"
+            theadClassName="border-b border-brand-primary/80 bg-panel-bg text-text-secondary"
+            tbodyClassName="text-text-secondary"
+            trClassName={() => "border-b border-brand-primary/40 hover:bg-brand-primary/10"}
+          />
         )}
       </div>
     </div>

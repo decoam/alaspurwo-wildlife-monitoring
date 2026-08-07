@@ -133,6 +133,14 @@ body {
 }
 
 @utility obs-btn-secondary {
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    &:hover {
+      background-color: initial;
+    }
+  }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -165,6 +173,14 @@ body {
 }
 
 @utility obs-input-field {
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    &:hover {
+      background-color: var(--color-input-bg);
+    }
+  }
   display: flex;
   align-items: center;
   gap: 0.5rem;

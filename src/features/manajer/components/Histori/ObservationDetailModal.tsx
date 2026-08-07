@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { formatDate } from "@/lib/date";
 import { User, Calendar, CloudSun } from "lucide-react";
 import { ManagerObservationItem } from "./ManagerObservationTable";
 
@@ -16,18 +17,15 @@ export const ObservationDetailModal: React.FC<ObservationDetailModalProps> = ({
   if (!item) return null;
 
   return (
-    /* OVERLAY / BACKDROP: Klik di area latar mana saja akan memicu onClose */
     <div 
       onClick={onClose}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 cursor-pointer"
     >
-      {/* KARTU MODAL: e.stopPropagation() mencegah modal tertutup jika area dalam modal diklik */}
       <div 
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-5xl rounded-3xl border border-brand-primary/40 bg-surface-dark p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto grid grid-cols-1 lg:grid-cols-12 gap-6 animate-in fade-in zoom-in-95 duration-150 cursor-default"
       >
         
-        {/* SISI KIRI: Foto modal Aspect-Square */}
         <div className="lg:col-span-6 flex items-center justify-center bg-panel-bg rounded-2xl overflow-hidden border border-brand-primary/30 aspect-square w-full">
           <img 
             src={item.foto || "/placeholder.svg"} 
@@ -36,7 +34,6 @@ export const ObservationDetailModal: React.FC<ObservationDetailModalProps> = ({
           />
         </div>
 
-        {/* SISI KANAN: Detail Data */}
         <div className="lg:col-span-6 flex flex-col justify-between space-y-4">
           <div>
             <p className="text-xs font-bold tracking-widest text-brand-text uppercase">
@@ -45,7 +42,6 @@ export const ObservationDetailModal: React.FC<ObservationDetailModalProps> = ({
             <h1 className="text-3xl font-bold text-text-heading mt-1">{item.namaSatwa}</h1>
           </div>
 
-          {/* Blok Petugas & Lokasi */}
           <div className="rounded-xl border border-brand-primary/80 bg-panel-bg/60 p-4 space-y-2 text-sm text-text-secondary">
             <div className="flex items-center gap-3">
               <User size={16} className="text-accent-text shrink-0" /> 
@@ -53,11 +49,10 @@ export const ObservationDetailModal: React.FC<ObservationDetailModalProps> = ({
             </div>
             <div className="flex items-center gap-3">
               <Calendar size={16} className="text-blue-text shrink-0" /> 
-              <span>Tanggal: <strong className="text-text-heading">{new Date(item.tanggalPengamatan).toLocaleDateString("id-ID")}</strong></span>
+              <span>Tanggal: <strong className="text-text-heading">{formatDate(item.tanggalPengamatan)}</strong></span>
             </div>
           </div>
 
-          {/* Informasi Lengkap */}
           <div className="rounded-xl border border-brand-primary/80 bg-panel-bg/60 p-4">
             <h3 className="text-sm font-bold text-brand-text mb-3 flex items-center gap-2">
               <CloudSun size={16}/> Informasi Lengkap
@@ -82,7 +77,6 @@ export const ObservationDetailModal: React.FC<ObservationDetailModalProps> = ({
             </div>
           </div>
 
-          {/* Aktivitas & Catatan */}
           <div className="rounded-xl border border-brand-primary/80 bg-panel-bg/60 p-4 space-y-1.5">
             <h3 className="text-sm font-bold text-brand-text">Aktivitas & Catatan</h3>
             <p className="text-xs text-text-heading font-medium leading-relaxed break-all">
@@ -90,7 +84,6 @@ export const ObservationDetailModal: React.FC<ObservationDetailModalProps> = ({
             </p>
           </div>
 
-          {/* Tombol Tutup Utama */}
           <div className="pt-2 flex justify-end">
             <button
               type="button"

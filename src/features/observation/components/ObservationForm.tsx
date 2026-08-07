@@ -5,12 +5,14 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { AlertCircle, Camera, CheckCircle2, Image as ImageIcon, Loader2, Trash2, UploadCloud } from "lucide-react";
 import { CldUploadWidget } from "next-cloudinary";
+import { Button } from "@/components/ui/Button";
+import { DatePicker } from "@/components/ui/DatePicker";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 
 const satwaOptions = ["Rusa Timor", "Banteng Jawa", "Merak Jawa", "Elang", "Babi Hutan", "Macan Tutul"];
 const locationOptions = ["Pos Pengamatan Pantai", "Rawa Mangrove", "Sadengan", "Puncak Pengamatan", "Padang Savana"];
 
-// Frontend-only mapping for PETUGAS UX.
-// Prevents inconsistent kategori by deriving it from selected namaSatwa.
 const animalCategoryMap: Record<string, string> = {
   "Banteng Jawa": "Mamalia",
   "Rusa Timor": "Mamalia",
@@ -88,14 +90,12 @@ export function ObservationForm({
   });
 
   const selectedNamaSatwa = watch("namaSatwa");
-
+  const selectedDate = watch("tanggalPengamatan");
   const isNamaSatwaSelected = Boolean(selectedNamaSatwa);
-
   const derivedKategori = useMemo(() => getKategoriFromNamaSatwa(selectedNamaSatwa), [selectedNamaSatwa]);
 
   useEffect(() => {
-    const kategoriToSet = derivedKategori;
-    setValue("kategori", kategoriToSet, { shouldValidate: true, shouldDirty: true });
+    setValue("kategori", derivedKategori, { shouldValidate: true, shouldDirty: true });
   }, [derivedKategori, setValue]);
 
   useEffect(() => {
@@ -122,284 +122,195 @@ export function ObservationForm({
     }
 
     const formData = new FormData();
-
     if (initialValues?.id) {
       formData.append("id", initialValues.id);
     }
-
     Object.entries(data).forEach(([key, value]) => {
-      if (key === "foto") {
-        return;
-      }
-
-      if (value !== undefined && value !== null) {
+      if (key !== "foto" && value !== undefined && value !== null) {
         formData.append(key, String(value));
       }
     });
-
     formData.append("foto", finalPhotoUrl);
 
     const result = await onSubmit(formData);
-
     if (result.success) {
       router.push(successRedirectUrl);
-      return;
+    } else {
+      setStatusMessage(result.message);
     }
-
-    setStatusMessage(result.message);
   };
 
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-5">
-      {statusMessage ? (
+      {statusMessage && (
         <div className="rounded-2xl border border-amber-bg bg-amber-bg px-4 py-3 text-sm text-amber-text">
           {statusMessage}
         </div>
-      ) : null}
+      )}
 
       <div className="grid gap-4 md:grid-cols-2">
-        {/* Nama Satwa (FIRST required field) */}
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Nama Satwa</label>
-          <select
-            {...register("namaSatwa")}
-            className="w-full rounded-2xl border border-brand-primary/60 bg-input-bg px-3 py-2.5 text-sm text-text-heading outline-none"
-          >
+          <Select {...register("namaSatwa")}>
             <option value="">Pilih satwa</option>
             {satwaOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
+              <option key={option} value={option}>{option}</option>
             ))}
-          </select>
-
-          {!isNamaSatwaSelected ? (
-            <p className="mt-2 text-xs text-brand-text-light/90">Silakan pilih nama satwa terlebih dahulu untuk mengaktifkan form pengamatan.</p>
-          ) : null}
-
-          {errors.namaSatwa ? <p className="mt-1 text-sm text-error-text">{errors.namaSatwa.message}</p> : null}
+          </Select>
+          {!isNamaSatwaSelected && <p className="mt-2 text-xs text-brand-text-light/90">Silakan pilih nama satwa terlebih dahulu untuk mengaktifkan form pengamatan.</p>}
+          {errors.namaSatwa && <p className="mt-1 text-sm text-error-text">{errors.namaSatwa.message}</p>}
         </div>
-
-        {/* Kategori (read-only, derived) */}
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Kategori</label>
-          <input
-            readOnly
-            value={derivedKategori}
-            placeholder={isNamaSatwaSelected ? "" : "Select animal name first"}
-            className="w-full cursor-not-allowed rounded-2xl border border-brand-primary/60 bg-input-bg px-3 py-2.5 text-sm text-text-heading outline-none disabled:cursor-not-allowed"
-          />
-          {errors.kategori ? <p className="mt-1 text-sm text-error-text">{errors.kategori.message}</p> : null}
+          <Input readOnly value={derivedKategori} placeholder={isNamaSatwaSelected ? "" : "Pilih nama satwa terlebih dahulu"} disabled={!isNamaSatwaSelected} />
+          {errors.kategori && <p className="mt-1 text-sm text-error-text">{errors.kategori.message}</p>}
         </div>
-
-        {/* Remaining fields (disabled until Nama Satwa selected) */}
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Jumlah</label>
-         <input
-  type="number"
-  min={1}
-  inputMode="numeric"
-  disabled={!isNamaSatwaSelected}
-  {...register("jumlah")}
-  className="w-full rounded-2xl border border-brand-primary/60 bg-input-bg px-3 py-2.5 text-sm text-text-heading outline-none disabled:cursor-not-allowed disabled:opacity-60 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-/>
-          {errors.jumlah ? <p className="mt-1 text-sm text-error-text">{errors.jumlah.message}</p> : null}
+          <Input type="number" min={1} disabled={!isNamaSatwaSelected} {...register("jumlah", { valueAsNumber: true })} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+          {errors.jumlah && <p className="mt-1 text-sm text-error-text">{errors.jumlah.message}</p>}
         </div>
-
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Lokasi</label>
-          <select
-            {...register("lokasi")}
-            disabled={!isNamaSatwaSelected}
-            className="w-full rounded-2xl border border-brand-primary/60 bg-input-bg px-3 py-2.5 text-sm text-text-heading outline-none disabled:cursor-not-allowed disabled:opacity-60"
-          >
+          <Select {...register("lokasi")} disabled={!isNamaSatwaSelected}>
             <option value="">Pilih lokasi</option>
             {locationOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
+              <option key={option} value={option}>{option}</option>
             ))}
-          </select>
-          {errors.lokasi ? <p className="mt-1 text-sm text-error-text">{errors.lokasi.message}</p> : null}
+          </Select>
+          {errors.lokasi && <p className="mt-1 text-sm text-error-text">{errors.lokasi.message}</p>}
         </div>
-
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Tanggal Pengamatan</label>
-          <input
-            type="date"
-            {...register("tanggalPengamatan")}
+          <DatePicker
+            value={selectedDate ? new Date(`${selectedDate}T00:00:00`) : undefined}
+            onChange={(date) => {
+              if (!date) {
+                setValue("tanggalPengamatan", "", { shouldValidate: true, shouldDirty: true });
+                return;
+              }
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, "0");
+              const day = String(date.getDate()).padStart(2, "0");
+              setValue("tanggalPengamatan", `${year}-${month}-${day}`, { shouldValidate: true, shouldDirty: true });
+            }}
             disabled={!isNamaSatwaSelected}
-            className="w-full rounded-2xl border border-brand-primary/60 bg-input-bg px-3 py-2.5 text-sm text-text-heading outline-none disabled:cursor-not-allowed disabled:opacity-60"
           />
-          {errors.tanggalPengamatan ? (
-            <p className="mt-1 text-sm text-error-text">{errors.tanggalPengamatan.message}</p>
-          ) : null}
+          {errors.tanggalPengamatan && <p className="mt-1 text-sm text-error-text">{errors.tanggalPengamatan.message}</p>}
         </div>
-
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Shift</label>
-          <select
-            {...register("shift")}
-            disabled={!isNamaSatwaSelected}
-            className="w-full rounded-2xl border border-brand-primary/60 bg-input-bg px-3 py-2.5 text-sm text-text-heading outline-none disabled:cursor-not-allowed disabled:opacity-60"
-          >
+          <Select {...register("shift")} disabled={!isNamaSatwaSelected}>
             <option value="Pagi">Pagi</option>
             <option value="Sore">Sore</option>
-          </select>
-          {errors.shift ? <p className="mt-1 text-sm text-error-text">{errors.shift.message}</p> : null}
+          </Select>
+          {errors.shift && <p className="mt-1 text-sm text-error-text">{errors.shift.message}</p>}
         </div>
-
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Cuaca</label>
-                  <select
-          {...register("kondisiCuaca")}
-          disabled={!isNamaSatwaSelected}
-          className="w-full rounded-2xl border border-brand-primary/60 bg-input-bg px-3 py-2.5 text-sm text-text-heading outline-none disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          <option value="">Pilih kondisi cuaca</option>
-          <option value="Cerah">Cerah</option>
-          <option value="Cerah Berawan">Cerah Berawan</option>
-          <option value="Berawan">Berawan</option>
-          <option value="Mendung">Mendung</option>
-          <option value="Hujan Ringan">Hujan Ringan</option>
-          <option value="Hujan Lebat">Hujan Lebat</option>
-          <option value="Berkabut">Berkabut</option>
-        </select>
-                  {errors.kondisiCuaca ? <p className="mt-1 text-sm text-error-text">{errors.kondisiCuaca.message}</p> : null}
-                </div>
-
+          <Select {...register("kondisiCuaca")} disabled={!isNamaSatwaSelected}>
+            <option value="">Pilih kondisi cuaca</option>
+            <option value="Cerah">Cerah</option>
+            <option value="Cerah Berawan">Cerah Berawan</option>
+            <option value="Berawan">Berawan</option>
+            <option value="Mendung">Mendung</option>
+            <option value="Hujan Ringan">Hujan Ringan</option>
+            <option value="Hujan Lebat">Hujan Lebat</option>
+            <option value="Berkabut">Berkabut</option>
+          </Select>
+          {errors.kondisiCuaca && <p className="mt-1 text-sm text-error-text">{errors.kondisiCuaca.message}</p>}
+        </div>
+        
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-medium text-text-secondary">Aktivitas Satwa</label>
           <textarea
             {...register("aktivitasSatwa")}
             disabled={!isNamaSatwaSelected}
             rows={3}
-            className="w-full rounded-2xl border border-brand-primary/60 bg-input-bg px-3 py-2.5 text-sm text-text-heading outline-none disabled:cursor-not-allowed disabled:opacity-60"
+            placeholder="Deskripsikan aktivitas satwa yang diamati, misalnya makan atau bergerak."
+            className="w-full rounded-2xl border border-brand-primary/40 bg-surface-card p-3 text-text-light placeholder:text-text-muted/50 focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
-          {errors.aktivitasSatwa ? (
-            <p className="mt-1 text-sm text-error-text">{errors.aktivitasSatwa.message}</p>
-          ) : null}
+          {errors.aktivitasSatwa && <p className="mt-1 text-sm text-error-text">{errors.aktivitasSatwa.message}</p>}
         </div>
-
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-medium text-text-secondary">Catatan</label>
           <textarea
             {...register("catatan")}
             disabled={!isNamaSatwaSelected}
             rows={3}
-            className="w-full rounded-2xl border border-brand-primary/60 bg-input-bg px-3 py-2.5 text-sm text-text-heading outline-none disabled:cursor-not-allowed disabled:opacity-60"
+            placeholder="Tambahkan catatan lokasi, cuaca, atau kondisi khusus lain."
+            className="w-full rounded-2xl border border-brand-primary/40 bg-surface-card p-3 text-text-light placeholder:text-text-muted/50 focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
+          {errors.catatan && <p className="mt-1 text-sm text-error-text">{errors.catatan.message}</p>}
         </div>
       </div>
 
-      {/* Upload Foto (disabled until animal selected) */}
       <div className="rounded-2xl border border-brand-primary/60 bg-input-bg p-4">
         <div className="flex items-center justify-between gap-3">
           <label className="flex items-center gap-2 text-sm font-medium text-text-secondary">
-            <Camera className="h-4 w-4" />
-            Upload Foto
+            <Camera className="h-4 w-4" /> Upload Foto
           </label>
           <span className="text-xs text-text-muted">JPG, JPEG, PNG, WebP • Maksimal 5 MB</span>
         </div>
-
         <div className="mt-4 grid gap-4 md:grid-cols-[1.05fr_0.95fr]">
           <div className="space-y-3">
             <CldUploadWidget
               uploadPreset={uploadPreset}
-              options={{
-                sources: ["local"],
-                multiple: false,
-                maxFiles: 1,
-                clientAllowedFormats: ["jpg", "jpeg", "png", "webp"],
-                maxFileSize: 5 * 1024 * 1024,
-                resourceType: "image",
-              }}
-              onOpen={() => {
-                if (!isNamaSatwaSelected) return;
-                setUploadState("uploading");
-                setUploadMessage("Membuka pemilih gambar...");
-              }}
+              options={{ sources: ["local"], multiple: false, maxFiles: 1, clientAllowedFormats: ["jpg", "jpeg", "png", "webp"], maxFileSize: 5 * 1024 * 1024, resourceType: "image" }}
+              onOpen={() => { if (isNamaSatwaSelected) { setUploadState("uploading"); setUploadMessage("Membuka pemilih gambar..."); } }}
               onSuccess={(result) => {
                 const uploadResult = result as CloudinaryUploadResult;
                 const secureUrl = uploadResult?.info?.secure_url ?? uploadResult?.info?.url ?? null;
-
-                if (!secureUrl) {
-                  setUploadState("error");
-                  setUploadMessage("Cloudinary tidak mengembalikan URL gambar.");
-                  return;
-                }
-
-                setPhotoUrl(secureUrl);
-                setUploadState("success");
-                setUploadMessage("Foto berhasil diunggah ke Cloudinary.");
+                if (secureUrl) { setPhotoUrl(secureUrl); setUploadState("success"); setUploadMessage("Foto berhasil diunggah."); }
+                else { setUploadState("error"); setUploadMessage("URL gambar tidak ditemukan."); }
               }}
               onError={(error) => {
-                const message = typeof error === "string" ? error : error?.statusText ?? "Gagal mengunggah foto.";
                 setUploadState("error");
-                setUploadMessage(message);
+                let errorMessage = "Gagal mengunggah.";
+                if (typeof error === "string") {
+                  errorMessage = error;
+                } else if (error && typeof error === "object" && "statusText" in error) {
+                  errorMessage = String((error as { statusText: string }).statusText);
+                }
+                setUploadMessage(errorMessage);
               }}
             >
               {({ open }) => (
-                <button
+                <Button
                   type="button"
-                  disabled={!isNamaSatwaSelected}
+                  variant="secondary"
+                  disabled={!isNamaSatwaSelected || isSubmitting}
                   onClick={() => {
-                    if (!isNamaSatwaSelected) return;
                     if (!cloudName || !uploadPreset) {
                       setUploadState("error");
-                      setUploadMessage(
-                        "Cloudinary belum dikonfigurasi. Periksa variabel NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME dan NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET.",
-                      );
-                      return;
+                      setUploadMessage("Cloudinary belum dikonfigurasi.");
+                    } else if (isNamaSatwaSelected) {
+                      open();
                     }
-
-                    setUploadState("uploading");
-                    setUploadMessage("Mengunggah foto...");
-                    open();
                   }}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-brand-primary/70 bg-brand-primary/90 px-4 py-3 text-sm font-semibold text-text-heading transition hover:bg-brand-primary disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full"
                 >
                   {uploadState === "uploading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
                   {uploadState === "uploading" ? "Mengunggah..." : "Pilih atau tarik gambar"}
-                </button>
+                </Button>
               )}
             </CldUploadWidget>
-
             <div className="rounded-2xl border border-dashed border-brand-primary/70 bg-surface-bg p-3 text-sm text-text-muted">
-              Widget mendukung drag & drop dari perangkat Anda. Setelah upload selesai, URL gambar akan dikirim ke server action.
+              Widget mendukung drag & drop. Upload akan otomatis dimulai.
             </div>
-
-            {uploadState === "success" ? (
-              <div className="flex items-center gap-2 rounded-2xl border border-brand-primary/70 bg-brand-primary/40 px-3 py-2 text-sm text-brand-text-light">
-                <CheckCircle2 className="h-4 w-4" />
-                Foto siap disimpan.
-              </div>
-            ) : null}
-
-            {uploadState === "error" ? (
-              <div className="flex items-center gap-2 rounded-2xl border border-rose-900/70 bg-rose-950/40 px-3 py-2 text-sm text-error-text">
-                <AlertCircle className="h-4 w-4" />
-                {uploadMessage}
-              </div>
-            ) : null}
+            {uploadState === "success" && <div className="flex items-center gap-2 rounded-2xl border border-brand-primary/70 bg-brand-primary/40 px-3 py-2 text-sm text-brand-text-light"><CheckCircle2 className="h-4 w-4" />Foto siap disimpan.</div>}
+            {uploadState === "error" && <div className="flex items-center gap-2 rounded-2xl border border-error-bg bg-error-bg px-3 py-2 text-sm text-error-text"><AlertCircle className="h-4 w-4" />{uploadMessage}</div>}
           </div>
-
           <div className="overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-card">
             {photoUrl ? (
-              <div className="relative">
-                <img src={photoUrl} alt="Preview foto" className="h-56 w-full object-cover" />
-                <button
-                  type="button"
-                  onClick={removePhoto}
-                  className="absolute right-3 top-3 flex items-center gap-2 rounded-full border border-error-bg/60 bg-rose/25 px-3 py-2 text-sm text-error-text backdrop-blur transition hover:bg-rose/35 hover:text-text-heading"
-                  disabled={!isNamaSatwaSelected}
-                >
-                  <Trash2 className="h-4 w-4" />
-                  Hapus
-                </button>
+              <div className="relative aspect-video w-full overflow-hidden rounded-2xl">
+                <img src={photoUrl} alt="Preview foto" className="h-full w-full object-cover" />
+                <Button type="button" variant="danger" onClick={removePhoto} className="absolute right-3 top-3 !py-2 !px-3" disabled={!isNamaSatwaSelected}>
+                  <Trash2 className="h-4 w-4" /> Hapus
+                </Button>
               </div>
             ) : (
-              <div className="flex h-56 items-center justify-center text-text-muted">
+              <div className="flex aspect-video items-center justify-center text-text-muted">
                 <div className="text-center">
                   <ImageIcon className="mx-auto h-8 w-8" />
                   <p className="mt-2 text-sm">Preview gambar akan tampil di sini.</p>
@@ -409,24 +320,12 @@ export function ObservationForm({
           </div>
         </div>
       </div>
-
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="rounded-2xl border border-brand-primary/60 px-4 py-2.5 text-sm font-semibold text-text-body transition hover:bg-brand-primary/60"
-        >
-          Batal
-        </button>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="rounded-2xl bg-brand-primary px-4 py-2.5 text-sm font-semibold text-text-heading transition hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-70"
-        >
-          {isSubmitting ? "Menyimpan..." : submitLabel}
-        </button>
+      <div className="flex justify-end">
+        <Button type="submit" disabled={!isNamaSatwaSelected || isSubmitting || uploadState === 'uploading'}>
+          {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
+          {submitLabel}
+        </Button>
       </div>
     </form>
   );
 }
-

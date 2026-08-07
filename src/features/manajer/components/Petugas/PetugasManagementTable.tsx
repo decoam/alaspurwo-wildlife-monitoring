@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserPlus, Edit2, Trash2, Search, User } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import { PetugasModal } from "./PetugasModal";
 import { PetugasTableDesktop } from "./PetugasTableDesktop";
 
-// DEFINISI TIPE DATA DI-EXPORT DARI SINI
 export type UserType = {
   _id: string;
   fullName: string;
@@ -23,29 +23,24 @@ type PetugasManagementTableProps = {
 export function PetugasManagementTable({ initialUsers }: PetugasManagementTableProps) {
   const router = useRouter();
   
-  // State Utama
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // State Modal Controlling
   const [modalType, setModalType] = useState<ModalType>(null);
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
-  // State Form Input
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // Filter data berdasarkan search query
   const filteredUsers = initialUsers.filter((user) =>
     user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Modal Triggers
   const openAddModal = () => {
     setErrorMsg(null);
     setSuccessMsg(null);
@@ -81,7 +76,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
     setSuccessMsg(null);
   };
 
-  // API Actions
   const handleAddPetugas = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName || !username || !password) {
@@ -92,7 +86,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
     setErrorMsg(null);
 
     try {
-      // PERBAIKAN: Mengarahkan endpoint ke API terproteksi manajer
       const res = await fetch("/api/manajer/petugas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -172,7 +165,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
   return (
     <div className="rounded-[28px] border border-brand-primary/60 bg-surface-subtle/85 p-4 sm:p-6 shadow-xl space-y-6">
       
-      {/* HEADER SECTION */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-brand-text">
@@ -185,19 +177,18 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         </div>
 
         <div className="shrink-0">
-          <button
+          <Button
             onClick={openAddModal}
-            className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-600 to-lime-600 px-5 py-3 text-sm font-semibold text-text-heading transition hover:from-emerald-500 hover:to-lime-500 shadow-md"
+            className="w-full md:w-auto"
           >
             <UserPlus className="h-4 w-4" />
             Tambah Petugas
-          </button>
+          </Button>
         </div>
       </div>
 
       <hr className="border-brand-primary/40" />
 
-      {/* SEARCH BAR */}
       <div className="flex items-center gap-2 rounded-2xl border border-brand-primary/60 bg-input-bg px-4 py-2.5 text-sm text-text-muted max-w-md w-full">
         <Search className="h-4 w-4 shrink-0" />
         <input
@@ -209,7 +200,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         />
       </div>
 
-      {/* MOBILE LIST CARD */}
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {filteredUsers.length === 0 ? (
           <div className="text-center py-8 text-text-muted text-sm">
@@ -235,20 +225,22 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
                 </div>
 
                 <div className="flex gap-2">
-                  <button
+                  <Button
+                    variant="outline"
                     onClick={() => openEditModal(user)}
-                    className="flex items-center justify-center p-2 rounded-xl border border-brand-primary/60 bg-input-bg text-brand-text transition hover:bg-brand-primary/60 hover:text-text-heading"
+                    className="!px-2 !py-2"
                     title="Edit"
                   >
                     <Edit2 className="h-3.5 w-3.5" />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="danger"
                     onClick={() => openDeleteModal(user)}
-                    className="flex items-center justify-center p-2 rounded-xl border border-error-bg bg-rose/25 text-error-text transition hover:bg-rose/35 hover:text-text-heading"
+                    className="!px-2 !py-2"
                     title="Hapus"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -256,7 +248,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         )}
       </div>
 
-      {/* DESKTOP TABLE COMPONENT */}
       <PetugasTableDesktop
         users={filteredUsers}
         initialUsersCount={initialUsers.length}
@@ -264,7 +255,6 @@ export function PetugasManagementTable({ initialUsers }: PetugasManagementTableP
         openDeleteModal={openDeleteModal}
       />
 
-      {/* MODAL COMPONENT */}
       <PetugasModal
         modalType={modalType}
         selectedUser={selectedUser}
