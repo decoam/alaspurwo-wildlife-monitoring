@@ -129,11 +129,11 @@ export const PerformanceCharts: React.FC<PerformanceChartsProps> = ({
                     />
                   ))}
                 </Pie>
-                <Tooltip 
-                  contentStyle={{ backgroundColor: "var(--color-surface-dark)", borderColor: "var(--color-border-subtle)", borderRadius: "12px" }}
-                  labelStyle={{ color: "var(--color-chart-1)", fontWeight: "bold" }}
-                  itemStyle={{ color: "var(--color-text-main)" }}
-                />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: "var(--color-surface-dark)", borderColor: "var(--color-border-subtle)", borderRadius: "12px" }}
+                    labelStyle={{ color: "var(--color-chart-1)", fontWeight: "bold" }}
+                    itemStyle={{ color: "var(--color-text-main)" }}
+                  />
               </PieChart>
             </ResponsiveContainer>
           )}
