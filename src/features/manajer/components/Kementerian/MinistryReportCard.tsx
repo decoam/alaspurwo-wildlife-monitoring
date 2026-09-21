@@ -35,7 +35,7 @@ export const MinistryReportCard: React.FC<MinistryReportCardProps> = ({
           </div>
           <span className={`text-xs font-semibold px-2 py-0.5 rounded-md ${
             isSynced 
-              ? "bg-brand-hover/10 text-brand-text border border-brand-hover/20" 
+              ? "bg-brand-primary/10 text-brand-text border border-brand-border/20" 
               : "bg-amber-bg text-amber-text border border-amber-bg"
           }`}>
             {isSynced ? "Terintegrasi" : "Butuh Sync"}

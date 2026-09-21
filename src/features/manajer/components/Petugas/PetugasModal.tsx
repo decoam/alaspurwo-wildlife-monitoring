@@ -2,6 +2,8 @@
 
 import React from "react";
 import { X, Loader2, Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { UserType, ModalType } from "./PetugasManagementTable";
 
 interface PetugasModalProps {
@@ -62,12 +64,12 @@ export function PetugasModal({
             {successMsg && <div className="text-sm bg-brand-primary/40 text-brand-text p-3 rounded-xl border border-brand-primary/60">{successMsg}</div>}
             
             <div className="flex justify-end gap-3 mt-4">
-              <button onClick={closeModal} className="px-4 py-2 rounded-xl border border-brand-primary/60 bg-input-bg text-sm text-text-secondary hover:bg-brand-primary/40 transition">
+              <Button variant="outline" type="button" onClick={closeModal}>
                 Batal
-              </button>
-              <button onClick={handleDeletePetugas} disabled={isLoading} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose text-sm font-semibold text-text-heading hover:bg-error-text transition disabled:opacity-50">
+              </Button>
+              <Button type="button" variant="danger" onClick={handleDeletePetugas} disabled={isLoading}>
                 {isLoading && <Loader2 className="h-4 w-4 animate-spin" />} Hapus Akun
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
@@ -78,24 +80,22 @@ export function PetugasModal({
 
             <div className="space-y-1">
               <label className="text-xs font-semibold text-brand-text uppercase tracking-wider">Nama Lengkap</label>
-              <input
+              <Input
                 type="text"
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full bg-input-bg border border-brand-primary/60 rounded-xl px-3 py-2 text-sm text-text-heading focus:outline-none focus:border-brand-hover placeholder:text-text-muted"
                 placeholder="Contoh: Ahmad Subari"
               />
             </div>
 
             <div className="space-y-1">
               <label className="text-xs font-semibold text-brand-text uppercase tracking-wider">Username</label>
-              <input
+              <Input
                 type="text"
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-input-bg border border-brand-primary/60 rounded-xl px-3 py-2 text-sm text-text-heading focus:outline-none focus:border-brand-hover placeholder:text-text-muted"
                 placeholder="Contoh: subari24"
               />
             </div>
@@ -106,12 +106,12 @@ export function PetugasModal({
               </label>
               
               <div className="relative flex items-center">
-                <input
+                <Input
                   type={showPassword ? "text" : "password"}
                   required={modalType === "add"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-input-bg border border-border-subtle rounded-xl pl-3 pr-10 py-2 text-sm text-text-heading focus:outline-none focus:border-brand-hover placeholder:text-text-muted"
+                  className="pr-10"
                   placeholder={modalType === "add" ? "••••••••" : "Masukkan password baru"}
                 />
                 
@@ -130,13 +130,13 @@ export function PetugasModal({
             {successMsg && <div className="text-sm bg-brand-primary/40 text-brand-text p-3 rounded-xl border border-brand-primary/60">{successMsg}</div>}
 
             <div className="flex justify-end gap-3 pt-2">
-              <button type="button" onClick={closeModal} className="px-4 py-2 rounded-xl border border-brand-primary/60 bg-input-bg text-sm text-text-secondary hover:bg-brand-primary/40 transition">
+              <Button type="button" variant="outline" onClick={closeModal}>
                 Batal
-              </button>
-              <button type="submit" disabled={isLoading} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-brand-primary to-accent-primary text-sm font-semibold text-text-heading hover:from-brand-hover hover:to-accent-hover transition disabled:opacity-50">
+              </Button>
+              <Button type="submit" disabled={isLoading}>
                 {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                 {modalType === "add" ? "Simpan Akun" : "Simpan Perubahan"}
-              </button>
+              </Button>
             </div>
           </form>
         )}

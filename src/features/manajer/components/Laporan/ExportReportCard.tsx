@@ -37,7 +37,7 @@ export const ExportReportCard: React.FC<ExportReportCardProps> = ({
 
           <div className="flex items-center justify-between p-2.5 rounded-xl bg-black/20 border border-brand-primary/20 text-xs">
             <div className="flex items-center gap-2 text-text-secondary">
-              <FileText size={16} className="text-blue-text" />
+              <FileText size={16} className="text-brand-text" />
               <span>Format Ringkasan PDF (.PDF)</span>
             </div>
             <span className="text-xs text-brand-text font-medium">Ready</span>

@@ -66,6 +66,12 @@ observationSchema.pre("updateMany", function () {
   (this as any).where({ deletedAt: null });
 });
 
+// Terapkan soft-delete filter secara otomatis untuk .distinct()
+observationSchema.pre("distinct", function () {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (this as any).where({ deletedAt: null });
+});
+
 export const Observation =
   mongoose.models.Observation ||
   mongoose.model<IObservation>("Observation", observationSchema);

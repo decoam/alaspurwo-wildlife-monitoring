@@ -7,8 +7,33 @@ import {
   Leaf,
   ArrowRight,
 } from "lucide-react";
+import { connectDB } from "@/lib/mongodb";
+import { Observation } from "@/models/Observation";
 
-export default function HomePage() {
+async function getLandingStats() {
+  try {
+    await connectDB();
+
+    const [observations, species, locations] = await Promise.all([
+      Observation.countDocuments({ deletedAt: null }),
+      Observation.distinct("namaSatwa", { deletedAt: null }),
+      Observation.distinct("lokasi", { deletedAt: null }),
+    ]);
+
+    return {
+      observations: Number.isFinite(observations) ? observations : 0,
+      species: Array.isArray(species) ? species.length : 0,
+      locations: Array.isArray(locations) ? locations.length : 0,
+    };
+  } catch (error) {
+    console.error("Failed to load landing page statistics", error);
+    return { observations: 0, species: 0, locations: 0 };
+  }
+}
+
+export default async function HomePage() {
+  const stats = await getLandingStats();
+
   return (
     <main className="landing-main">
       {/* Background Image */}
@@ -58,17 +83,17 @@ export default function HomePage() {
 
             <div className="landing-stats-row">
               <div>
-                <h2 className="landing-stat-number">42</h2>
+                <h2 className="landing-stat-number">{stats.locations.toLocaleString("id-ID")}</h2>
                 <p className="landing-stat-label">Pos Pengamatan</p>
               </div>
 
               <div>
-                <h2 className="landing-stat-number">1.256</h2>
+                <h2 className="landing-stat-number">{stats.observations.toLocaleString("id-ID")}</h2>
                 <p className="landing-stat-label">Observasi</p>
               </div>
 
               <div>
-                <h2 className="landing-stat-number">87</h2>
+                <h2 className="landing-stat-number">{stats.species.toLocaleString("id-ID")}</h2>
                 <p className="landing-stat-label">Spesies</p>
               </div>
             </div>

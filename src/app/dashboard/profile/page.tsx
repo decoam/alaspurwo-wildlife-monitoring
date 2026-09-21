@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, CalendarDays, Camera, PlusCircle } from "lucide-react";
 import { redirect } from "next/navigation";
+import { formatDateLong } from "@/lib/date";
 import { auth } from "@/auth";
 import { connectDB } from "@/lib/mongodb";
 import { Observation } from "@/models/Observation";
@@ -189,7 +190,7 @@ export default async function ProfilePage() {
               <div className="prof-detail-row">
                 <span className="prof-detail-label">Tanggal Bergabung</span>
                 <span className="prof-detail-value">
-                  {createdAt ? createdAt.toLocaleDateString("id-ID", { year: "numeric", month: "long", day: "numeric" }) : "—"}
+                  {createdAt ? formatDateLong(createdAt) : "—"}
                 </span>
               </div>
             </div>

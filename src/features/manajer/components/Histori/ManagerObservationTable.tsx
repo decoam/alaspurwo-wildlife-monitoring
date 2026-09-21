@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Eye } from "lucide-react";
+import { formatDate } from "@/lib/date";
 import { ObservationDetailModal } from "./ObservationDetailModal";
+import { Table } from "@/components/ui/Table";
 
 export type ManagerObservationItem = {
   _id: string;
@@ -29,79 +31,109 @@ export function ManagerObservationTable({ items }: ManagerObservationTableProps)
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   const [selectedItem, setSelectedItem] = useState<ManagerObservationItem | null>(null);
 
+  const columns = [
+    {
+      key: "foto",
+      header: "Foto",
+      headerClassName: "w-17.5",
+      cell: (item: ManagerObservationItem) => (
+        <div className="shrink-0">
+          <Image
+            src={failedImages[item._id] || !item.foto ? "/placeholder.svg" : item.foto}
+            alt={item.namaSatwa}
+            width={44}
+            height={44}
+            className="h-11 w-11 rounded-xl object-cover border border-brand-hover/20 shrink-0"
+            unoptimized
+            onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
+          />
+        </div>
+      ),
+    },
+    {
+      key: "namaSatwa",
+      header: "Nama Satwa",
+      cell: (item: ManagerObservationItem) => <span className="font-medium text-text-heading">{item.namaSatwa}</span>,
+    },
+    {
+      key: "kategori",
+      header: "Kategori",
+      cell: (item: ManagerObservationItem) => item.kategori,
+    },
+    {
+      key: "jumlah",
+      header: "Jumlah",
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
+      cell: (item: ManagerObservationItem) => item.jumlah,
+    },
+    {
+      key: "lokasi",
+      header: "Lokasi",
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
+      cell: (item: ManagerObservationItem) => item.lokasi,
+    },
+    {
+      key: "shift",
+      header: "Shift",
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
+      cell: (item: ManagerObservationItem) => item.shift,
+    },
+    {
+      key: "tanggalPengamatan",
+      header: "Tanggal",
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
+      cell: (item: ManagerObservationItem) => formatDate(item.tanggalPengamatan),
+    },
+    {
+      key: "namaPetugas",
+      header: "Petugas",
+      cell: (item: ManagerObservationItem) => item.namaPetugas,
+    },
+    {
+      key: "statusUpload",
+      header: "Status Upload",
+      headerClassName: "hidden md:table-cell",
+      cellClassName: "hidden md:table-cell",
+      cell: (item: ManagerObservationItem) => (
+        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${item.foto ? "bg-brand-primary/60 text-brand-text-light" : "bg-surface-card text-text-muted"}`}>
+          {item.foto ? "Tersedia" : "Belum"}
+        </span>
+      ),
+    },
+    {
+      key: "aksi",
+      header: "Aksi",
+      headerClassName: "text-center w-15",
+      cellClassName: "text-center",
+      cell: () => (
+        <div 
+          className="inline-flex rounded-full border border-brand-primary/60 p-2 text-brand-text-light transition hover:bg-brand-primary/60"
+          title="Lihat Detail"
+        >
+          <Eye className="h-4 w-4" />
+        </div>
+      ),
+    }
+  ];
+
   return (
     <div className="space-y-4">
-      {/* WRAPPER TABEL UTAMA */}
       <div className="overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-card/90">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-brand-primary/60 text-sm text-text-secondary">
-            <thead className="bg-brand-primary/50 text-left text-text-body">
-              <tr>
-                <th className="px-4 py-3 w-17.5">Foto</th>
-                <th className="px-4 py-3">Nama Satwa</th>
-                <th className="px-4 py-3">Kategori</th>
-                <th className="px-4 py-3 hidden md:table-cell">Jumlah</th>
-                <th className="px-4 py-3 hidden md:table-cell">Lokasi</th>
-                <th className="px-4 py-3 hidden md:table-cell">Shift</th>
-                <th className="px-4 py-3 hidden md:table-cell">Tanggal</th>
-                <th className="px-4 py-3">Petugas</th>
-                <th className="px-4 py-3 hidden md:table-cell">Status Upload</th>
-                <th className="px-4 py-3 text-center w-15">Aksi</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-brand-primary/60 bg-hover-bg">
-              {items.map((item) => (
-                <tr 
-                  key={item._id} 
-                  onClick={() => setSelectedItem(item)}
-                  className="transition cursor-pointer hover:bg-brand-primary/30 active:bg-brand-primary/50"
-                >
-                  <td className="px-4 py-3">
-                    <div className="shrink-0">
-                      <Image
-                        src={failedImages[item._id] || !item.foto ? "/placeholder.svg" : item.foto}
-                        alt={item.namaSatwa}
-                        width={44}
-                        height={44}
-                        className="h-11 w-11 rounded-xl object-cover border border-brand-hover/20 shrink-0"
-                        unoptimized
-                        onError={() => setFailedImages((prev) => ({ ...prev, [item._id]: true }))}
-                      />
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 font-medium text-text-heading">{item.namaSatwa}</td>
-                  <td className="px-4 py-3">{item.kategori}</td>
-                  
-                  <td className="px-4 py-3 hidden md:table-cell">{item.jumlah}</td>
-                  <td className="px-4 py-3 hidden md:table-cell">{item.lokasi}</td>
-                  <td className="px-4 py-3 hidden md:table-cell">{item.shift}</td>
-                  <td className="px-4 py-3 hidden md:table-cell">
-                    {new Date(item.tanggalPengamatan).toLocaleDateString("id-ID")}
-                  </td>
-                  
-                  <td className="px-4 py-3">{item.namaPetugas}</td>
-                  
-                  <td className="px-4 py-3 hidden md:table-cell">
-                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${item.foto ? "bg-brand-primary/60 text-brand-text-light" : "bg-surface-card text-text-muted"}`}>
-                      {item.foto ? "Tersedia" : "Belum"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <div 
-                      className="inline-flex rounded-full border border-brand-primary/60 p-2 text-brand-text-light transition hover:bg-brand-primary/60"
-                      title="Lihat Detail"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          data={items}
+          columns={columns}
+          rowKey={(item) => item._id}
+          onRowClick={(item) => setSelectedItem(item)}
+          tbodyClassName="divide-y divide-brand-primary/60 bg-hover-bg"
+          theadClassName="bg-brand-primary/50 text-left text-text-body"
+          trClassName={() => "transition cursor-pointer hover:bg-brand-primary/30 active:bg-brand-primary/50"}
+        />
       </div>
 
-      {/* PENGGUNAAN KOMPONEN MODAL YANG DIPISAH */}
       <ObservationDetailModal 
         item={selectedItem} 
         onClose={() => setSelectedItem(null)} 
