@@ -5,12 +5,10 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { AlertCircle, Camera, CheckCircle2, Image as ImageIcon, Loader2, Trash2, UploadCloud, Calendar as CalendarIcon, X } from "lucide-react";
+import { AlertCircle, Camera, CheckCircle2, Image as ImageIcon, Loader2, Trash2, UploadCloud } from "lucide-react";
 import { CldUploadWidget } from "next-cloudinary";
-import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
-import { id } from "date-fns/locale";
-import "react-day-picker/dist/style.css";
+import { DatePicker } from "@/components/ui/DatePicker";
 
 const locationOptions = ["Pos Pengamatan Pantai", "Rawa Mangrove", "Sadengan", "Puncak Pengamatan", "Padang Savana"];
 
@@ -55,7 +53,6 @@ export function ObservationForm({
   const [uploadState, setUploadState] = useState<"idle" | "uploading" | "success" | "error">("idle");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [uploadMessage, setUploadMessage] = useState<string | null>(null);
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   const [satwaList, setSatwaList] = useState<{ namaSpesies: string; kategori: string }[]>([]);
   const [satwaLoading, setSatwaLoading] = useState(true);
@@ -119,7 +116,6 @@ export function ObservationForm({
   });
 
   const selectedNamaSatwa = watch("namaSatwa");
-  const selectedDate = watch("tanggalPengamatan");
   const isNamaSatwaSelected = Boolean(selectedNamaSatwa);
   const derivedKategori = useMemo(() => getKategoriFromNamaSatwa(selectedNamaSatwa), [selectedNamaSatwa]);
 
@@ -172,12 +168,14 @@ export function ObservationForm({
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="space-y-5">
       {statusMessage && (
-        <div className="rounded-2xl border border-amber-bg bg-amber-bg px-4 py-3 text-sm text-amber-text">
-          {statusMessage}
+        <div className="flex items-center gap-2 rounded-2xl border border-rose-900/60 bg-rose-950/40 p-4 text-sm text-rose-200">
+          <AlertCircle className="h-5 w-5 shrink-0 text-rose-400" />
+          <span>{statusMessage}</span>
         </div>
       )}
 
       <div className="grid gap-4 md:grid-cols-2">
+        {/* Nama Satwa */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Nama Satwa</label>
           <select
@@ -193,30 +191,34 @@ export function ObservationForm({
             ))}
           </select>
           {satwaError && <p className="mt-1 text-sm text-rose-400">{satwaError}</p>}
-
-          {!isNamaSatwaSelected ? (
+          {!isNamaSatwaSelected && (
             <p className="mt-2 text-xs text-emerald-300/90">Silakan pilih nama satwa terlebih dahulu untuk mengaktifkan form pengamatan.</p>
-          ) : null}
-
-          {errors.namaSatwa ? <p className="mt-1 text-sm text-rose-300">{errors.namaSatwa.message}</p> : null}
+          )}
+          {errors.namaSatwa && <p className="mt-1 text-sm text-rose-300">{errors.namaSatwa.message}</p>}
         </div>
+
+        {/* Kategori */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-300 flex items-center justify-between">
-            Kategori
+          <label className="mb-2 flex items-center justify-between text-sm font-medium text-slate-300">
+            <span>Kategori</span>
             {isNamaSatwaSelected && (
-              <span className="text-[10px] bg-emerald-900 text-emerald-200 px-2 py-0.5 rounded-full">Terisi otomatis</span>
+              <span className="rounded-full bg-emerald-900/60 px-2 py-0.5 text-[10px] text-emerald-300 border border-emerald-700/50">
+                Terisi otomatis
+              </span>
             )}
           </label>
           <input
             readOnly
             value={derivedKategori}
-            placeholder={isNamaSatwaSelected ? "" : "Select animal name first"}
-            className="w-full cursor-not-allowed rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed"
+            placeholder={isNamaSatwaSelected ? "" : "Pilih nama satwa terlebih dahulu"}
+            className="w-full cursor-not-allowed rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none opacity-80"
           />
-          {errors.kategori ? <p className="mt-1 text-sm text-rose-300">{errors.kategori.message}</p> : null}
+          {errors.kategori && <p className="mt-1 text-sm text-rose-300">{errors.kategori.message}</p>}
         </div>
+
+        {/* Jumlah */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-text-secondary">Jumlah</label>
+          <label className="mb-2 block text-sm font-medium text-slate-300">Jumlah Satwa (Ekor)</label>
           <input
             type="number"
             min={1}
@@ -224,81 +226,66 @@ export function ObservationForm({
             {...register("jumlah", { valueAsNumber: true })}
             className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
-          {errors.jumlah && <p className="mt-1 text-sm text-error-text">{errors.jumlah.message}</p>}
+          {errors.jumlah && <p className="mt-1 text-sm text-rose-300">{errors.jumlah.message}</p>}
         </div>
+
+        {/* Lokasi */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-text-secondary">Lokasi</label>
-          <select {...register("lokasi")} disabled={!isNamaSatwaSelected} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60">
+          <label className="mb-2 block text-sm font-medium text-slate-300">Lokasi Pengamatan</label>
+          <select
+            {...register("lokasi")}
+            disabled={!isNamaSatwaSelected}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          >
             <option value="">Pilih lokasi</option>
             {locationOptions.map((option) => (
-              <option key={option} value={option}>{option}</option>
+              <option key={option} value={option}>
+                {option}
+              </option>
             ))}
           </select>
           {errors.lokasi && <p className="mt-1 text-sm text-rose-300">{errors.lokasi.message}</p>}
+        </div>
+
+        {/* Tanggal Pengamatan */}
+        <div>
           <label className="mb-2 block text-sm font-medium text-slate-300">Tanggal Pengamatan</label>
           <Controller
             control={control}
             name="tanggalPengamatan"
             render={({ field }) => (
-              <>
-                <button
-                  type="button"
-                  disabled={!isNamaSatwaSelected}
-                  onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-                  className={`w-full flex items-center justify-between rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-60 transition ${field.value ? "text-white" : "text-slate-400"}`}
-                >
-                  <span className="truncate">
-                    {field.value
-                      ? format(new Date(field.value), "dd MMMM yyyy", { locale: id })
-                      : "Pilih tanggal"}
-                  </span>
-                  <CalendarIcon className="h-4 w-4 shrink-0 opacity-70" />
-                </button>
-
-                {isDatePickerOpen && (
-                  <div className="absolute top-full mt-2 left-0 z-50 rounded-2xl border border-emerald-900/60 bg-[#0c1914] p-3 shadow-xl shadow-black/50">
-                    <div className="flex justify-end mb-2">
-                      <button 
-                        type="button" 
-                        onClick={() => setIsDatePickerOpen(false)}
-                        className="text-slate-400 hover:text-white p-1 rounded-full hover:bg-emerald-900/40"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                    <DayPicker
-                      mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => {
-                        field.onChange(date ? format(date, "yyyy-MM-dd") : "");
-                        setIsDatePickerOpen(false);
-                      }}
-                      locale={id}
-                      className="text-white"
-                      classNames={{
-                        selected: "bg-emerald-600 text-white rounded-full hover:bg-emerald-500",
-                        today: "font-bold text-emerald-400",
-                        day_button: "hover:bg-emerald-900/40 rounded-full transition-colors",
-                      }}
-                    />
-                  </div>
-                )}
-              </>
+              <DatePicker
+                value={field.value ? new Date(field.value) : undefined}
+                onChange={(date) => field.onChange(date ? format(date, "yyyy-MM-dd") : "")}
+                disabled={!isNamaSatwaSelected}
+              />
             )}
           />
-          {errors.tanggalPengamatan && <p className="mt-1 text-sm text-error-text">{errors.tanggalPengamatan.message}</p>}
+          {errors.tanggalPengamatan && <p className="mt-1 text-sm text-rose-300">{errors.tanggalPengamatan.message}</p>}
         </div>
+
+        {/* Shift */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-text-secondary">Shift</label>
-          <select {...register("shift")} disabled={!isNamaSatwaSelected} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60">
+          <label className="mb-2 block text-sm font-medium text-slate-300">Shift Pengamatan</label>
+          <select
+            {...register("shift")}
+            disabled={!isNamaSatwaSelected}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          >
             <option value="Pagi">Pagi</option>
             <option value="Sore">Sore</option>
           </select>
           {errors.shift && <p className="mt-1 text-sm text-rose-300">{errors.shift.message}</p>}
         </div>
-        <div>
-          <label className="mb-2 block text-sm font-medium text-text-secondary">Cuaca</label>
-          <select {...register("kondisiCuaca")} disabled={!isNamaSatwaSelected} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60">
+
+        {/* Cuaca */}
+        <div className="md:col-span-2">
+          <label className="mb-2 block text-sm font-medium text-slate-300">Kondisi Cuaca</label>
+          <select
+            {...register("kondisiCuaca")}
+            disabled={!isNamaSatwaSelected}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
+          >
             <option value="">Pilih kondisi cuaca</option>
             <option value="Cerah">Cerah</option>
             <option value="Cerah Berawan">Cerah Berawan</option>
@@ -310,53 +297,76 @@ export function ObservationForm({
           </select>
           {errors.kondisiCuaca && <p className="mt-1 text-sm text-rose-300">{errors.kondisiCuaca.message}</p>}
         </div>
-        
+
+        {/* Aktivitas Satwa */}
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-medium text-text-secondary">Aktivitas Satwa</label>
+          <label className="mb-2 block text-sm font-medium text-slate-300">Aktivitas Satwa</label>
           <textarea
             {...register("aktivitasSatwa")}
             disabled={!isNamaSatwaSelected}
             rows={3}
-            placeholder="Deskripsikan aktivitas satwa yang diamati, misalnya makan atau bergerak."
-            className="w-full rounded-2xl border border-brand-primary/40 bg-surface-card p-3 text-text-light placeholder:text-text-muted/50 focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
+            placeholder="Deskripsikan aktivitas satwa yang diamati, misalnya sedang makan rumput, bertengger, atau berpindah kelompok."
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] p-3 text-sm text-white placeholder:text-slate-500 outline-none focus:border-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
           />
-          {errors.aktivitasSatwa && <p className="mt-1 text-sm text-error-text">{errors.aktivitasSatwa.message}</p>}
+          {errors.aktivitasSatwa && <p className="mt-1 text-sm text-rose-300">{errors.aktivitasSatwa.message}</p>}
         </div>
+
+        {/* Catatan Tambahan */}
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-medium text-text-secondary">Catatan</label>
+          <label className="mb-2 block text-sm font-medium text-slate-300">Catatan Tambahan (Opsional)</label>
           <textarea
             {...register("catatan")}
             disabled={!isNamaSatwaSelected}
             rows={3}
-            placeholder="Tambahkan catatan lokasi, cuaca, atau kondisi khusus lain."
-            className="w-full rounded-2xl border border-brand-primary/40 bg-surface-card p-3 text-text-light placeholder:text-text-muted/50 focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
+            placeholder="Tambahkan catatan khusus mengenai lingkungan, koordinat spesifik, atau anomali kondisi satwa."
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] p-3 text-sm text-white placeholder:text-slate-500 outline-none focus:border-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
           />
-          {errors.catatan && <p className="mt-1 text-sm text-error-text">{errors.catatan.message}</p>}
+          {errors.catatan && <p className="mt-1 text-sm text-rose-300">{errors.catatan.message}</p>}
         </div>
       </div>
 
-      <div className="rounded-2xl border border-brand-primary/60 bg-input-bg p-4">
+      {/* Upload Foto */}
+      <div className="rounded-2xl border border-emerald-900/60 bg-[#07110c]/80 p-5 shadow-lg">
         <div className="flex items-center justify-between gap-3">
-          <label className="flex items-center gap-2 text-sm font-medium text-text-secondary">
-            <Camera className="h-4 w-4" /> Upload Foto
+          <label className="flex items-center gap-2 text-sm font-medium text-slate-200">
+            <Camera className="h-4 w-4 text-emerald-400" /> Upload Foto Dokumentasi
           </label>
-          <span className="text-xs text-text-muted">JPG, JPEG, PNG, WebP • Maksimal 5 MB</span>
+          <span className="text-xs text-slate-400">JPG, JPEG, PNG, WebP • Maksimal 5 MB</span>
         </div>
-        <div className="mt-4 grid gap-4 md:grid-cols-[1.05fr_0.95fr]">
+
+        <div className="mt-4 grid gap-4 md:grid-cols-[1fr_1fr]">
           <div className="space-y-3">
             <CldUploadWidget
               uploadPreset={uploadPreset}
-              options={{ sources: ["local"], multiple: false, maxFiles: 1, clientAllowedFormats: ["jpg", "jpeg", "png", "webp"], maxFileSize: 5 * 1024 * 1024, resourceType: "image" }}
-              onOpen={() => { if (isNamaSatwaSelected) { setUploadState("uploading"); setUploadMessage("Membuka pemilih gambar..."); } }}
+              options={{
+                sources: ["local"],
+                multiple: false,
+                maxFiles: 1,
+                clientAllowedFormats: ["jpg", "jpeg", "png", "webp"],
+                maxFileSize: 5 * 1024 * 1024,
+                resourceType: "image",
+              }}
+              onOpen={() => {
+                if (isNamaSatwaSelected) {
+                  setUploadState("uploading");
+                  setUploadMessage("Membuka pemilih gambar...");
+                }
+              }}
               onSuccess={(result) => {
                 const uploadResult = result as CloudinaryUploadResult;
                 const secureUrl = uploadResult?.info?.secure_url ?? uploadResult?.info?.url ?? null;
-                if (secureUrl) { setPhotoUrl(secureUrl); setUploadState("success"); setUploadMessage("Foto berhasil diunggah."); }
-                else { setUploadState("error"); setUploadMessage("URL gambar tidak ditemukan."); }
+                if (secureUrl) {
+                  setPhotoUrl(secureUrl);
+                  setUploadState("success");
+                  setUploadMessage("Foto berhasil diunggah.");
+                } else {
+                  setUploadState("error");
+                  setUploadMessage("URL gambar tidak ditemukan.");
+                }
               }}
               onError={(error) => {
                 setUploadState("error");
-                let errorMessage = "Gagal mengunggah.";
+                let errorMessage = "Gagal mengunggah foto.";
                 if (typeof error === "string") {
                   errorMessage = error;
                 } else if (error && typeof error === "object" && "statusText" in error) {
@@ -377,50 +387,63 @@ export function ObservationForm({
                       open();
                     }
                   }}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#10241a] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-900/40 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-emerald-800/80 bg-emerald-950/40 px-4 py-3 text-sm font-medium text-emerald-200 transition hover:bg-emerald-900/50 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {uploadState === "uploading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
-                  {uploadState === "uploading" ? "Mengunggah..." : "Pilih atau tarik gambar"}
+                  {uploadState === "uploading" ? "Mengunggah..." : "Pilih atau Tarik Foto Satwa"}
                 </button>
               )}
             </CldUploadWidget>
-            <div className="rounded-2xl border border-dashed border-brand-primary/70 bg-surface-bg p-3 text-sm text-text-muted">
-              Widget mendukung drag & drop. Upload akan otomatis dimulai.
+
+            <div className="rounded-2xl border border-dashed border-emerald-900/60 bg-[#08140e] p-3 text-xs text-slate-400">
+              Pastikan foto jelas menampilkan satwa yang sedang dipantau di lokasi.
             </div>
-            {uploadState === "success" && <div className="flex items-center gap-2 rounded-2xl border border-brand-primary/70 bg-brand-primary/40 px-3 py-2 text-sm text-brand-text-light"><CheckCircle2 className="h-4 w-4" />Foto siap disimpan.</div>}
-            {uploadState === "error" && <div className="flex items-center gap-2 rounded-2xl border border-error-bg bg-error-bg px-3 py-2 text-sm text-error-text"><AlertCircle className="h-4 w-4" />{uploadMessage}</div>}
+
+            {uploadState === "success" && (
+              <div className="flex items-center gap-2 rounded-2xl border border-emerald-800/60 bg-emerald-950/60 px-3 py-2 text-xs text-emerald-300">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                <span>Foto siap disimpan bersama laporan observasi.</span>
+              </div>
+            )}
+
+            {uploadState === "error" && (
+              <div className="flex items-center gap-2 rounded-2xl border border-rose-900/60 bg-rose-950/50 px-3 py-2 text-xs text-rose-300">
+                <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
+                <span>{uploadMessage}</span>
+              </div>
+            )}
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-emerald-900/60 bg-[#08140e] w-full aspect-video">
+          <div className="overflow-hidden rounded-2xl border border-emerald-900/60 bg-[#08140e] aspect-video w-full">
             {photoUrl ? (
               <div className="relative w-full h-full">
-                <img src={photoUrl} alt="Preview foto" className="w-full h-full object-cover" />
+                <img src={photoUrl} alt="Preview foto satwa" className="h-full w-full object-cover" />
                 <button
                   type="button"
                   onClick={removePhoto}
-                  className="absolute right-3 top-3 flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-3 py-2 text-sm text-white backdrop-blur"
+                  className="absolute right-3 top-3 flex items-center gap-1.5 rounded-xl border border-rose-800/80 bg-rose-950/80 px-3 py-1.5 text-xs font-medium text-rose-200 shadow-md backdrop-blur transition hover:bg-rose-900"
                   disabled={!isNamaSatwaSelected}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-3.5 w-3.5" />
                   Hapus
                 </button>
               </div>
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-slate-500">
-                <div className="text-center">
-                  <ImageIcon className="mx-auto h-8 w-8" />
-                  <p className="mt-2 text-sm">Preview gambar akan tampil di sini.</p>
-                </div>
+              <div className="flex h-full w-full flex-col items-center justify-center text-slate-500 p-4">
+                <ImageIcon className="h-8 w-8 opacity-40 text-emerald-400" />
+                <p className="mt-2 text-xs text-slate-400 text-center">Preview gambar yang diunggah akan muncul di sini</p>
               </div>
             )}
           </div>
         </div>
       </div>
-      <div className="flex justify-end">
+
+      {/* Submit Button */}
+      <div className="flex justify-end pt-2">
         <button
           type="submit"
-          disabled={!isNamaSatwaSelected || isSubmitting || uploadState === 'uploading'}
-          className="flex items-center gap-2 rounded-2xl bg-linear-to-r from-emerald-500 to-lime-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:from-emerald-600 hover:to-lime-700 disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={!isNamaSatwaSelected || isSubmitting || uploadState === "uploading"}
+          className="flex items-center gap-2 rounded-2xl bg-linear-to-r from-emerald-500 to-lime-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-950/50 transition hover:from-emerald-600 hover:to-lime-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
           {submitLabel}
