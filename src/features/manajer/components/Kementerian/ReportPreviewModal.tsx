@@ -89,18 +89,43 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
           </div>
 
           <div className="pt-2">
-            <p className="text-text-muted mb-2 font-sans font-semibold text-xs">Daftar Data Terlampir:</p>
-            <Table
-                data={currentPayload.data}
-                columns={columns}
-                rowKey={(item, idx) => (isBAP(item) ? item._id : idx.toString())}
-                emptyMessage="Tidak ada data pengamatan terlampir."
-                wrapperClassName="overflow-x-auto rounded-xl border border-brand-primary/80"
-                tableClassName="w-full text-left text-xs"
-                theadClassName="bg-surface-dark text-brand-text-light border-b border-brand-primary/80"
-                tbodyClassName="divide-y divide-brand-primary/50 bg-surface-table text-text-body"
-                trClassName={() => "hover:bg-brand-primary/40"}
-            />
+            <p className="text-slate-400 mb-2 font-sans font-semibold text-[11px]">Daftar Data Terlampir:</p>
+            <div className="overflow-x-auto rounded-xl border border-emerald-950">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-[#030705] text-emerald-400 border-b border-emerald-950">
+                  <tr>
+                    <th className="px-3 py-2 font-medium">No</th>
+                    <th className="px-3 py-2 font-medium">Nama Satwa</th>
+                    <th className="px-3 py-2 font-medium">Kategori</th>
+                    <th className="px-3 py-2 font-medium">Jumlah</th>
+                    <th className="px-3 py-2 font-medium">Lokasi</th>
+                    <th className="px-3 py-2 font-medium">Shift</th>
+                    <th className="px-3 py-2 font-medium">Tanggal</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-emerald-950/50 bg-[#060d0a] text-slate-300">
+                  {!Array.isArray(currentPayload.data) || currentPayload.data.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="px-3 py-4 text-center text-slate-500 italic">
+                        Tidak ada data pengamatan terlampir.
+                      </td>
+                    </tr>
+                  ) : (
+                    currentPayload.data.map((item: any, idx: number) => (
+                      <tr key={idx} className="hover:bg-emerald-950/20">
+                        <td className="px-3 py-2">{idx + 1}</td>
+                        <td className="px-3 py-2 font-medium text-emerald-300">{item.namaSatwa || item.namaSpesies || "-"}</td>
+                        <td className="px-3 py-2">{item.kategori || "-"}</td>
+                        <td className="px-3 py-2">{item.jumlah || item.totalJumlah || "-"}</td>
+                        <td className="px-3 py-2">{item.lokasi || (item.lokasiList ? item.lokasiList.join(", ") : "-")}</td>
+                        <td className="px-3 py-2">{item.shift || "-"}</td>
+                        <td className="px-3 py-2">{item.tanggalPengamatan ? new Date(item.tanggalPengamatan).toLocaleDateString("id-ID") : "-"}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 

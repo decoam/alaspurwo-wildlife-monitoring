@@ -1,39 +1,33 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { AlertCircle, Camera, CheckCircle2, Image as ImageIcon, Loader2, Trash2, UploadCloud } from "lucide-react";
+import { AlertCircle, Camera, CheckCircle2, Image as ImageIcon, Loader2, Trash2, UploadCloud, Calendar as CalendarIcon, X } from "lucide-react";
 import { CldUploadWidget } from "next-cloudinary";
-import { Button } from "@/components/ui/Button";
-import { DatePicker } from "@/components/ui/DatePicker";
-import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
+import { DayPicker } from "react-day-picker";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
+import "react-day-picker/dist/style.css";
 
-const satwaOptions = ["Rusa Timor", "Banteng Jawa", "Merak Jawa", "Elang", "Babi Hutan", "Macan Tutul"];
 const locationOptions = ["Pos Pengamatan Pantai", "Rawa Mangrove", "Sadengan", "Puncak Pengamatan", "Padang Savana"];
 
-const animalCategoryMap: Record<string, string> = {
-  "Banteng Jawa": "Mamalia",
-  "Rusa Timor": "Mamalia",
-  "Merak Jawa": "Burung",
-  "Elang": "Burung",
-  "Babi Hutan": "Mamalia",
-  "Macan Tutul": "Mamalia",
-};
+const observationSchema = z.object({
+  namaSatwa: z.string().min(1, "Nama satwa wajib dipilih"),
+  kategori: z.string().optional(),
+  jumlah: z.number().min(1, "Jumlah minimal 1"),
+  lokasi: z.string().min(1, "Lokasi wajib dipilih"),
+  tanggalPengamatan: z.string().min(1, "Tanggal wajib diisi"),
+  shift: z.enum(["Pagi", "Sore"]),
+  kondisiCuaca: z.string().min(1, "Kondisi cuaca wajib dipilih"),
+  aktivitasSatwa: z.string().min(10, "Aktivitas satwa minimal 10 karakter"),
+  catatan: z.string().optional(),
+  foto: z.string().optional(),
+});
 
-type ObservationFormValues = {
-  namaSatwa: string;
-  kategori: string;
-  jumlah: number;
-  lokasi: string;
-  tanggalPengamatan: string;
-  shift: "Pagi" | "Sore";
-  kondisiCuaca: string;
-  aktivitasSatwa: string;
-  catatan?: string;
-  foto?: string;
-};
+type ObservationFormValues = z.infer<typeof observationSchema>;
 
 type ObservationFormProps = {
   initialValues?: Partial<ObservationFormValues> & { foto?: string; id?: string };
@@ -50,10 +44,6 @@ type CloudinaryUploadResult = {
   };
 };
 
-function getKategoriFromNamaSatwa(namaSatwa: string): string {
-  return animalCategoryMap[namaSatwa] ?? "";
-}
-
 export function ObservationForm({
   initialValues,
   submitLabel,
@@ -65,6 +55,43 @@ export function ObservationForm({
   const [uploadState, setUploadState] = useState<"idle" | "uploading" | "success" | "error">("idle");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [uploadMessage, setUploadMessage] = useState<string | null>(null);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+
+  const [satwaList, setSatwaList] = useState<{ namaSpesies: string; kategori: string }[]>([]);
+  const [satwaLoading, setSatwaLoading] = useState(true);
+  const [satwaError, setSatwaError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchSatwa() {
+      try {
+        const res = await fetch("/api/satwa");
+        if (!res.ok) throw new Error("Gagal mengambil data satwa");
+        const json = await res.json();
+        if (json.success) {
+          setSatwaList(json.data);
+        } else {
+          setSatwaError(json.message);
+        }
+      } catch (err: any) {
+        setSatwaError(err.message || "Terjadi kesalahan");
+      } finally {
+        setSatwaLoading(false);
+      }
+    }
+    fetchSatwa();
+  }, []);
+
+  const animalCategoryMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    satwaList.forEach((s) => {
+      map[s.namaSpesies] = s.kategori;
+    });
+    return map;
+  }, [satwaList]);
+
+  function getKategoriFromNamaSatwa(namaSatwa: string): string {
+    return animalCategoryMap[namaSatwa] ?? "";
+  }
 
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ?? "";
   const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ?? process.env.CLOUDINARY_UPLOAD_PRESET ?? "";
@@ -74,8 +101,10 @@ export function ObservationForm({
     handleSubmit,
     setValue,
     watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<ObservationFormValues>({
+    resolver: zodResolver(observationSchema),
     defaultValues: {
       namaSatwa: initialValues?.namaSatwa ?? "",
       kategori: initialValues?.kategori ?? "",
@@ -150,20 +179,41 @@ export function ObservationForm({
 
       <div className="grid gap-4 md:grid-cols-2">
         <div>
-          <label className="mb-2 block text-sm font-medium text-text-secondary">Nama Satwa</label>
-          <Select {...register("namaSatwa")}>
-            <option value="">Pilih satwa</option>
-            {satwaOptions.map((option) => (
-              <option key={option} value={option}>{option}</option>
+          <label className="mb-2 block text-sm font-medium text-slate-300">Nama Satwa</label>
+          <select
+            {...register("namaSatwa")}
+            disabled={satwaLoading || !!satwaError}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:opacity-50"
+          >
+            <option value="">{satwaLoading ? "Memuat satwa..." : satwaError ? "Gagal memuat" : "Pilih satwa"}</option>
+            {satwaList.map((satwa) => (
+              <option key={satwa.namaSpesies} value={satwa.namaSpesies}>
+                {satwa.namaSpesies}
+              </option>
             ))}
-          </Select>
-          {!isNamaSatwaSelected && <p className="mt-2 text-xs text-brand-text-light/90">Silakan pilih nama satwa terlebih dahulu untuk mengaktifkan form pengamatan.</p>}
-          {errors.namaSatwa && <p className="mt-1 text-sm text-error-text">{errors.namaSatwa.message}</p>}
+          </select>
+          {satwaError && <p className="mt-1 text-sm text-rose-400">{satwaError}</p>}
+
+          {!isNamaSatwaSelected ? (
+            <p className="mt-2 text-xs text-emerald-300/90">Silakan pilih nama satwa terlebih dahulu untuk mengaktifkan form pengamatan.</p>
+          ) : null}
+
+          {errors.namaSatwa ? <p className="mt-1 text-sm text-rose-300">{errors.namaSatwa.message}</p> : null}
         </div>
         <div>
-          <label className="mb-2 block text-sm font-medium text-text-secondary">Kategori</label>
-          <Input readOnly value={derivedKategori} placeholder={isNamaSatwaSelected ? "" : "Pilih nama satwa terlebih dahulu"} disabled={!isNamaSatwaSelected} />
-          {errors.kategori && <p className="mt-1 text-sm text-error-text">{errors.kategori.message}</p>}
+          <label className="mb-2 block text-sm font-medium text-slate-300 flex items-center justify-between">
+            Kategori
+            {isNamaSatwaSelected && (
+              <span className="text-[10px] bg-emerald-900 text-emerald-200 px-2 py-0.5 rounded-full">Terisi otomatis</span>
+            )}
+          </label>
+          <input
+            readOnly
+            value={derivedKategori}
+            placeholder={isNamaSatwaSelected ? "" : "Select animal name first"}
+            className="w-full cursor-not-allowed rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed"
+          />
+          {errors.kategori ? <p className="mt-1 text-sm text-rose-300">{errors.kategori.message}</p> : null}
         </div>
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Jumlah</label>
@@ -180,21 +230,58 @@ export function ObservationForm({
           </Select>
           {errors.lokasi && <p className="mt-1 text-sm text-error-text">{errors.lokasi.message}</p>}
         </div>
-        <div>
-          <label className="mb-2 block text-sm font-medium text-text-secondary">Tanggal Pengamatan</label>
-          <DatePicker
-            value={selectedDate ? new Date(`${selectedDate}T00:00:00`) : undefined}
-            onChange={(date) => {
-              if (!date) {
-                setValue("tanggalPengamatan", "", { shouldValidate: true, shouldDirty: true });
-                return;
-              }
-              const year = date.getFullYear();
-              const month = String(date.getMonth() + 1).padStart(2, "0");
-              const day = String(date.getDate()).padStart(2, "0");
-              setValue("tanggalPengamatan", `${year}-${month}-${day}`, { shouldValidate: true, shouldDirty: true });
-            }}
-            disabled={!isNamaSatwaSelected}
+
+        <div className="relative">
+          <label className="mb-2 block text-sm font-medium text-slate-300">Tanggal Pengamatan</label>
+          <Controller
+            control={control}
+            name="tanggalPengamatan"
+            render={({ field }) => (
+              <>
+                <button
+                  type="button"
+                  disabled={!isNamaSatwaSelected}
+                  onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+                  className={`w-full flex items-center justify-between rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-60 transition ${field.value ? "text-white" : "text-slate-400"}`}
+                >
+                  <span className="truncate">
+                    {field.value
+                      ? format(new Date(field.value), "dd MMMM yyyy", { locale: id })
+                      : "Pilih tanggal"}
+                  </span>
+                  <CalendarIcon className="h-4 w-4 shrink-0 opacity-70" />
+                </button>
+
+                {isDatePickerOpen && (
+                  <div className="absolute top-full mt-2 left-0 z-50 rounded-2xl border border-emerald-900/60 bg-[#0c1914] p-3 shadow-xl shadow-black/50">
+                    <div className="flex justify-end mb-2">
+                      <button 
+                        type="button" 
+                        onClick={() => setIsDatePickerOpen(false)}
+                        className="text-slate-400 hover:text-white p-1 rounded-full hover:bg-emerald-900/40"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <DayPicker
+                      mode="single"
+                      selected={field.value ? new Date(field.value) : undefined}
+                      onSelect={(date) => {
+                        field.onChange(date ? format(date, "yyyy-MM-dd") : "");
+                        setIsDatePickerOpen(false);
+                      }}
+                      locale={id}
+                      className="text-white"
+                      classNames={{
+                        selected: "bg-emerald-600 text-white rounded-full hover:bg-emerald-500",
+                        today: "font-bold text-emerald-400",
+                        day_button: "hover:bg-emerald-900/40 rounded-full transition-colors",
+                      }}
+                    />
+                  </div>
+                )}
+              </>
+            )}
           />
           {errors.tanggalPengamatan && <p className="mt-1 text-sm text-error-text">{errors.tanggalPengamatan.message}</p>}
         </div>
@@ -301,16 +388,23 @@ export function ObservationForm({
             {uploadState === "success" && <div className="flex items-center gap-2 rounded-2xl border border-brand-primary/70 bg-brand-primary/40 px-3 py-2 text-sm text-brand-text-light"><CheckCircle2 className="h-4 w-4" />Foto siap disimpan.</div>}
             {uploadState === "error" && <div className="flex items-center gap-2 rounded-2xl border border-error-bg bg-error-bg px-3 py-2 text-sm text-error-text"><AlertCircle className="h-4 w-4" />{uploadMessage}</div>}
           </div>
-          <div className="overflow-hidden rounded-2xl border border-brand-primary/60 bg-surface-card">
+
+          <div className="overflow-hidden rounded-2xl border border-emerald-900/60 bg-[#08140e] w-full aspect-video">
             {photoUrl ? (
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl">
-                <img src={photoUrl} alt="Preview foto" className="h-full w-full object-cover" />
-                <Button type="button" variant="danger" onClick={removePhoto} className="absolute right-3 top-3 !py-2 !px-3" disabled={!isNamaSatwaSelected}>
-                  <Trash2 className="h-4 w-4" /> Hapus
-                </Button>
+              <div className="relative w-full h-full">
+                <img src={photoUrl} alt="Preview foto" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={removePhoto}
+                  className="absolute right-3 top-3 flex items-center gap-2 rounded-full border border-white/20 bg-black/60 px-3 py-2 text-sm text-white backdrop-blur"
+                  disabled={!isNamaSatwaSelected}
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Hapus
+                </button>
               </div>
             ) : (
-              <div className="flex aspect-video items-center justify-center text-text-muted">
+              <div className="flex h-full w-full items-center justify-center text-slate-500">
                 <div className="text-center">
                   <ImageIcon className="mx-auto h-8 w-8" />
                   <p className="mt-2 text-sm">Preview gambar akan tampil di sini.</p>

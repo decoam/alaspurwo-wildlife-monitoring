@@ -1,36 +1,37 @@
-import type { ReactNode } from "react";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { DashboardRouteWrapper } from "@/features/dashboard/components/DashboardRouteWrapper";
+import { auth } from "@/auth";
+import { DashboardShell } from "@/features/dashboard/components/DashboardShell";
 
 export const runtime = "nodejs";
 
-function getAvatarInitials(fullName: string) {
-  return fullName
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join("") || "AP";
-}
-
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const session = await auth();
 
-  if (!session) {
+  if (!session?.user?.id) {
     redirect("/login");
   }
 
-  const fullName = session.user?.fullName || session.user?.username || "Alas Purwo";
-  const role = session.user?.role || "Petugas";
-  const posPengamatan = (session.user as { posPengamatan?: string })?.posPengamatan || "Pos Pengamatan Utama";
+  const { fullName, role, posPengamatan } = session.user;
+
+  const avatarInitials = (fullName ?? "AP")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   const user = {
-    fullName,
-    role,
-    posPengamatan,
-    avatarInitials: getAvatarInitials(fullName),
+    fullName: fullName ?? "",
+    role: role ?? "Petugas",
+    posPengamatan: posPengamatan ?? "",
+    avatarInitials,
   };
 
-  return <DashboardRouteWrapper user={user}>{children}</DashboardRouteWrapper>;
+  return <DashboardShell user={user}>{children}</DashboardShell>;
 }

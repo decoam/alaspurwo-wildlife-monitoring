@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { connectDB } from "@/lib/mongodb";
+import { Observation } from "@/models/Observation";
+import { User } from "@/models/User";
 import {
   Trees,
   PawPrint,
@@ -28,6 +31,31 @@ async function getLandingStats() {
   } catch (error) {
     console.error("Failed to load landing page statistics", error);
     return { observations: 0, species: 0, locations: 0 };
+  }
+}
+
+export default async function HomePage() {
+  const stats = await getLandingStats();
+
+export const runtime = "nodejs";
+
+async function getLandingStats() {
+  try {
+    await connectDB();
+    const [distinctSpecies, totalObservations, totalPetugas] = await Promise.all([
+      Observation.distinct("namaSatwa"),
+      Observation.countDocuments(),
+      User.countDocuments({ role: /^petugas$/i }),
+    ]);
+
+    return {
+      distinctSpecies: distinctSpecies.length,
+      totalObservations,
+      totalPetugas,
+    };
+  } catch (error) {
+    console.error("Failed to fetch landing stats:", error);
+    return { distinctSpecies: 0, totalObservations: 0, totalPetugas: 0 };
   }
 }
 
@@ -83,17 +111,17 @@ export default async function HomePage() {
 
             <div className="landing-stats-row">
               <div>
-                <h2 className="landing-stat-number">{stats.locations.toLocaleString("id-ID")}</h2>
+                <h2 className="landing-stat-number">{stats.totalPetugas || "—"}</h2>
                 <p className="landing-stat-label">Pos Pengamatan</p>
               </div>
 
               <div>
-                <h2 className="landing-stat-number">{stats.observations.toLocaleString("id-ID")}</h2>
+                <h2 className="landing-stat-number">{stats.totalObservations || "—"}</h2>
                 <p className="landing-stat-label">Observasi</p>
               </div>
 
               <div>
-                <h2 className="landing-stat-number">{stats.species.toLocaleString("id-ID")}</h2>
+                <h2 className="landing-stat-number">{stats.distinctSpecies || "—"}</h2>
                 <p className="landing-stat-label">Spesies</p>
               </div>
             </div>
