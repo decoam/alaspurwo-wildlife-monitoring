@@ -4,11 +4,11 @@ import React, { useState, useMemo } from "react";
 import { 
   FileSpreadsheet, 
   FileText, 
-  import { 
-    FileSpreadsheet, 
-    File, 
-    Loader2
-  } from "lucide-react";
+  Loader2,
+  Info,
+  CheckSquare,
+  Square,
+} from "lucide-react";
 import { ExportReportTable } from "./ExportReportTable";
 import { ReportCardItem } from "./ReportCardItem";
 import { DatePicker } from "@/components/ui/DatePicker";

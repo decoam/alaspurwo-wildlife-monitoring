@@ -15,7 +15,7 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const { fullName, role, posPengamatan } = session.user;
+  const { fullName, role } = session.user;
 
   const avatarInitials = (fullName ?? "AP")
     .trim()
@@ -29,7 +29,7 @@ export default async function DashboardLayout({
   const user = {
     fullName: fullName ?? "",
     role: role ?? "Petugas",
-    posPengamatan: posPengamatan ?? "",
+    posPengamatan: "",
     avatarInitials,
   };
 

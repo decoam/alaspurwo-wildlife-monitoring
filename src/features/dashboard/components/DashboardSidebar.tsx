@@ -16,10 +16,10 @@ type DashboardSidebarProps = {
 };
 
 const menuItems = [
-  { label: "Dashboard",          href: "/dashboard",                     icon: LayoutDashboard, exact: true  },
-  { label: "Data Pengamatan",    href: "/dashboard/observations",        icon: Camera,          exact: false },
-  { label: "Tambah Pengamatan",  href: "/dashboard/observations/create", icon: PlusCircle,      exact: false },
-  { label: "Profil",             href: "/dashboard/profile",             icon: UserCircle2,     exact: false },
+  { label: "Dashboard",         href: "/dashboard",                     icon: LayoutDashboard, exact: true  },
+  { label: "Data Pengamatan",   href: "/dashboard/observations",        icon: Camera,          exact: false },
+  { label: "Tambah Pengamatan", href: "/dashboard/observations/create", icon: PlusCircle,      exact: false },
+  { label: "Profil",            href: "/dashboard/profile",             icon: UserCircle2,     exact: false },
 ];
 
 export function DashboardSidebar({ user, onClose }: DashboardSidebarProps) {
@@ -36,11 +36,8 @@ export function DashboardSidebar({ user, onClose }: DashboardSidebarProps) {
   };
 
   return (
-    <>
-      {isOpen && <button type="button" aria-label="Tutup navigasi dashboard" className="fixed inset-0 z-40 bg-surface-bg/70 md:hidden" onClick={() => setIsOpen(false)} />}
-      <aside className={`fixed inset-y-4 left-4 z-50 flex w-[calc(100%-2rem)] max-w-72 flex-col justify-between rounded-[28px] border border-brand-primary/60 bg-surface-bg/95 p-5 shadow-2xl transition-transform duration-200 md:inset-y-6 md:left-8 md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-[calc(100%+1rem)] md:translate-x-0"}`}>
+    <aside className="flex h-full w-full flex-col justify-between rounded-[28px] border border-emerald-900/60 bg-[#07110c]/90 p-5 shadow-2xl">
       <div>
-        {/* Header row: avatar + user info + X close (mobile only) */}
         <div className="mb-8 flex items-center gap-3">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-lime-600 text-lg font-semibold text-white">
             {user.avatarInitials}
@@ -49,7 +46,6 @@ export function DashboardSidebar({ user, onClose }: DashboardSidebarProps) {
             <p className="truncate text-sm font-semibold text-white">{user.fullName || "Alas Purwo"}</p>
             <p className="truncate text-xs text-emerald-200/70">{user.role || "Wildlife Monitoring"}</p>
           </div>
-          {/* X button — only visible on mobile, closes the drawer */}
           {onClose && (
             <button
               type="button"
@@ -62,7 +58,6 @@ export function DashboardSidebar({ user, onClose }: DashboardSidebarProps) {
           )}
         </div>
 
-        {/* Navigation links */}
         <nav className="space-y-2">
           {menuItems.map(({ label, href, icon: Icon, exact }) => {
             const active = isActive(href, exact);
@@ -85,16 +80,14 @@ export function DashboardSidebar({ user, onClose }: DashboardSidebarProps) {
         </nav>
       </div>
 
-      {/* Logout */}
       <button
         type="button"
         onClick={handleLogout}
-        className="flex items-center gap-3 rounded-2xl border border-amber-bg bg-amber-bg px-3 py-3 text-sm font-medium text-amber-text transition hover:bg-hover-bg"
+        className="flex items-center gap-3 rounded-2xl border border-emerald-900/60 bg-[#07110c] px-3 py-3 text-sm font-medium text-slate-300 transition hover:bg-emerald-900/40 hover:text-white"
       >
         <LogOut className="h-4 w-4" />
         Logout
       </button>
-      </aside>
-    </>
+    </aside>
   );
 }

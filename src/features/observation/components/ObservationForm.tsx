@@ -217,21 +217,24 @@ export function ObservationForm({
         </div>
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Jumlah</label>
-          <Input type="number" min={1} disabled={!isNamaSatwaSelected} {...register("jumlah", { valueAsNumber: true })} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+          <input
+            type="number"
+            min={1}
+            disabled={!isNamaSatwaSelected}
+            {...register("jumlah", { valueAsNumber: true })}
+            className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          />
           {errors.jumlah && <p className="mt-1 text-sm text-error-text">{errors.jumlah.message}</p>}
         </div>
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Lokasi</label>
-          <Select {...register("lokasi")} disabled={!isNamaSatwaSelected}>
+          <select {...register("lokasi")} disabled={!isNamaSatwaSelected} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60">
             <option value="">Pilih lokasi</option>
             {locationOptions.map((option) => (
               <option key={option} value={option}>{option}</option>
             ))}
-          </Select>
-          {errors.lokasi && <p className="mt-1 text-sm text-error-text">{errors.lokasi.message}</p>}
-        </div>
-
-        <div className="relative">
+          </select>
+          {errors.lokasi && <p className="mt-1 text-sm text-rose-300">{errors.lokasi.message}</p>}
           <label className="mb-2 block text-sm font-medium text-slate-300">Tanggal Pengamatan</label>
           <Controller
             control={control}
@@ -287,15 +290,15 @@ export function ObservationForm({
         </div>
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Shift</label>
-          <Select {...register("shift")} disabled={!isNamaSatwaSelected}>
+          <select {...register("shift")} disabled={!isNamaSatwaSelected} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60">
             <option value="Pagi">Pagi</option>
             <option value="Sore">Sore</option>
-          </Select>
-          {errors.shift && <p className="mt-1 text-sm text-error-text">{errors.shift.message}</p>}
+          </select>
+          {errors.shift && <p className="mt-1 text-sm text-rose-300">{errors.shift.message}</p>}
         </div>
         <div>
           <label className="mb-2 block text-sm font-medium text-text-secondary">Cuaca</label>
-          <Select {...register("kondisiCuaca")} disabled={!isNamaSatwaSelected}>
+          <select {...register("kondisiCuaca")} disabled={!isNamaSatwaSelected} className="w-full rounded-2xl border border-emerald-900/60 bg-[#10241a] px-3 py-2.5 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60">
             <option value="">Pilih kondisi cuaca</option>
             <option value="Cerah">Cerah</option>
             <option value="Cerah Berawan">Cerah Berawan</option>
@@ -304,8 +307,8 @@ export function ObservationForm({
             <option value="Hujan Ringan">Hujan Ringan</option>
             <option value="Hujan Lebat">Hujan Lebat</option>
             <option value="Berkabut">Berkabut</option>
-          </Select>
-          {errors.kondisiCuaca && <p className="mt-1 text-sm text-error-text">{errors.kondisiCuaca.message}</p>}
+          </select>
+          {errors.kondisiCuaca && <p className="mt-1 text-sm text-rose-300">{errors.kondisiCuaca.message}</p>}
         </div>
         
         <div className="md:col-span-2">
@@ -363,9 +366,8 @@ export function ObservationForm({
               }}
             >
               {({ open }) => (
-                <Button
+                <button
                   type="button"
-                  variant="secondary"
                   disabled={!isNamaSatwaSelected || isSubmitting}
                   onClick={() => {
                     if (!cloudName || !uploadPreset) {
@@ -375,11 +377,11 @@ export function ObservationForm({
                       open();
                     }
                   }}
-                  className="w-full"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-emerald-900/60 bg-[#10241a] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-900/40 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {uploadState === "uploading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
                   {uploadState === "uploading" ? "Mengunggah..." : "Pilih atau tarik gambar"}
-                </Button>
+                </button>
               )}
             </CldUploadWidget>
             <div className="rounded-2xl border border-dashed border-brand-primary/70 bg-surface-bg p-3 text-sm text-text-muted">
@@ -415,10 +417,14 @@ export function ObservationForm({
         </div>
       </div>
       <div className="flex justify-end">
-        <Button type="submit" disabled={!isNamaSatwaSelected || isSubmitting || uploadState === 'uploading'}>
+        <button
+          type="submit"
+          disabled={!isNamaSatwaSelected || isSubmitting || uploadState === 'uploading'}
+          className="flex items-center gap-2 rounded-2xl bg-linear-to-r from-emerald-500 to-lime-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:from-emerald-600 hover:to-lime-700 disabled:cursor-not-allowed disabled:opacity-60"
+        >
           {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
           {submitLabel}
-        </Button>
+        </button>
       </div>
     </form>
   );

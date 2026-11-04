@@ -11,17 +11,10 @@ export default async function DashboardPage({
 }: {
   searchParams: Promise<{ search?: string }> | { search?: string };
 }) {
-  // PERBAIKAN: Guard auth() eksplisit di Server Component
-  const session = await auth();
-
-  if (!session) {
-    redirect("/login");
-  }
-
   const resolvedSearchParams = await searchParams;
   const search = typeof resolvedSearchParams.search === "string" ? resolvedSearchParams.search : "";
 
-  const { stats, recentObservations } = await getDashboardData(search);
+  const { user, stats, recentObservations } = await getDashboardData(search);
 
   const summaryCards = [
     {
@@ -56,7 +49,7 @@ export default async function DashboardPage({
 
   return (
     <main className="px-4 py-4 sm:px-6 lg:px-8 lg:py-6 space-y-4">
-      <DashboardHeader searchValue={search} user={user} />
+      <DashboardHeader user={user} />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {summaryCards.map((card) => (

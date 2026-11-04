@@ -10,32 +10,6 @@ import {
   Leaf,
   ArrowRight,
 } from "lucide-react";
-import { connectDB } from "@/lib/mongodb";
-import { Observation } from "@/models/Observation";
-
-async function getLandingStats() {
-  try {
-    await connectDB();
-
-    const [observations, species, locations] = await Promise.all([
-      Observation.countDocuments({ deletedAt: null }),
-      Observation.distinct("namaSatwa", { deletedAt: null }),
-      Observation.distinct("lokasi", { deletedAt: null }),
-    ]);
-
-    return {
-      observations: Number.isFinite(observations) ? observations : 0,
-      species: Array.isArray(species) ? species.length : 0,
-      locations: Array.isArray(locations) ? locations.length : 0,
-    };
-  } catch (error) {
-    console.error("Failed to load landing page statistics", error);
-    return { observations: 0, species: 0, locations: 0 };
-  }
-}
-
-export default async function HomePage() {
-  const stats = await getLandingStats();
 
 export const runtime = "nodejs";
 
@@ -103,10 +77,6 @@ export default async function HomePage() {
                 Masuk
                 <ArrowRight size={18} />
               </Link>
-
-              {/* <Link href="/register" className="landing-btn-secondary">
-                Daftar Petugas
-              </Link> */}
             </div>
 
             <div className="landing-stats-row">
